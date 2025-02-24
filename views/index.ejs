@@ -12,7 +12,33 @@
 	<span>hard</span>
 	<file-etc editable="true"></file-etc>
 
+	<a href="/user/register">Register</a>
+
+	<br>
+
+	<a href="/user/login">LOGIN</a>
+
 	<script src="/util/util.js"></script>
 	<script src="/component/file-etc.js"></script>
+
+	<script>
+//const tt = JSON.parse(<%=response%>);
+//console.log(<%=response%>)
+
+// const formData = new FormData();
+// formData.append("title", "new book 18s");
+// formData.append("subTitle", "sub new book 15");
+// formData.append("author", "new author 17");
+// formData.append("publishedDate", new Date());
+
+// util.sendFormData("/book", "POST", formData ).then((data) => {
+// 	console.log(data); // JSON 데이터가 `data.json()` 호출에 의해 파싱됨
+// });
+
+util.sendFormData("/book/list", "POST", new FormData() ).then((data) => {
+	console.log(data); // JSON 데이터가 `data.json()` 호출에 의해 파싱됨
+});
+
+	</script>
 </body>
 </html>
