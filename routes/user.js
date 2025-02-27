@@ -8,27 +8,22 @@ router.get('/register', (request,response)=>{
 })
 
 router.get('/login', (request,response)=>{
+	
 	response.render('login.ejs');
+})
+
+router.get('/logout', (request,response)=>{
+	request.logout(()=>{
+		response.redirect('/');
+	})
 })
 
 router.post('/add', userController.createUser);
 
 router.post('/passUser', userController.loginUser);
 
-// router.post('/add', async(request, response, next)=> {
-//   try{
-// 		const username = request.body.username;
-// 		const password = await bcrypt.hash(request.body.password, 10)
-// 		const data = {username:username, password:password};
-// 		await db.collection("user").insertOne(data);
-		
-// 		response.redirect('/');
-// 	}
-// 	catch(e){
-// 		console.log(e)
-// 		response.redirect('/error');
-// 	}
-// });
+router.post('/list', userController.listUser);
 
+router.post('/update', userController.updateUser);
 
 module.exports = router; 

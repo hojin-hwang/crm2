@@ -1,62 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Login</title>
-	<style>
-		input,div {
-  box-sizing: border-box;
-}
-.form-box {
-  background : white;
-  padding : 25px;
-  margin: 20px;
-  border-radius: 8px;
-}
-.form-box input {
-  padding : 10px;
-  font-size: 16px;
-  width: 100%;
-  border: 1px solid black;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-.form-box button {
-  padding: 10px;
-  border : none;
-  background : lightgrey;
-  border-radius: 5px;
-}
-	</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SOOY-K CRM</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">  
+  <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
-	<form class="form-box">
-    <h4>Login</h4>
-    <input type="text" name="username" placeholder="ID"></input>
-		<input type="password" name="password" placeholder="password"></input>
-    <button type="button" class="command-pass-user">전송</button>
-</form> 
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <div
+      class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+      <div class="d-flex align-items-center justify-content-center w-100">
+        <div class="row justify-content-center w-100">
+          <div class="col-md-8 col-lg-6 col-xxl-3">
+            <div class="card mb-0">
+              <div class="card-body">
+                <div class="card-body">
+                  <a href="#" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                    <img src="/img/logos/dark-logo.png" width="180" alt="" />
+                  </a>
+                  <p class="text-center">CRM Manager Platform</p>
+                  <form>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">ID</label>
+                      <input type="email" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-4">
+                      <label for="exampleInputPassword1" class="form-label">Password</label>
+                      <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    
+                    <button class="command-pass-user btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</button>
+                  </form>
+                </div>
+                <div class="card-tail" style="text-align: right;">
+                  <button type="button" class="btn btn-link m-1 command-move-register">회원가입</button>
+                </div>
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+	<script src="/util/util.js"></script>
 
-<script src="/util/util.js"></script>
-<script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+		document.addEventListener('click', handleClick);
 
-window.addEventListener('click', (e)=>{
-  e.composedPath().find((node) => 
-			{
-					if (typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
-					if(node.className.match(/command-pass-user/))
-					{
-							const form = node.closest('form');
-							const formData = new FormData(form);
-							util.sendFormData("/user/passUser", "POST", formData ).then((data) => {
-                console.log(data); // JSON 데이터가 `data.json()` 호출에 의해 파싱됨
-                if(data.loginSuccess) location.href = ("/");
-              });
-							return;
-					}
-			});
-});
-</script>
+		function handleClick(e) {
+				 e.preventDefault();
+				 e.composedPath().find((node)=>{
+						 if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
+						 if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
+						 if(node.className.match(/command-pass-user/))
+							{
+								const form = node.closest('form');
+								const formData = new FormData(form);
+								util.sendFormData("/user/passUser", "POST", formData ).then((data) => {
+									console.log(data); // JSON 데이터가 `data.json()` 호출에 의해 파싱됨
+									if(data.loginSuccess) location.href = ("/");
+								});
+								return;
+							}
+             if(node.className.match(/command-move-register/))
+						 {
+							location.href = '/user/register'
+						 }
+				 });
+		 }
+
+		 
+
+		})
+ </script>
 </body>
 </html>

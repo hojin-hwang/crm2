@@ -5,40 +5,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>index</title>
-	<link href="/css/style.css" rel="stylesheet">
+	<link href="/css/styles.css" rel="stylesheet">
 </head>
 <body>
   <h1>is Index !</h1>
 	<span>hard</span>
 	<file-etc editable="true"></file-etc>
 
+	<form  method="POST" enctype="multipart/form-data">
+		<input type="file" name="myFile" id="fileInput"/>
+		<button type="button" class="command-upload-file">Upload</button>
+	</form>
+	<img src="uploads/4b17d5f8-d1e9-49bb-98be-92fdcfeef573.jpg" alt="1.jpg" width="100" height="100" />
+
+	<button class="command-delete-image" data-name="4b17d5f8-d1e9-49bb-98be-92fdcfeef573.jpg">Delete Image</button>
 	<a href="/user/register">Register</a>
 
 	<br>
 
 	<a href="/user/login">LOGIN</a>
-
+	<br>
+	<a href="/user/logout">LOGOUT</a>
 	<script src="/util/util.js"></script>
 	<script src="/component/file-etc.js"></script>
 
 	<script>
-//const tt = JSON.parse(<%=response%>);
-//console.log(<%=response%>)
+const _userInfo_s = `<%= JSON.stringify(userInfo) %>`;
+const _userInfo_r = _userInfo_s.replaceAll('&#34;', '\"');
+const userInfo = JSON.parse(_userInfo_r)
+console.log(userInfo);
 
-// const formData = new FormData();
-// formData.append("title", "new book 18s");
-// formData.append("subTitle", "sub new book 15");
-// formData.append("author", "new author 17");
-// formData.append("publishedDate", new Date());
+window.addEventListener('click', (e)=>{
+  e.composedPath().find((node) => 
+			{
+					if (typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
+					if(node.className.match(/command-upload-file/))
+					{
+							const form = node.closest('form');
+							const formData = new FormData(form);
 
-// util.sendFormData("/book", "POST", formData ).then((data) => {
-// 	console.log(data); // JSON 데이터가 `data.json()` 호출에 의해 파싱됨
-// });
+							util.sendFormFileData("/upload", "POST", formData).then((response) => {
+                console.log(response); // JSON 데이터가 `data.json()` 호출에 의해 파싱됨
+								const img = document.querySelector('img');
+								img.src = `uploads/${response.data.name}`;
+								const deleteButton = document.querySelector('.command-delete-image');
+								deleteButton.dataset.name = response.data.name;
+              });
+							return;
+					}
+					if(node.className.match(/command-delete-image/))
+					{
+						const formData = new FormData();
+						formData.append('name', node.dataset.name);
 
-util.sendFormData("/book/list", "POST", new FormData() ).then((data) => {
-	console.log(data); // JSON 데이터가 `data.json()` 호출에 의해 파싱됨
+						util.sendFormData("/upload/delete", "POST", formData).then((response) => {
+                console.log(response); // JSON 데이터가 `data.json()` 호출에 의해 파싱됨
+								// const img = document.querySelector('img');
+								// img.src = ``;
+            });
+						return;
+					}
+					
+			});
 });
-
 	</script>
 </body>
 </html>

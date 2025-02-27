@@ -303,22 +303,36 @@ util.get_json_request = function(method, url, formData, callback, custom_headers
 
 util.sendFormData = async function(url = "", method = "GET", formData = null) {
   // 옵션 기본 값은 *로 강조
-	const plainFormData = Object.fromEntries(formData.entries());
-	const formDataJsonString = JSON.stringify(plainFormData);
-
+  const data = {};
+  formData.forEach((value, key) => data[key] = value);
   const response = await fetch(url, {
     method: method, // *GET, POST, PUT, DELETE 등
     mode: "cors", // no-cors, *cors, same-origin
     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
     credentials: "same-origin", // include, *same-origin, omit
-    headers: {
-      "Content-Type": "application/json",
-    },
     redirect: "follow", // manual, *follow, error
     referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    body: (method === 'GET')? null : formDataJsonString, // body의 데이터 유형은 반드시 "Content-Type" 헤더와 일치해야 함
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    body: (method === 'GET')? null : JSON.stringify(data), // body의 데이터 유형은 반드시 "Content-Type" 헤더와 일치해야 함
   });
   return response.json(); // JSON 응답을 네이티브 JavaScript 객체로 파싱
+}
+
+util.sendFormFileData = async function(url = "", method = "POST", formData = null) {
+  // 옵션 기본 값은 *로 강조
+  const response = await fetch(url, {
+    method: method, 
+    mode: "cors", 
+    cache: "no-cache",
+    credentials: "same-origin",
+    redirect: "follow", 
+    referrerPolicy: "no-referrer",
+    body: formData, 
+  });
+  return response.json(); 
 }
 
 util.removeEnter = (text) =>{

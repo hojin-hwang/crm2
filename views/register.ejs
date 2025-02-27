@@ -1,61 +1,133 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Register</title>
-	<style>
-		input,div {
-  box-sizing: border-box;
-}
-.form-box {
-  background : white;
-  padding : 25px;
-  margin: 20px;
-  border-radius: 8px;
-}
-.form-box input {
-  padding : 10px;
-  font-size: 16px;
-  width: 100%;
-  border: 1px solid black;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-.form-box button {
-  padding: 10px;
-  border : none;
-  background : lightgrey;
-  border-radius: 5px;
-}
-	</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SOOY-K CRM</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">  
+  <link href="/css/styles.css" rel="stylesheet">
 </head>
+
 <body>
-	<form class="form-box">
-    <h4>회원가입</h4>
-    <input type="text" name="username" placeholder="ID"></input>
-		<input type="password" name="password" placeholder="password"></input>
-    <button type="button" class="command-add-user">전송</button>
-</form> 
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <div
+      class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+      <div class="d-flex align-items-center justify-content-center w-100">
+        <div class="row justify-content-center w-100">
+          <div class="col-md-8 col-lg-6 col-xxl-3">
+            <div class="card mb-0">
+              <div class="card-body">
+                <a href="#" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                  <img src="/img/logos/dark-logo.png" width="180" alt="" />
+                </a>
+                <p class="text-center">CRM Manager Platform</p>
+                <form>
+                  <div class="mb-3">
+                    <label for="exampleInputtext1" class="form-label">Name</label>
+                    <input type="text" name="name" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email Address</label>
+                    <input type="email" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  </div>
+                  <div class="mb-4">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" id="exampleInputPassword1">
+                  </div>
+                  <div class="mb-4">
+                    <label for="repassword" class="form-label">Re Password</label>
+                    <input type="password" class="form-control" name="repassword" id="repassword">
+                  </div>
+                  <button class="command-user-signup btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign Up</button>
+                  <div class="d-flex align-items-center justify-content-center">
+                    <p class="fs-4 mb-0 fw-bold">가입 후 관리자의 승인을 기다리세요</p>
+                    <p class="fs-4 mb-0 fw-bold">이미 계정이 있다면</p>
+                    <a class="text-primary fw-bold ms-2 command-go-signin" href="#">Sign In</a>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<script src="/util/util.js"></script>
-<script>
+  <script src="/util/util.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+		document.addEventListener('click', handleClick);
 
-window.addEventListener('click', (e)=>{
-  e.composedPath().find((node) => 
-			{
-					if (typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
-					if(node.className.match(/command-add-user/))
-					{
-							const form = node.closest('form');
-							const formData = new FormData(form);
-							util.sendFormData("/user/add", "POST", formData ).then((data) => {
-                location.href = ("/user/login");
-              });
-							return;
-					}
-			});
-});
-</script>
+		function handleClick(e) {
+				 e.preventDefault();
+				 e.composedPath().find((node)=>{
+						 if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
+						 if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
+						 if(node.className.match(/command-user-signup/))
+						 {
+								const form = node.closest('form');
+								const formData = new FormData(form);
+                if(!userJoinCondition(form)) return;
+
+								util.sendFormData("/user/add", "POST", formData ).then((data) => {
+									if(data.createSuccess) location.href = ("/user/login");
+									else alert(data.message);
+								});
+						 }
+
+             if(node.className.match(/command-go-signin/))
+						 {
+                location.href = '/user/login';
+						 }
+				 });
+		 }
+
+		})
+
+    const userJoinCondition = (form)=>{
+      return (checkName(form) && checkEmail(form) && checkPassword(form) && checkRePassword(form));
+    }
+    const checkName = (form)=>{
+      if(form.name.value.length < 1) 
+      {
+        alert('이름은 2자리 이상입니다.');
+        return false;
+      }
+      return true;
+    }
+    const checkEmail = (form)=>{
+      if(form.username.value.length < 1) {
+        alert('이메일은 필수입력사항입니다');
+        return false;
+      }
+      else
+      {
+        const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+        if(!regEmail.test(form.username.value)) {
+            alert('이메일 형식에 따라 정확히 입력해주세요');
+            return false;
+        }
+      }
+      return true;
+    }
+    const checkPassword = (form)=>{
+      if(form.password.value.length < 4) {
+        alert('비밀번호는 4자 이상이어야 합니다');
+        return false;
+      }
+      return true;
+    }
+    const checkRePassword = (form)=>{
+      if(form.password.value !== form.repassword.value) {
+        alert('비밀번호가 일치하지 않습니다');
+        return false;
+      }
+      return true;
+    }
+ </script>
 </body>
+
 </html>

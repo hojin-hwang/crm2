@@ -6,11 +6,17 @@ const saltRounds = 10;
 const userSchema = new mongooes.Schema({
 		username: {type: String, required: true},
 		password: {type: String, required: true},
-		degree:{type: Number, required: true, default: 0},
+		name: {type: String, required: true, default: "no Name"},
+		degree:{type: String, required: true, default: "대기"},
+		code:{type: String, required: false, default: ""},
+		department:{type: String, required: true, default: "기타"},
+		position:{type: String, required: true, default: "사원"},
+		used:{type: String, required: true, default: 'Y'},
 		date:{type: Date, required: true, default: Date.now},
 });
 
 userSchema.pre('save', async function(next){
+	console.log(this.password)
 	if(!this.isModified('password')){
 		return next();
 	}
