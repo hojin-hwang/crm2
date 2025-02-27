@@ -16,7 +16,6 @@ const userSchema = new mongooes.Schema({
 });
 
 userSchema.pre('save', async function(next){
-	console.log(this.password)
 	if(!this.isModified('password')){
 		return next();
 	}

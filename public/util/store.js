@@ -28,29 +28,16 @@ class Store{
 
 	addInfo(formData, listName, command)
 	{
-		const info = {};
-
-		for (const pair of formData.entries()) {
-			info[pair[0]] = pair[1];
-		}
-		info['date'] = util.getDayDashFormat(new Date())
-
-		if(!info["id"]) 
-		{
-			info["id"] = util.secureRandom();
-			formData.append("id", info["id"]);
-		}
-
-		ttb.get_json_request("POST", this.addApiUrl(listName), formData, (response)=>
+		
+		util.sendFormData(this.addApiUrl(listName), "POST", formData ).then((response) =>
 		{
 				if (100 == response.code)
 				{
-
 					const _listInfo = this.selectStoreList(listName, command)
 					if(_listInfo)
 					{
-						_listInfo.list?.push(info);
-						_listInfo.info = info;
+						_listInfo.list?.push(response.info);
+						_listInfo.info = response.info;
 						_listInfo.listName = listName;
 					}
 
@@ -75,7 +62,6 @@ class Store{
 			info[pair[0]] = pair[1];
 		}
 		formData.append('used', 'N')	
-		//ttb.get_json_request("POST", _url, formData, (response)=>
 		util.sendFormData(this.updateApiUrl(listName), "POST", formData ).then((response) => 
 		{
 				if (100 == response.code)
@@ -345,7 +331,7 @@ class Store{
 				api_url = "/api/crm/customer/addCustomer";
 			break;
 			case 'user-list':
-				api_url = "/api/crm/user/addUser";
+				api_url = "/user/add";
 			break;
 			case 'notice-list':
 				api_url = "/api/crm/notice/addNotice";

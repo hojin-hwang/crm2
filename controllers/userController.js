@@ -12,12 +12,21 @@ exports.createUser = async (req, res) =>{
 							user:null
 						})
 					}
+		delete req.body._id;			
 		const user = new User(req.body);
 		const saveUser = await user.save();
+
+		const _saveUser = {};
+		Object.assign(_saveUser, saveUser._doc);
+		_saveUser["date"] = _saveUser.date.toISOString().substring(0,10);
+		delete _saveUser.password;
+
 		res.status(201).json({
+			code:100,
 			createSuccess: true,
 			message: "정상등록되었습니다.",
-			user:saveUser
+			user:_saveUser,
+			info:_saveUser
 		});
 	}
 	catch(error){
@@ -141,7 +150,6 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async(user, done) => {
 	const userInfo = (user)? await User.findById(user.id).exec() : null;
-	//delete userInfo.password;
 	if(userInfo) userInfo.password = null;
   process.nextTick(() => {
     return done(null, userInfo)
