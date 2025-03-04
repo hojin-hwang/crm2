@@ -40,5 +40,7 @@ class AbstractComponent extends HTMLElement
   {
     window.postMessage(message, location.href);
   }
-
+  
+  
 }
+customElements.define('abs-component', AbstractComponent);

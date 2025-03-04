@@ -213,28 +213,34 @@ class Store{
 
 	getDataList(listName, search = false, command = "GET_DATA_LIST", _formData = null)
 	{
+		this.#performanceMonitor.start()
 		const formData = (_formData)? _formData : new FormData();
 		util.sendFormData(this.getListApiUrl(listName), "POST", formData).then((response) => {
 			if (100 == response.code)
 				{
-					this.getGlobalList(listName, response.list);
-					const message = (search)? {msg:"GET_SEARCH_DATA_LIST", data:response.list} :{msg:command, data:{listName:listName, list:response.list}}
+					this.getGlobalList(listName, response.data.list);
+					const message = (search)? {msg:"GET_SEARCH_DATA_LIST", data:response.data.list} :{msg:command, data:{listName:listName, list:response.data.list}}
 					window.postMessage(message, location.href);
 					return;
 				}
 				else
 				{
+						if(response.code == 401)
+						{
+							window.location.href = '/user/login';
+							return;
+						}
 						if (response.message) alert(response.message, true);
 						else console.dir(response); 
 				} 
 		});
-
+		this.#performanceMonitor.end('데이터 목록 로딩');
 		// ttb.get_json_request("POST", this.getListApiUrl(listName), formData, (response)=>
 		// {
 		// 		if (100 == response.code)
 		// 		{
-		// 			this.getGlobalList(listName, response.list);
-		// 			const message = (search)? {msg:"GET_SEARCH_DATA_LIST", data:response.list} :{msg:command, data:{listName:listName, list:response.list}}
+		// 			this.getGlobalList(listName, response.data);
+		// 			const message = (search)? {msg:"GET_SEARCH_DATA_LIST", data:response.data} :{msg:command, data:{listName:listName, list:response.data}}
 		// 			window.postMessage(message, location.href);
 		// 			return;
 		// 		}
@@ -255,7 +261,7 @@ class Store{
 		{
 				if (100 == response.code)
 				{
-					const message = {msg:"GET_BOARD_LIST", data:response.list}
+					const message = {msg:"GET_BOARD_LIST", data:response.data}
 					window.postMessage(message, location.href);
 					return;
 				}
@@ -282,7 +288,7 @@ class Store{
 				api_url = "/api/crm/product/getMaterialList";
 			break;	
 			case 'company-list':
-				api_url = "/api/crm/company/getCompanyList";
+				api_url = "/company/list";
 			break;
 			case 'customer-list':
 				api_url = "/api/crm/customer/getCustomerList";
@@ -325,7 +331,7 @@ class Store{
 				api_url = "/api/crm/product/addProduct";
 			break;	
 			case 'company-list':
-				api_url = "/api/crm/company/addCompany";
+				api_url = "/company/add";
 			break;
 			case 'customer-list':
 				api_url = "/api/crm/customer/addCustomer";
@@ -364,7 +370,7 @@ class Store{
 				api_url = "/api/crm/product/updateProduct";
 			break;	
 			case 'company-list':
-				api_url = "/api/crm/company/updateCompany";
+				api_url = "/company/update";
 			break;
 			case 'customer-list':
 				api_url = "/api/crm/customer/updateCustomer";
@@ -505,7 +511,7 @@ class Store{
 		{
 				if (100 == response.code)
 				{
-					const message = {msg:"GET_SALES_WORK_LIST", data:response.list}
+					const message = {msg:"GET_SALES_WORK_LIST", data:response.data}
 					window.postMessage(message, location.href);
 					return;
 				}
@@ -525,7 +531,7 @@ class Store{
 		{
 				if (100 == response.code)
 				{
-					const message = {msg:"GET_SALES_MEMO_LIST", data:response.list}
+					const message = {msg:"GET_SALES_MEMO_LIST", data:response.data}
 					window.postMessage(message, location.href);
 					return;
 				}
@@ -583,6 +589,19 @@ class Store{
 		return;
 	}
 
+	#performanceMonitor = {
+    startTime: null,
+    
+    start() {
+        this.startTime = performance.now();
+    },
+    
+    end(operation) {
+        const duration = performance.now() - this.startTime;
+        console.debug(`${operation} 수행 시간: ${duration.toFixed(2)}ms`);
+    }
+  }
+
 	setInitConfig(){
 
 		globalThis.config = {
@@ -614,10 +633,9 @@ class Store{
 				"formName":"company-form",
 				"boardId":"2569258608",
 				"columns":[
-					{"data": "id", "title":"id"},
+					{"data": "_id", "title":"id"},
 					{ "data": "name", "title":"고객사 이름" },
 					{ "data": "address", "title":"주소" },
-					{ "data": "tel", "title":"연락처" },
 					{ "data": "userName", "title":"담당자" }
 				]
 			},

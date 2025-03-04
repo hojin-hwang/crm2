@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const userController = require('../controllers/userController');
-
+const LoginRequired = require('../utils/loginRequired');
 router.get('/register', (request,response)=>{
 	response.render('register.ejs');
 })
@@ -18,12 +18,12 @@ router.get('/logout', (request,response)=>{
 	})
 })
 
-router.post('/add', userController.createUser);
-
 router.post('/passUser', userController.loginUser);
 
-router.post('/list', userController.listUser);
+router.post('/add',  userController.createUser);
 
-router.post('/update', userController.updateUser);
+router.post('/list', LoginRequired.messageIfNotLogin, userController.listUser);
+
+router.post('/update', LoginRequired.messageIfNotLogin, userController.updateUser);
 
 module.exports = router; 

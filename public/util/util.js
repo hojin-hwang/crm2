@@ -304,7 +304,7 @@ util.get_json_request = function(method, url, formData, callback, custom_headers
 util.sendFormData = async function(url = "", method = "GET", formData = null) {
   // 옵션 기본 값은 *로 강조
   const data = {};
-  formData.forEach((value, key) => data[key] = value);
+  if(formData) formData.forEach((value, key) => data[key] = value);
   const response = await fetch(url, {
     method: method, // *GET, POST, PUT, DELETE 등
     mode: "cors", // no-cors, *cors, same-origin

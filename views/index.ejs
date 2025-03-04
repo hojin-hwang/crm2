@@ -44,7 +44,7 @@ window.addEventListener('click', (e)=>{
 							const form = node.closest('form');
 							const formData = new FormData(form);
 
-							util.sendFormFileData("/upload", "POST", formData).then((response) => {
+							util.sendFormFileData("/upload/add", "POST", formData).then((response) => {
                 console.log(response); // JSON 데이터가 `data.json()` 호출에 의해 파싱됨
 								const img = document.querySelector('img');
 								img.src = `uploads/${response.data.name}`;

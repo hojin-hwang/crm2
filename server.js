@@ -6,8 +6,9 @@ const passport = require('passport');
 const cookieParser = require('cookie-parser');
 //const methodOverride = require('method-override')
 const userRouter = require('./routes/user');
-const bookRouter = require('./routes/book');
+const companyRouter = require('./routes/company');
 const fileRouter = require('./routes/file');
+const messageRouter = require('./routes/message');
 const MongoStore = require('connect-mongo')
 const mongoose = require('mongoose');
 
@@ -33,8 +34,8 @@ app.use(session({
 	secret : process.env.SECRET, 
 	resave : true, 
 	saveUninitialized: false,
-	// cookie : {maxAge: 1000*60*60*24},
-	cookie : {maxAge: 1000*60*60*24},
+	 //cookie : {maxAge: 1000*60},
+		cookie : {maxAge: 1000*60*60*24},
 	store : MongoStore.create({
 		mongoUrl: process.env.MONGO_URI,
 		dbName: process.env.DBNAME
@@ -46,19 +47,20 @@ app.use(passport.session());
 const url = process.env.MONGO_URI;
 mongoose.connect(url);
 
-app.use('/user', userRouter );
-app.use('/book', bookRouter);
-app.use('/upload', fileRouter);
+const LoginRequired = require('./utils/loginRequired');
 
+app.use('/user', userRouter );
+app.use('/company', companyRouter);
+app.use('/upload', fileRouter);
+app.use('/message', messageRouter);
 
 // app.listen -> server.listen 으로 변경(소켓 사용을 위해)
 app.listen(process.env.PORT,()=>{
 	console.log("starting Server port 8080!!")
 })
 
-const loginRequired = require('./util/login-required');
 
-app.get('/', loginRequired, async(request,response)=>{
+app.get('/', LoginRequired.redirectIfNotLogin, async(request,response)=>{
 	if(!request.user){
 		response.redirect('/user/login');
 		return;

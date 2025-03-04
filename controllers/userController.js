@@ -1,157 +1,128 @@
 const User = require('../models/user');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
-exports.createUser = async (req, res) =>{
-	try{
+
+
+exports.createUser = async (req, res) => {
+	try {
 		const userInfo = await User.findOne({ username: req.body.username }).exec();
-		if(userInfo){
-						return res.json({
-							createSuccess: false,
-							message: "중복된 아이디입니다.",
-							user:null
-						})
-					}
-		delete req.body._id;			
+		if (userInfo) {
+			return sendErrorResponse(res, 400, "중복된 아이디입니다.");
+		}
+
+		delete req.body._id;
 		const user = new User(req.body);
-		const saveUser = await user.save();
+		const savedUser = await user.save();
 
-		const _saveUser = {};
-		Object.assign(_saveUser, saveUser._doc);
-		_saveUser["date"] = _saveUser.date.toISOString().substring(0,10);
-		delete _saveUser.password;
+		const userData = {
+			...savedUser._doc,
+			date: savedUser.date.toISOString().substring(0,10)
+		};
+		delete userData.password;
 
-		res.status(201).json({
-			code:100,
-			createSuccess: true,
-			message: "정상등록되었습니다.",
-			user:_saveUser,
-			info:_saveUser
-		});
-	}
-	catch(error){
-		res.status(500).json({message: error.message});
+		return sendSuccessResponse(res, userData, "정상등록되었습니다.");
+	} catch(error) {
+		return sendErrorResponse(res, 500, "사용자 생성 중 오류가 발생했습니다.", error.message);
 	}
 };
 
-// exports.loginUser = async (req, res) =>{
-// 	try{
-// 		const userInfo = await User.findOne({ username: req.body.username }).exec();
-// 		if(!userInfo || !userInfo._id){
-// 			return res.json({
-// 				loginSuccess: false,
-// 				message: "등록되지 않은 이메일입니다."
-// 			})
-// 		}
-// 		const pass = userInfo.comparePassword(req.body.password);
-// 		if(!pass){
-// 			return res.json({
-// 				loginSuccess: false,
-// 				message: "비밀번호가 틀렸습니다."
-// 			})
-// 		}
-// 		else
-// 		{
-// 			return res.json({
-// 				loginSuccess: true,
-// 				message: "비밀번호가 맞습니다.",
-// 				sessionId : userInfo._id
-// 			})
-// 		}
-// 	}
-// 	catch(error){
-// 		res.status(500).json({message: error.message});
-// 	}	
-// }
-
-exports.loginUser = async (req, res, next) =>{
-		try{
-			passport.authenticate('local', (error, user, info) => {
-				if (error) return res.status(500).json(error)
-				if (!user) {
-					return res.json({
-						loginSuccess: false,
-						message: info.message
-						})
-					}
-					req.logIn(user, (err) => {
-						if (err) return next(err)
-						return res.json({
-											loginSuccess: true,
-											message: "비밀번호가 일치합니다."
-										})
-				})
-				})(req, res, next)
-		}
-		catch(error){
-			res.status(500).json({message: error.message});
-		}	
-	}
-
-exports.listUser = async (req, res) =>{
-	try{
-		const list = await User.find({ used: { $ne: 'N' } }).select('-password').exec();
-		
-		const userList = list.reduce((acc, cur)=>{
+exports.loginUser = async (req, res, next) => {
+	try {
+		passport.authenticate('local', (error, user, info) => {
+			if (error) {
+				return sendErrorResponse(res, 500, "로그인 처리 중 오류가 발생했습니다.", error);
+			}
+			if (!user) {
+				return sendErrorResponse(res, 401, info.message);
+			}
 			
-			const tempObject = {};
-			Object.assign(tempObject, cur._doc);
-			tempObject["date"] = tempObject.date.toISOString().substring(0,10);
-			acc.push(tempObject);
-			return acc;
-		},[]);
+			req.logIn(user, (err) => {
+				if (err) {
+					return sendErrorResponse(res, 500, "세션 생성 중 오류가 발생했습니다.", err);
+				}
+				return sendSuccessResponse(res, { username: user.username, loginSuccess:true }, "로그인에 성공했습니다.");
+			});
+		})(req, res, next);
+	} catch(error) {
+		return sendErrorResponse(res, 500, "로그인 처리 중 오류가 발생했습니다.", error.message);
+	}
+};
+
+exports.listUser = async (req, res) => {
+	try {
+		const users = await User.find({ used: { $ne: 'N' } })
+			.select('-password')
+			.lean()
+			.exec();
+
+		const userList = users.map(user => ({
+			...user,
+			date: user.date.toISOString().substring(0,10)
+		}));
+
+		return sendSuccessResponse(res, {list: userList});
+	} catch(error) {
+		return sendErrorResponse(res, 500, "사용자 목록 조회 중 오류가 발생했습니다.", error.message);
+	}
+};
+
+exports.updateUser = async (req, res) => {
+	try {
+		const { _id, ...updateData } = req.body;
 		
-		res.status(200).json({
-			code:100,
-			list:userList
-		});
-	}
-	catch(error){
-		res.status(500).json({code:500, message: error.message});
-	}
-};
-
-exports.updateUser = async (req, res) =>{
-	try{
-		const user = await User.findOne({ _id: req.body._id }).exec();
-		for (const [key, value] of Object.entries(req.body)) {
-			user[key] = value;
+		if (!_id) {
+			return sendErrorResponse(res, 400, "사용자 ID가 필요합니다.");
 		}
-		const saveUser = await user.save();
-		saveUser.password = null;
-		res.status(200).json({
-			code:100,
-			userInfo:saveUser
-		});
-	}
-	catch(error){
-		res.status(500).json({code:500, message: error.message});
+
+		const user = await User.findById(_id);
+		if (!user) {
+			return sendErrorResponse(res, 404, "사용자를 찾을 수 없습니다.");
+		}
+
+		Object.assign(user, updateData);
+		const savedUser = await user.save();
+		
+		const userData = savedUser.toObject();
+		delete userData.password;
+
+		return sendSuccessResponse(res, { userInfo: userData }, "사용자 정보가 업데이트되었습니다.");
+	} catch(error) {
+		return sendErrorResponse(res, 500, "사용자 정보 수정 중 오류가 발생했습니다.", error.message);
 	}
 };
 
+// Passport 설정
 passport.use(new LocalStrategy(async (username, password, callback) => {
-  const userInfo = await User.findOne({ username: username }).exec();
-  if (!userInfo) {
-    return callback(null, false, { message: '아이디 DB에 없음' })
-  }
-	const pass = await userInfo.comparePassword(password);
-  if (pass) {
-    return callback(null, userInfo)
-  } else {
-    return callback(null, false, { message: '비밀번호가 일치하지 않습니다.' });
-  }
-}))
+	try {
+		const user = await User.findOne({ username }).exec();
+		if (!user) {
+			return callback(null, false, { message: '등록되지 않은 아이디입니다.' });
+		}
+
+		const isValidPassword = await user.comparePassword(password);
+		if (isValidPassword) {
+			return callback(null, user);
+		} else {
+			return callback(null, false, { message: '비밀번호가 일치하지 않습니다.' });
+		}
+	} catch(error) {
+		return callback(error);
+	}
+}));
 
 passport.serializeUser((user, done) => {
-  process.nextTick(() => {
-    done(null, { id: user._id, username: user.username })
-  })
-})
+	process.nextTick(() => {
+		done(null, { id: user._id, username: user.username });
+	});
+});
 
-passport.deserializeUser(async(user, done) => {
-	const userInfo = (user)? await User.findById(user.id).exec() : null;
-	if(userInfo) userInfo.password = null;
-  process.nextTick(() => {
-    return done(null, userInfo)
-  })
-})
+passport.deserializeUser(async (user, done) => {
+	try {
+		const userInfo = user ? await User.findById(user.id).select('-password').lean().exec() : null;
+		process.nextTick(() => done(null, userInfo));
+	} catch(error) {
+		process.nextTick(() => done(error));
+	}
+});

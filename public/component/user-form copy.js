@@ -37,18 +37,7 @@ class UserForm extends AbsForm
         }
         else
         {
-            const defaultData = {
-                _id: "",
-                username: "",
-                password: DEFAULT_PASSWORD,
-                code: "",
-                name: "",
-                department: "",
-                position: "",
-                degree: "일반",
-                isNew: "save"
-            };
-            Object.assign(this.data, defaultData);
+            this.#initializeDefaultData();
         }
     }
 
@@ -101,6 +90,20 @@ class UserForm extends AbsForm
         });
     }
 
+    #initializeDefaultData() {
+        const defaultData = {
+            _id: "",
+            username: "",
+            password: DEFAULT_PASSWORD,
+            code: "",
+            name: "",
+            department: "",
+            position: "",
+            degree: "일반",
+            isNew: "save"
+        };
+        Object.assign(this.data, defaultData);
+    }
 
     #getTemplate()
     {
