@@ -14,20 +14,18 @@ class MessageForm extends AbsForm {
 					if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
 					if(node.className.match(/command-send-message/))
 					{
-							console.log(this.querySelector('form'));
 							const form = this.querySelector('form');
 							const formData = new FormData(form);
 							util.sendFormData('/message/send', "POST", formData ).then((response) =>
 							{
 									if (100 == response.code)
 									{
-										console.log(response);
 										return;
 									}
 									else
 									{
-											if (response.message) alert(response.message, true);
-											else console.dir(response); 
+                                        if (response.message) alert(response.message, true);
+                                        else console.dir(response); 
 									}       
 							});
 							return;

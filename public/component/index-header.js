@@ -17,7 +17,7 @@ class IndexHeader extends HTMLElement
       if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
       if(node.className.match(/command-user-logout/))
       {
-        location.href = '/user/logout'
+        location.href = '/auth/logout'
         //this.#logout();
         return;
       }

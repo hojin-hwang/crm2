@@ -4,14 +4,18 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 const userSchema = new mongooes.Schema({
+		clientId:{type: String, required: true, default: ""},
 		username: {type: String, required: true},
-		password: {type: String, required: true},
+		password: {type: String, required: true },
 		name: {type: String, required: true, default: "no Name"},
 		degree:{type: String, required: true, default: "대기"},
 		code:{type: String, required: false, default: ""},
 		department:{type: String, required: true, default: "기타"},
 		position:{type: String, required: true, default: "사원"},
 		used:{type: String, required: true, default: 'Y'},
+		snsId: {type: String, required: false},
+		provider: {type: String, required: false},
+		email: {type: String, required: false},
 		date:{type: Date, required: true, default: Date.now},
 });
 

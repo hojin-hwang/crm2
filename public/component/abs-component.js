@@ -4,11 +4,11 @@ class AbstractComponent extends HTMLElement
   {
     super();
     this.message_prefix = util.secureRandom();
-    this.addEventListener('click', this.absHandleClick);
+    this.addEventListener('click', this.handleClick);
   }
 
 
-  absHandleClick(e)
+  handleClick(e)
   {
      //e.preventDefault();
      const node = e.target;
@@ -34,6 +34,7 @@ class AbstractComponent extends HTMLElement
   disconnectedCallback()
   {
     window.removeEventListener("message", this.receiveMessage)
+    this.removeEventListener("click", this.handleClick)
   }
 
   sendPostMessage(message)

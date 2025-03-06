@@ -8,12 +8,17 @@ exports.stream = async (req, res) => {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
   })
-	
-	// const messageEventEmitter = Message.watch([
-  //   { $match: { operationType: 'insert' } }
-  // ])
+	res.flushHeaders();
+	res.write('event: alert\n')
+  res.write(`data: Start Message Stream\n\n`)
+
+	req.on('close', () => {
+		messageEventEmitter.removeAllListeners('change');
+		res.end();
+	});
 
 	const messageEventEmitter = Message.watch();
+
 	messageEventEmitter.on('change', change => {
 		res.write('event: msg\n')
     res.write(`data: ${JSON.stringify(change.fullDocument)}\n\n`)
@@ -22,12 +27,10 @@ exports.stream = async (req, res) => {
 
 
 exports.create = async (req, res, next) => {
-	
 	try {
 
 		delete req.body._id;
 		req.body.to = req.body.to.split(',');
-		console.log(req.body);
 		const message = new Message(req.body);
 		const savedMessage = await message.save();
 

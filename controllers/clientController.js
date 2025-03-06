@@ -1,26 +1,33 @@
+const Client = require('../models/client');
 const User = require('../models/user');
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
-exports.createUser = async (req, res) => {
+exports.createClient = async (req, res) => {
 	try {
-		const userInfo = await User.findOne({ username: req.body.username }).exec();
-		if (userInfo) {
-			return sendErrorResponse(res, 400, "중복된 아이디입니다.");
-		}
+		// const userInfo = await User.findOne({ username: req.body.username }).exec();
+		// if (userInfo) {
+		// 	return sendErrorResponse(res, 400, "중복된 아이디입니다.");
+		// }
+		const client = new Client(req.body);
+		const savedClient = await client.save();
 
-		delete req.body._id;
-		const user = new User(req.body);
+		const user = new User({
+			username: req.body.username,
+			password: req.body.password,
+			clientId: savedClient.clientId,
+			degree: 'super-admin'
+		});
 		const savedUser = await user.save();
 
 		const userData = {
 			...savedUser._doc,
 			date: savedUser.date.toISOString().substring(0,10)
 		};
-		delete userData.password;
 
 		return sendSuccessResponse(res, userData, "정상등록되었습니다.");
 	} catch(error) {
-		return sendErrorResponse(res, 500, "사용자 생성 중 오류가 발생했습니다.", error.message);
+		console.log(error);
+		return sendErrorResponse(res, 500, "Client 생성 중 오류가 발생했습니다.", error.message);
 	}
 };
 

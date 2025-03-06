@@ -12,13 +12,7 @@ router.get('/login', (request,response)=>{
 	response.render('login.ejs');
 })
 
-router.get('/logout', (request,response)=>{
-	request.logout(()=>{
-		response.redirect('/');
-	})
-})
 
-router.post('/passUser', userController.loginUser);
 
 router.post('/add',  userController.createUser);
 

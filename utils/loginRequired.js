@@ -1,7 +1,7 @@
 class LoginRequired
 {
 	static redirectIfNotLogin = (req, res, next) =>{
-		if (!req.user) {
+		if (!req.isAuthenticated()) {
 				res.redirect('/user/login');
 				return;
 		}
@@ -9,7 +9,7 @@ class LoginRequired
 	}
 	
 	static messageIfNotLogin = (req, res, next) =>{
-		if (!req.user) {
+		if (!req.isAuthenticated()) {
 				res.status(401).json({
 					code: 401,
 					success: false,
@@ -18,6 +18,15 @@ class LoginRequired
 				return;
 		}
 		next();
+	}
+
+	static isNotLogin = (req, res, next) =>{
+		if (!req.isAuthenticated()) {
+      next(); // 로그인 안되어있으면 다음 미들웨어
+   } else {
+      const message = encodeURIComponent('로그인한 상태입니다.');
+      res.redirect(`/?error=${message}`);
+   }
 	}
 }
 

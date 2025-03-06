@@ -46,7 +46,6 @@ exports.create = async (req, res, next) => {
 
 exports.list = async (req, res) => {
 	try {
-		console.log(req.user);
 		
 		const {
 			page = 1,
@@ -65,10 +64,8 @@ exports.list = async (req, res) => {
 				{ description: { $regex: search, $options: 'i' } }
 			];
 		}
-
 		// 정렬 조건
 		const sort = { [sortBy]: order === 'desc' ? -1 : 1 };
-
 		// 전체 데이터 수 조회
 		const total = await Company.countDocuments(query);
 
