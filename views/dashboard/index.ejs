@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Simple CRM</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link
+      rel="icon"
+      href="/assets/img/kaiadmin/favicon.ico"
+      type="image/x-icon"
+    />
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/kaiadmin.min.css" />
+		<style>
+			.card-round{
+				height: calc(100vh - 48px);
+				margin-bottom: unset;
+			}
+			.btn-google {
+      background-color: #ffffff;
+      color: #757575;
+      padding: 12px 30px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #dadce0;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+			justify-content: center;
+    }
+    
+    .btn-google:hover {
+      background-color: #f8f9fa;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+    .google-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 20px 0;
+      color: #757575;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #dadce0;
+    }
+
+    .divider span {
+      padding: 0 10px;
+      font-size: 14px;
+    }
+		
+		.card .card-header{
+			border-bottom: unset !important;
+		}
+
+		.card .card-header .card-title{
+			font-size: 24px;
+			font-weight: 600;
+		}
+
+		.link-header{display: none;}
+
+		@media screen and (max-width: 700px) {
+			.card-round:first-child{display: none;}
+			.link-header{display: block;}
+			.btn-link{color: #fff !important;}
+		}
+
+		</style>
+  </head>
+  <body>
+    <div class="wrapper">
+
+      <div class="">
+        <div class="">
+          <div class="page-inner">
+            <div class="row">
+              <div class="col-md-4">
+								<div class="card card-secondary bg-secondary-gradient link-header">
+									<button class="btn btn-link">
+										<span class="btn-label">
+											Simple CRM 데모 이용하기
+										</span>
+									</button>
+								</div>
+
+                <div class="card card-round">
+									
+                  <div class="card-header">
+										
+                    <div class="card-head-row">
+                      <h4 class="card-title">Simple CRM 로그인</h4>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <a href="/auth/google" class="btn-google">
+											<img src="https://www.google.com/favicon.ico" alt="Google" class="google-icon">
+											Google로 로그인
+										</a>
+
+										<div class="divider">
+											<span>또는</span>
+										</div>
+
+										<form method="POST" action="/user/login">
+											<div class="form-group">
+												<label for="username">Email Address</label>
+												<input type="username" class="form-control" id="username" name="username" placeholder="Enter Email">
+												<small id="usernameHelp" class="form-text text-muted"></small>
+											</div>
+											<div class="form-group">
+												<label for="password">Password</label>
+												<input type="password" class="form-control" id="password" name="password" autocomplete="current-password" placeholder="Password">
+											</div>
+
+											<div class="form-group">
+												<button type="button" class="command-pass-user btn btn-primary">email로 로그인</button>
+											</div>
+										</form>
+										
+                  </div>
+                </div>
+              </div>
+
+
+							<div class="col-md-8">
+                <div class="card card-round">
+                  <div class="card-header">
+                    <div class="card-head-row card-tools-still-right">
+                      <h1 class="card-title">Simple 하지만 강력한 CRM Solution</h1>
+                      
+                    </div>
+                    <p class="card-category">
+											고객 관리의 새로운 기준, Simple CRM과 함께 비즈니스를 성장시키세요. <br>
+											간편한 사용성과 강력한 기능으로 당신의 비즈니스를 한 단계 더 발전시킬 수 있습니다.
+                    </p>
+										<p class="card-category">
+											데모를 먼저 이용해보세요. 그리고 무료로 시작해보세요.
+                    </p>
+                  </div>
+                  <div class="card-body">
+										<button class="btn btn-link">
+											<span class="btn-label">
+												Simple CRM 데모 이용하기
+											</span>
+										</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <!--   Core JS Files   -->
+    <script src="/assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+		<script src="/util/util.js"></script>
+
+    <!-- Kaiadmin JS -->
+    <!-- <script src="/assets/js/kaiadmin.min.js"></script> -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+			document.addEventListener('click', handleClick);
+	
+			function handleClick(e) {
+					 e.preventDefault();
+					 e.composedPath().find((node)=>{
+							 if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
+							 if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
+							 if(node.className.match(/command-pass-user/))
+								{
+									const form = node.closest('form');
+									if(!userLoginCondition(form)) return;
+									
+									const formData = new FormData(form);
+									util.sendFormData("/auth/login", "POST", formData ).then((response) => {
+										if(response.success && response.data.loginSuccess) location.href = ("/crm/"+response.data.clientId);
+										else {
+											alert(response.message);
+										}
+									});
+									return;
+								}
+							 if(node.className.match(/command-move-register/))
+							 {
+								location.href = '/user/register'
+							 }
+							 if(node.className.match(/command-google-login/))
+							 {
+								location.href = '/auth/google'
+							 }
+					 });
+			 }
+			})
+
+		const userLoginCondition = (form)=>{
+		return ( checkEmail(form) && checkPassword(form));
+    }
+    
+    const checkEmail = (form)=>{
+      if(form.username.value.length < 1) {
+        alert('이메일은 필수입력사항입니다');
+        return false;
+      }
+      else
+      {
+        const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+        if(!regEmail.test(form.username.value)) {
+            alert('이메일 형식에 따라 정확히 입력해주세요');
+            return false;
+        }
+      }
+      return true;
+    }
+    const checkPassword = (form)=>{
+      if(form.password.value.length < 4) {
+        alert('비밀번호는 4자 이상이어야 합니다');
+        return false;
+      }
+      return true;
+    }
+    
+	 </script>
+    
+    
+  </body>
+</html>

@@ -68,6 +68,12 @@ app.listen(process.env.PORT,()=>{
 	console.log("starting Server port 8080??!!")
 })
 
+app.get('/dashboard/',  async(request,response)=>{
+	response.render('dashboard/index.ejs');
+});
+app.get('/dashboard/dashboard',  async(request,response)=>{
+	response.render('dashboard/dashboard.ejs');
+});
 
 app.get('/',  async(request,response)=>{
 	response.render('index.ejs');

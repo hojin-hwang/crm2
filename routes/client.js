@@ -3,11 +3,15 @@ var router = express.Router();
 
 const clientController = require('../controllers/clientController');
 
-router.get('/register-client', (request,response)=>{
-	response.render('register-client.ejs');
-})
+	router.get('/register', (request,response)=>{
+		response.render('client/register.ejs');
+	})
 
-router.post('/add',  clientController.createClient);
+	router.get('/login', (request,response)=>{
+		response.render('client/login.ejs');
+	})
+	
+	router.post('/add',  clientController.createClient);
 
 
 

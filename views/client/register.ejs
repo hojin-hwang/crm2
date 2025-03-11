@@ -225,6 +225,17 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
+        const userInfo = {};    
+        try {
+            // 1. URL 디코딩
+            const _userInfo_s = `<%= JSON.stringify(userInfo) %>`;
+		    const encodedData = JSON.parse(decodeURIComponent(_userInfo_s.replaceAll('&#34;', '\"')))
+            Object.assign(userInfo, encodedData);
+            console.log(userInfo);
+        } catch (error) {
+            console.error('데이터 파싱 에러:', error);
+        }
+
 		document.addEventListener('click', handleClick);
 
 		function handleClick(e) {

@@ -58,34 +58,88 @@
 
   <script src="/util/util.js"></script>
 	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-		document.addEventListener('click', handleClick);
+    // URL에서 userInfo 파라미터 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const userInfoParam = urlParams.get('userInfo');
+    let userInfo = null;
 
-		function handleClick(e) {
-				 e.preventDefault();
-				 e.composedPath().find((node)=>{
-						 if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
-						 if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
-						 if(node.className.match(/command-user-signup/))
-						 {
-								const form = node.closest('form');
-								const formData = new FormData(form);
-                if(!userJoinCondition(form)) return;
+    if (userInfoParam) {
+        try {
+            userInfo = JSON.parse(decodeURIComponent(userInfoParam));
+            console.log('Google 프로필 정보:', userInfo);
+            
+            // DOM이 로드되면 폼에 데이터 자동 채우기
+            document.addEventListener('DOMContentLoaded', function() {
+                if (userInfo) {
+                    // 이메일 채우기
+                    const emailInput = document.querySelector('input[name="username"]');
+                    if (emailInput && userInfo.email) {
+                        emailInput.value = userInfo.email;
+                        emailInput.readOnly = true; // 구글 이메일은 수정 불가
+                    }
 
-								util.sendFormData("/user/add", "POST", formData ).then((data) => {
-									if(data.createSuccess) location.href = ("/user/login");
-									else alert(data.message);
-								});
-						 }
+                    // 이름 채우기
+                    const nameInput = document.querySelector('input[name="name"]');
+                    if (nameInput && userInfo.name) {
+                        nameInput.value = userInfo.name;
+                    }
 
-             if(node.className.match(/command-go-signin/))
-						 {
-                location.href = '/user/login';
-						 }
-				 });
-		 }
+                    // 구글 로그인 사용자는 비밀번호 필드 숨기기
+                    if (userInfo.provider === 'google') {
+                        const passwordFields = document.querySelectorAll('input[type="password"]');
+                        passwordFields.forEach(field => {
+                            field.parentElement.style.display = 'none';
+                        });
+                    }
 
-		})
+                    // 폼 제출 시 구글 로그인 정보 포함
+                    
+                }
+            });
+        } catch (error) {
+            console.error('userInfo 파싱 에러:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('click', handleClick);
+
+        function handleClick(e) {
+            e.preventDefault();
+            e.composedPath().find((node)=>{
+                if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
+                if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
+                if(node.className.match(/command-user-signup/))
+                {
+                    const form = node.closest('form');
+                    const formData = new FormData(form);
+                    
+                    // 구글 로그인 사용자는 비밀번호 검증 스킵
+                    if (userInfo && userInfo.provider === 'google') {
+                        if(!checkName(form) || !checkEmail(form)) return;
+                        formData.append('snsId', userInfo.snsId);
+                        formData.append('provider', userInfo.provider);
+                        formData.append('clientId', userInfo.clientId);
+                        if (userInfo.profileImage) {
+                            formData.append('profileImage', userInfo.profileImage);
+                        }
+                    } else {
+                        if(!userJoinCondition(form)) return;
+                    }
+
+                    util.sendFormData("/user/add", "POST", formData).then((response) => {
+                        if(response.success) location.href = ("/user/login");
+                        else alert(response.message);
+                    });
+                }
+
+                if(node.className.match(/command-go-signin/))
+                {
+                    location.href = '/user/login';
+                }
+            });
+        }
+    });
 
     const userJoinCondition = (form)=>{
       return (checkName(form) && checkEmail(form) && checkPassword(form) && checkRePassword(form));

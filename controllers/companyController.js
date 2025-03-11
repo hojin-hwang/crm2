@@ -23,14 +23,18 @@ const validateCompanyData = (data) => {
 exports.create = async (req, res, next) => {
 	
 	try {
-		// 데이터 유효성 검사
-		const validationErrors = validateCompanyData(req.body);
+		const {...createData } = req.body;
+
+		const validationErrors = validateCompanyData(createData);
 		if (validationErrors.length > 0) {
 			return sendErrorResponse(res, 400, '입력값이 유효하지 않습니다.', validationErrors);
 		}
 
-		delete req.body._id;
-		const company = new Company(req.body);
+		delete createData._id;
+
+		createData["clientId"] = req.user.clientId;
+
+		const company = new Company(createData);
 		const savedCompany = await company.save();
 
 		const companyData = {
@@ -122,6 +126,7 @@ exports.update = async (req, res) => {
 				updatedFields[key] = value;
 			}
 		}
+		updatedFields["clientId"] = req.user.clientId;
 
 		if (Object.keys(updatedFields).length === 0) {
 			return sendSuccessResponse(res, { info: company }, "변경된 내용이 없습니다.");

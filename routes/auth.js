@@ -14,9 +14,6 @@ router.post('/login', authController.loginUser);
 
 router.get('/google', authController.googleUser);
 
-router.get('/google/callback',authController.googleCallback, (req, res) => {
-      res.redirect('/crm/');
-   },
-);
+router.get('/google/callback', authController.googleCallback);
 
 module.exports = router; 

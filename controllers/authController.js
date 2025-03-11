@@ -26,9 +26,45 @@ exports.loginUser = async (req, res, next) => {
 };
 
 exports.googleUser = (req, res, next) => {
-	passport.authenticate('google', { scope: ['profile', 'email']})(req, res, next);
+	const clientId = req.query.clientId;
+	const state = JSON.stringify({clientId: clientId});
+	passport.authenticate('google', { 
+		scope: ['profile', 'email'],
+		state 
+	})(req, res, next);
 };
 
 exports.googleCallback = (req, res, next) => {
-	passport.authenticate('google', { failureRedirect: '/user/login' })(req, res, next);
+	
+	passport.authenticate('google', { 
+		failureRedirect: '/user/login' 
+	}, (err, user, info) => {
+		console.log(user);
+		if (err) {
+			return next(err);
+		}
+		if (!user) {
+			return res.redirect('/user/login');
+		}
+		// 새로운 사용자인 경우 등록 페이지로 리다이렉트
+		if (user.isNewUser && user.clientId === 'client') {
+			//const userInfo = encodeURIComponent(JSON.stringify(user));
+			//return res.redirect(`/user/register?userInfo=${userInfo}`);
+			return res.render('client/register.ejs', {"userInfo":user});
+		}
+		else if(user.isNewUser && !user.clientId) {// 
+			return res.redirect('/user/login');//클라이언트가 없으며 새로운 사용자인경우로 안내페이지로 이동
+		}
+
+		req.logIn(user, (err) => {
+			if (err) {
+				return next(err);
+			}
+			if(user.clientId !== 'client') {
+				return res.redirect('/crm/' + user.clientId);
+			} else {
+				return res.redirect('/client/register');
+			}
+		});
+	})(req, res, next);
 };

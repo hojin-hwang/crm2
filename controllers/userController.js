@@ -20,7 +20,7 @@ exports.createUser = async (req, res) => {
 
 		return sendSuccessResponse(res, userData, "정상등록되었습니다.");
 	} catch(error) {
-		return sendErrorResponse(res, 500, "사용자 생성 중 오류가 발생했습니다.", error.message);
+		return sendErrorResponse(res, 500, "사용자 생성 중 오류가 발생했습니다."+error.message, error.message);
 	}
 };
 
