@@ -1,15 +1,18 @@
 var express = require('express');
 var router = express.Router();
 
+const clientController = require('../controllers/clientController');
 
 router.get('/:clientId',  async(request,response)=>{
-  console.log(request.params.clientId);
    if(!request.user){
-      response.redirect('/user/login');
+      response.redirect('/crm/login/'+request.params.clientId);
 		return;
 	}
-	response.render('crm.ejs', {"userInfo":request.user});
+	clientController.get(request).then(data=>{
+		response.render('crm.ejs', {"userInfo":request.user, "clientInfo":data});
+	})
 });
+
 
 
 module.exports = router; 

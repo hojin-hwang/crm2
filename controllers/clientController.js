@@ -75,3 +75,12 @@ exports.updateUser = async (req, res) => {
 		return sendErrorResponse(res, 500, "사용자 정보 수정 중 오류가 발생했습니다.", error.message);
 	}
 };
+
+exports.get = async (req, res) => {
+	try {
+		return {clientId:req.params.clientId};
+	} catch(error) {
+		console.log(error);
+		return {clientId:{}};
+	}
+};

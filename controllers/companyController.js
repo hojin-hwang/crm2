@@ -1,4 +1,5 @@
 const Company = require('../models/company');
+const { ObjectId } = require('mongoose').Types;
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
 // 회사 데이터 유효성 검사
@@ -33,12 +34,15 @@ exports.create = async (req, res, next) => {
 		delete createData._id;
 
 		createData["clientId"] = req.user.clientId;
-
+		createData["user"] = ObjectId.createFromHexString(createData.user);
+		
 		const company = new Company(createData);
 		const savedCompany = await company.save();
 
 		const companyData = {
 			...savedCompany._doc,
+			userId: company.user?._id || '',
+			userName : createData.userName,
 			date: savedCompany.date.toISOString().substring(0,10)
 		};
 
@@ -60,7 +64,7 @@ exports.list = async (req, res) => {
 		} = req.query;
 
 		// 검색 조건 구성
-		const query = { used: { $ne: 'N' } };
+		const query = { used: { $ne: 'N' }, clientId: req.user.clientId };
 		if (search) {
 			query.$or = [
 				{ name: { $regex: search, $options: 'i' } },
@@ -76,6 +80,7 @@ exports.list = async (req, res) => {
 		// 페이지네이션 적용하여 데이터 조회
 		const companies = await Company.find(query)
 			.sort(sort)
+			.populate('user', 'name')
 			// .skip((page - 1) * limit)
 			// .limit(Number(limit))
 			.lean()
@@ -83,6 +88,8 @@ exports.list = async (req, res) => {
 
 		const companyList = companies.map(company => ({
 			...company,
+			userName: company.user?.name || '',
+			userId: company.user?._id || '',
 			date: company.date.toISOString().substring(0,10)
 		}));
 
@@ -114,7 +121,7 @@ exports.update = async (req, res) => {
 			return sendErrorResponse(res, 400, '입력값이 유효하지 않습니다.', validationErrors);
 		}
 
-		const company = await Company.findById(_id);
+		const company = await Company.findById({_id, clientId: req.user.clientId});
 		if (!company) {
 			return sendErrorResponse(res, 404, "회사 정보를 찾을 수 없습니다.");
 		}
@@ -127,6 +134,7 @@ exports.update = async (req, res) => {
 			}
 		}
 		updatedFields["clientId"] = req.user.clientId;
+		updatedFields["user"] = ObjectId.createFromHexString(updatedFields.user);
 
 		if (Object.keys(updatedFields).length === 0) {
 			return sendSuccessResponse(res, { info: company }, "변경된 내용이 없습니다.");
@@ -135,14 +143,57 @@ exports.update = async (req, res) => {
 		Object.assign(company, updatedFields);
 		const savedCompany = await company.save();
 		
-		return sendSuccessResponse(res, { info: savedCompany }, "회사 정보가 업데이트되었습니다.");
+		const companyData = {
+			...savedCompany._doc,
+			userId: savedCompany.user,
+			userName:updatedFields.userName,
+		};
+
+
+		return sendSuccessResponse(res, { info: companyData }, "회사 정보가 업데이트되었습니다.");
 	} catch(error) {
+		console.log(error)
 		return sendErrorResponse(res, 500, "회사 정보 수정 중 오류가 발생했습니다.", error.message);
 	}
 };
 
+exports.delete = async (req, res) => {
+	try {
+		const { _id, ...updateData } = req.body;
+
+		if (!_id) {
+			return sendErrorResponse(res, 400, "회사 ID가 필요합니다.");
+		}
+
+		const company = await Company.findById({_id, clientId: req.user.clientId});
+		if (!company) {
+			return sendErrorResponse(res, 404, "회사 정보를 찾을 수 없습니다.");
+		}
+
+		// 변경된 필드만 업데이트
+		const updatedFields = {};
+		for (const [key, value] of Object.entries(updateData)) {
+			if (company[key] !== value) {
+				updatedFields[key] = value;
+			}
+		}
+
+		Object.assign(company, updatedFields);
+		const savedCompany = await company.save();
+		
+		const companyData = {
+			...savedCompany._doc,
+		};
+
+		return sendSuccessResponse(res, { info: companyData }, "회사 정보가 삭제되었습니다.");
+	} catch(error) {
+		console.log(error)
+		return sendErrorResponse(res, 500, "회사 정보 삭제 중 오류가 발생했습니다.", error.message);
+	}
+};
+
 // 회사 상세 정보 조회 추가
-exports.getCompany = async (req, res) => {
+exports.get = async (req, res) => {
 	try {
 		const { id } = req.params;
 		

@@ -6,5 +6,6 @@ const LoginRequired = require('../utils/loginRequired');
 
 router.post('/add', LoginRequired.messageIfNotLogin, fileController.uploadFile);
 router.post('/delete', LoginRequired.messageIfNotLogin, fileController.deleteFile);
+router.post('/list', LoginRequired.messageIfNotLogin, fileController.list);
 
 module.exports = router; 

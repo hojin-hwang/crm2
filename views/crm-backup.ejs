@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SOOY-K CRM DashBoard</title>
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">  
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/datatables.min.css" />
+
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+  <link href="/css/swiper-bundle.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/css/crm.css" />
+</head>
+
+
+<body>
+ 
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    
+    <nav-bar></nav-bar>
+    
+    <div class="body-wrapper">
+      <index-header></index-header>
+      
+      <div class="container-fluid"></div>
+      <message-form></message-form>
+      <message-receiver></message-receiver>
+      <!-- Footer Start-->
+      
+      <footer class="app-footer">
+        <div>
+          <p>
+            경기도 성남시 중원구 갈마치로 215 (금강펜테리움IT타워) 금강펜테리움IT타워 A동 1101호
+            Tel. <a href="#">031-703-0636</a>
+          </p>
+          <div class="clear opsource">
+            <p class="copy">Copyright ⓒ (주)수이케이 All Rights Reserved.
+              <a href="#" aria-expanded="false">
+                <span>
+                  <i class="ti ti-license"></i>
+                </span>
+                <span>Licence</span>
+              </a>
+            </p>
+          </div>
+        </div>
+      </footer>
+      <!-- Footer End-->
+    </div>
+  </div>
+  <modal-page></modal-page>
+
+
+  <div id="calendar" style="width:600px;"></div>
+	
+  <script src="/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/libs/calendar/index.global.js"></script>
+  <script src="/libs/datatable/datatables.min.js"></script>
+  <script src="/libs/swiper-bundle.min.js"></script>
+
+  <script src="/util/util.js"></script>
+  <script src="/util/store.js"></script>
+	<script src="/component/abs-component.js"></script>
+  <script src="/component/abs-form.js"></script>
+	<script src="/component/index-header.js"></script>
+	<script src="/component/nav-bar.js"></script>
+  <script src="/component/table-list.js"></script>
+  <script src="/component/modal-page.js"></script>
+  <script src="/component/user-form.js"></script>
+  <script src="/component/company-form.js"></script>
+  <script src="/component/file-image.js"></script>
+  <script src="/component/message-form.js"></script>
+  <script src="/component/message-receiver.js"></script>
+	<!--<script src="/js/crm/app.min.js"></script>
+ 
+  <script src="/libs/simplebar/dist/simplebar.js"></script>
+  
+ 
+  <script src="/js/crm/store/store.js"></script>
+  
+  
+  <script src="/component/dash-board-card.js"></script>
+
+  <script src="/component/dash-board.js"></script>
+  <script src="/component/modal-page.js"></script>
+
+  <script src="/component/calendar-board.js"></script>
+  <script src="/component/sales-sheet-list.js"></script>
+  
+  <script src="/component/search-list.js"></script>
+
+  <script src="/component/sales-sheet.js"></script>
+  <script src="/component/product-form.js"></script>
+ 
+  
+  <script src="/component/customer-form.js"></script>
+  <script src="/component/notice-form.js"></script>
+  <script src="/component/work-form.js"></script>
+  <script src="/component/sales-work-form.js"></script>
+  <script src="/component/sales-sheet-form.js"></script>
+  <script src="/component/sales-sheet-view.js"></script>
+
+  <script src="/libs/swiper-bundle.min.js"></script>
+ 
+  <script src="/component/access-user.js"></script>
+  <script src="/component/board-info.js"></script>
+  <script src="/component/board-info-form.js"></script>
+  <script src="/component/board-user-form.js"></script>
+  <script src="/component/custom-board.js"></script>
+
+  <script src="/libs/quill.js"></script>
+  <script src="/component/alert-message.js"></script>
+  <script src="/component/contents-container.js"></script>
+	<script src="/component/contents-view.js"></script>
+	<script src="/component/contents-form.js"></script>
+  
+	<script src="/component/file-etc.js"></script>
+  <script src="/component/contents-check.js"></script>
+  <script src="/component/contents-reply.js"></script>
+  <script src="/component/password-form.js"></script>
+
+  <script src="/js/crm/store/config.js" type="text/javascript"></script>
+
+  <script src="/component/message-loading.js"></script>
+-->
+	<script>
+		const _userInfo_s = `<%= JSON.stringify(userInfo) %>`;
+		const _userInfo_r = _userInfo_s.replaceAll('&#34;', '\"');
+		const userInfo = JSON.parse(_userInfo_r)
+
+    globalThis.config = {};
+    globalThis.user = {};
+		Object.assign(globalThis.user, userInfo);
+
+    document.addEventListener('DOMContentLoaded', function () {
+      //Get config 
+      store.setInitConfig();
+      
+      document.querySelector('index-header').setData(globalThis.user)
+      document.querySelector('nav-bar').setAttribute('degree', globalThis.user.degree);
+
+      // const dashBoard = new DashBoard();
+      // if(globalThis.user.degree === '대기') dashBoard.setAttribute('enabled', 'unabled');
+      
+      // document.querySelector('.container-fluid').appendChild(dashBoard)
+
+		})
+ </script>
+</body>
+
+</html>

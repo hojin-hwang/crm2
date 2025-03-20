@@ -15,9 +15,9 @@ class Store{
 		globalThis.userBoardList = [];
 	}
 	
-	getInfo(listName, fieldName, value)
+	getInfo(collection, fieldName, value)
 	{
-		const _listInfo = this.selectStoreList(listName)
+		const _listInfo = this.selectStoreList(collection)
 
 		for(let i=0; i< _listInfo.list.length; i++)
 		{
@@ -26,19 +26,19 @@ class Store{
 		return null;
 	}
 
-	addInfo(formData, listName, command)
+	addInfo(formData, collection, command)
 	{
 		
-		util.sendFormData(this.addApiUrl(listName), "POST", formData ).then((response) =>
+		util.sendFormData(this.addApiUrl(collection), "POST", formData ).then((response) =>
 		{
 				if (100 == response.code)
 				{
-					const _listInfo = this.selectStoreList(listName, command)
+					const _listInfo = this.selectStoreList(collection, command)
 					if(_listInfo)
 					{
-						_listInfo.list?.push(response.info);
-						_listInfo.info = response.info;
-						_listInfo.listName = listName;
+						_listInfo.list?.push(response.data.info);
+						_listInfo.info = response.data.info;
+						_listInfo.collection = collection;
 					}
 
 					const message = {msg:command, data:_listInfo}
@@ -55,25 +55,26 @@ class Store{
 		return;
 	}
 
-	deleteInfo(formData, listName, command)
+	deleteInfo(formData, collection, command)
 	{
 		const info = {};
 		for (const pair of formData.entries()) {
 			info[pair[0]] = pair[1];
 		}
 		formData.append('used', 'N')	
-		util.sendFormData(this.updateApiUrl(listName), "POST", formData ).then((response) => 
+		util.sendFormData(this.deleteApiUrl(collection), "POST", formData ).then((response) => 
 		{
 				if (100 == response.code)
 				{
-					const _listInfo = this.selectStoreList(listName, command)
+					const _listInfo = this.selectStoreList(collection, command);
+					if(!_listInfo.list) return;
 					let startIndex = _listInfo.list.length;
 					for(let i=0; i< _listInfo.list.length; i++)
 					{
 						if(_listInfo.list[i]["_id"].toString() === info["_id"].toString()) startIndex = i;
 					}
 					_listInfo.list.splice(startIndex, 1);
-					_listInfo.listName = listName;
+					_listInfo.collection = collection;
 					const message = {msg:command, data:_listInfo}
 					window.postMessage(message, location.href);
 				}
@@ -85,14 +86,14 @@ class Store{
 		});
 	}
 
-	removeInfo(formData, listName, command)
+	removeInfo(formData, collection, command)
 	{
 		const info = {};
 		for (const pair of formData.entries()) {
 			info[pair[0]] = pair[1];
 		}
 
-		ttb.get_json_request("POST", this.deleteApiUrl(listName), formData, (response)=>
+		ttb.get_json_request("POST", this.deleteApiUrl(collection), formData, (response)=>
 		{
 				if (100 == response.code)
 				{
@@ -107,7 +108,7 @@ class Store{
 		});
 	}
 
-	updateInfo(formData, listName, command)
+	updateInfo(formData, collection, command)
 	{
 		const info = {};
 		for (const pair of formData.entries()) {
@@ -115,16 +116,21 @@ class Store{
 		}
 		info['date'] = util.getDayDashFormat(new Date())
 
-		util.sendFormData(this.updateApiUrl(listName), "POST", formData ).then((response) => {
+		util.sendFormData(this.updateApiUrl(collection), "POST", formData ).then((response) => {
 			if (100 == response.code)
 				{
-					const _listInfo = this.selectStoreList(listName, command)
+					const _listInfo = this.selectStoreList(collection, command)
+					
 					for(let i=0; i< _listInfo.list.length; i++)
 					{
-						if(_listInfo.list[i]["_id"].toString() === info["_id"].toString()) _listInfo.list[i] = info;
+						if(_listInfo.list[i]["_id"].toString() === response.data.info["_id"].toString()) {
+							_listInfo.list[i] = response.data.info;
+						}
 					}
-					_listInfo.info = info;
-					_listInfo.listName = listName;
+					_listInfo.info = response.data.info;
+					_listInfo.collection = collection;
+
+					console.log(_listInfo)
 
 					const message = {msg:command, data:_listInfo}
 					window.postMessage(message, location.href);
@@ -138,88 +144,27 @@ class Store{
 				} 
 		});
 
-		// ttb.get_json_request("POST", this.updateApiUrl(listName), formData, (response)=>
-		// {
-		// 		if (100 == response.code)
-		// 		{
-		// 			const _listInfo = this.selectStoreList(listName, command)
-		// 			for(let i=0; i< _listInfo.list.length; i++)
-		// 			{
-		// 				if(_listInfo.list[i]["id"].toString() === info["id"].toString()) _listInfo.list[i] = info;
-		// 			}
-		// 			_listInfo.info = info;
-		// 			_listInfo.listName = listName;
-
-		// 			const message = {msg:command, data:_listInfo}
-		// 			window.postMessage(message, location.href);
-
-		// 			return;
-		// 		}
-		// 		else
-		// 		{
-		// 				if (response.message) alert(response.message, true);
-		// 				else console.dir(response); 
-		// 		}       
-		// });
 	}
 
 
-	selectStoreList(listName, command = null)
+	selectStoreList(collection, command = null)
 	{
 		const storeList = {};
 		storeList.command = command ;
-		switch(listName)
-		{
-			case 'product-list':
-				storeList.list = globalThis.productList;
-			break;
-			case 'material-list':
-				storeList.list = globalThis.materialList;
-			break;
-			case 'assemble-list':
-				storeList.list = globalThis.assembleList;
-			break;	
-			case 'company-list':
-				storeList.list = globalThis.companyList;
-			break;
-			case 'user-list':
-				storeList.list = globalThis.userList;
-			break;
-			case 'customer-list':
-				storeList.list = globalThis.customerList;
-			break;
-			case 'notice-list':
-				storeList.list = globalThis.noticeList;
-			break;
-			case 'work-list':
-				storeList.list = globalThis.workList;
-			break;
-			case 'sales-work-list':
-				storeList.list = globalThis.salesWorkList;
-			break;
-			case 'sales-sheet-list':
-				storeList.list = globalThis.salesSheetList;
-			break;
-			case 'board-info-list':
-				storeList.list = globalThis.boardInfoList;
-			break;
-			case 'user-board-list':
-				storeList.list = globalThis.userBoardList;
-			break;
-		}
+		storeList.list = globalThis[collection + 'List'];
 		return storeList;
 	}
 
 
-	getDataList(listName, search = false, command = "GET_DATA_LIST", _formData = null)
+	getDataList(collection, search = false, command = "GET_DATA_LIST", _formData = null)
 	{
 		this.#performanceMonitor.start()
 		const formData = (_formData)? _formData : new FormData();
-		util.sendFormData(this.getListApiUrl(listName), "POST", formData).then((response) => {
+		util.sendFormData(this.getListApiUrl(collection), "POST", formData).then((response) => {
 			if (100 == response.code)
 				{
-					this.getGlobalList(listName, response.data.list);
-					const message = (search)? {msg:"GET_SEARCH_DATA_LIST", data:response.data.list} :{msg:command, data:{listName:listName, list:response.data.list}}
+					this.getGlobalList(collection, response.data.list);
+					const message = (search)? {msg:"GET_SEARCH_DATA_LIST", data:response.data.list} :{msg:command, data:{collection:collection, list:response.data.list}}
 					window.postMessage(message, location.href);
 					return;
 				}
@@ -235,21 +180,6 @@ class Store{
 				} 
 		});
 		this.#performanceMonitor.end('데이터 목록 로딩');
-		// ttb.get_json_request("POST", this.getListApiUrl(listName), formData, (response)=>
-		// {
-		// 		if (100 == response.code)
-		// 		{
-		// 			this.getGlobalList(listName, response.data);
-		// 			const message = (search)? {msg:"GET_SEARCH_DATA_LIST", data:response.data} :{msg:command, data:{listName:listName, list:response.data}}
-		// 			window.postMessage(message, location.href);
-		// 			return;
-		// 		}
-		// 		else
-		// 		{
-		// 				if (response.message) alert(response.message, true);
-		// 				else console.dir(response); 
-		// 		}       
-		// });
 	}
 
 	getCustomBoard(id)
@@ -273,321 +203,33 @@ class Store{
 		});
 	}
 
-	getListApiUrl(listName)
+	getListApiUrl(collectionName, code = null)
 	{
-		let api_url = '';
-		switch(listName)
-		{
-			case 'product-list':
-				api_url = "/api/crm/product/getList";
-			break;
-			case 'item-list':
-				api_url = "/api/crm/product/getItemList";
-			break;
-			case 'material-list':
-				api_url = "/api/crm/product/getMaterialList";
-			break;	
-			case 'company-list':
-				api_url = "/company/list";
-			break;
-			case 'customer-list':
-				api_url = "/api/crm/customer/getCustomerList";
-			break;
-			case 'user-list':
-				api_url = "/user/list";
-			break;
-			case 'notice-list':
-				api_url = "/api/crm/notice/getNoticeList";
-			break;
-			case 'work-list':
-				api_url = "/api/crm/work/getWorkList";
-			break;
-			case 'sales-work-list':
-				api_url = "/api/crm/work/getWorkList";
-			break;
-			case 'sales-sheet-list':
-				api_url = "/api/crm/sheet/getSheetList";
-			break;
-			case 'board-info-list':
-				api_url = "/api/crm/board/getBoardList";
-			break;
-			case 'board-user-list':
-				api_url = "/api/crm/board/getBoardUserList";
-			break;
-			case 'user-board-list':
-				api_url = "/api/crm/board/getUserBoardList";
-			break;
+		return "/"+collectionName + "/list" + (code ? code : '');
+	}
+
+	addApiUrl(collectionName)
+	{
+		return "/"+collectionName + "/add";
+	}
 			
-		}
-		return api_url;
+	updateApiUrl(collectionName)
+	{
+		return "/"+collectionName + "/update";
 	}
 
-	addApiUrl(listName)
+	deleteApiUrl(collectionName)
 	{
-		let api_url = '';
-		switch(listName)
-		{
-			case 'product-list':
-				api_url = "/api/crm/product/addProduct";
-			break;	
-			case 'company-list':
-				api_url = "/company/add";
-			break;
-			case 'customer-list':
-				api_url = "/api/crm/customer/addCustomer";
-			break;
-			case 'user-list':
-				api_url = "/user/add";
-			break;
-			case 'notice-list':
-				api_url = "/api/crm/notice/addNotice";
-			break;
-			case 'work-list':
-				api_url = "/api/crm/work/addWork2";
-			break;
-			case 'sales-work-list':
-				api_url = "/api/crm/work/addWork";
-			break;
-			case 'sales-sheet-list':
-				api_url = "/api/crm/sheet/addSheet";
-			break;
-			case 'board-info-list':
-				api_url = "/api/crm/board/addBoard";
-			break;
-			case 'board-user-list':
-				api_url = "/api/crm/board/addBoardUser";
-			break;
-		}
-		return api_url;
+		return "/"+collectionName + "/delete";
 	}
 
-	updateApiUrl(listName)
+	getGlobalList(collectionName, list)
 	{
-		let api_url = '';
-		switch(listName)
-		{
-			case 'product-list':
-				api_url = "/api/crm/product/updateProduct";
-			break;	
-			case 'company-list':
-				api_url = "/company/update";
-			break;
-			case 'customer-list':
-				api_url = "/api/crm/customer/updateCustomer";
-			break;
-			case 'notice-list':
-				api_url = "/api/crm/notice/updateNotice";
-			break;
-			case 'user-list':
-				api_url = "/user/update";
-			break;
-			case 'work-list':
-				api_url = "/api/crm/work/updateWork2";
-			break;
-			case 'sales-work-list':
-				api_url = "/api/crm/work/updateWork";
-			break;
-			case 'sales-sheet-list':
-				api_url = "/api/crm/sheet/updateSheet";
-			break;
-			case 'board-info-list':
-				api_url = "/api/crm/board/updateBoard";
-			break;
-		}
-		return api_url;
-	}
-
-	deleteApiUrl(listName)
-	{
-		let api_url = '';
-		switch(listName)
-		{
-			case 'product-list':
-				api_url = "/api/crm/product/deleteProduct";
-			break;	
-			case 'company-list':
-				api_url = "/api/crm/company/deleteCompany";
-			break;
-			case 'customer-list':
-				api_url = "/api/crm/customer/deleteCustomer";
-			break;
-			case 'notice-list':
-				api_url = "/api/crm/notice/deleteNotice";
-			break;
-			case 'work-list':
-				api_url = "/api/crm/work/deleteWork2";
-			break;
-			case 'sales-work-list':
-				api_url = "/api/crm/work/deleteWork";
-			break;
-			case 'sales-sheet-list':
-				api_url = "/api/crm/sheet/deleteSheet";
-			break;
-			case 'board-info-list':
-				api_url = "/api/crm/board/deleteBoard";
-			break;
-			case 'board-user-list':
-				api_url = "/api/crm/board/deleteBoardUser";
-			break;
-			case 'board-list':
-				api_url = "/api/crm/board/delete";
-			break;
-		}
-		return api_url;
-	}
-
-	getGlobalList(listName, list)
-	{
-		switch(listName)
-		{
-			case 'product-list':
-			globalThis.productList = list;
-			break;
-			case 'material-list':
-			globalThis.materialList = list;
-			break;
-			case 'assemble-list':
-			globalThis.assembleList = list;
-			break;	
-			case 'company-list':
-				globalThis.companyList = list;
-			break;
-			case 'customer-list':
-				globalThis.customerList = list;
-			break;
-			case 'user-list':
-				globalThis.userList = list;
-			break;
-			case 'notice-list':
-				globalThis.noticeList = list;
-			break;
-			case 'work-list':
-				globalThis.workList = list;
-			break;
-			case 'sales-work-list':
-				globalThis.salesWorkList = list;
-			break;
-			case 'sales-sheet-list':
-				globalThis.salesSheetList = list;
-			break;
-			case 'board-info-list':
-				globalThis.boardInfoList = list;
-			break;
-			case 'user-board-list':
-				globalThis.userBoardList = list;
-			break;
-		}
-	}
-
-	setMaterialList(list)
-	{
-		if(list)
-		{
-			const list_ = list.reduce((acc, item) => {
-				if(item.code === '원재료')  acc.push(item);
-				return acc;
-			}, []);
-			return list_;
-		}
-	}
-
-	setProductList(list)
-	{
-		if(list)
-		{
-			const list_ = list.reduce((acc, item) => {
-				if(item.code !== '원재료')  acc.push(item);
-				return acc;
-			}, []);
-			return list_;
-		}
-	}
-
-	getSheetSalesWorkList(sheetId)
-	{
-		const formData = new FormData();
-		formData.append('sheet', sheetId)
-		ttb.get_json_request("POST", this.getListApiUrl('sales-work-list'), formData, (response)=>
-		{
-				if (100 == response.code)
-				{
-					const message = {msg:"GET_SALES_WORK_LIST", data:response.data}
-					window.postMessage(message, location.href);
-					return;
-				}
-				else
-				{
-						if (response.message) alert(response.message, true);
-						else console.dir(response); 
-				}       
-		});
-	}
-
-	getSheetSalesMemoList(sheetId)
-	{
-		const formData = new FormData();
-		formData.append('sheet', sheetId)
-		ttb.get_json_request("POST", "/api/crm/memo/getMemoList", formData, (response)=>
-		{
-				if (100 == response.code)
-				{
-					const message = {msg:"GET_SALES_MEMO_LIST", data:response.data}
-					window.postMessage(message, location.href);
-					return;
-				}
-				else
-				{
-						if (response.message) alert(response.message, true);
-						else console.dir(response); 
-				}       
-		});
+		const listName = `${collectionName}List`;
+		globalThis[listName] = list;
+		return;
 	}
 	
-
-	addSheetWorkMemo(formData)
-	{
-		const info = {};
-
-		for (const pair of formData.entries()) {
-			info[pair[0]] = pair[1];
-		}
-		info['id'] = util.secureRandom();
-		info['date'] = util.getDayDashFormat(new Date())
-
-		formData.append("id", info['id']);
-
-		ttb.get_json_request("POST", "/api/crm/memo/addMemo", formData, (response)=>
-		{
-				if (100 == response.code)
-				{
-					const message = {msg:"ADD_SHEET_WORK_MEMO", data:info}
-					window.postMessage(message, location.href);
-				}
-				else
-				{
-						if (response.message) alert(response.message, true);
-						else console.dir(response); 
-				}       
-		});
-		return;
-	}
-
-
-	removeSheetWorkMemo(formData)
-	{
-		ttb.get_json_request("POST", "/api/crm/memo/deleteMemo", formData, (response)=>
-		{
-				if (100 == response.code)
-				{
-				}
-				else
-				{
-						if (response.message) alert(response.message, true);
-						else console.dir(response); 
-				}       
-		});
-		return;
-	}
 
 	#performanceMonitor = {
     startTime: null,
@@ -603,33 +245,32 @@ class Store{
   }
 
 	setInitConfig(){
-
-		globalThis.config = {
-			"sales-sheet-list":{
+		return {
+			"sheet":{
 				"title":"영업기회 리스트",
 				"buttonTitle":"영업기회 등록",
-				"listName":"sales-sheet-list",
-				"formName":"sales-sheet-form",
+				"name":"sheet",
+				"formName":"sheet-form",
 				"boardId":"615103576",
 				"columnInvisible":[0,8,9]
 			},
-			"product-list":{
+			"product":{
 				"title":"품목 리스트",
 				"buttonTitle":"품목 등록",
-				"listName":"product-list",
+				"name":"product",
 				"formName":"product-form",
 				"boardId":"2498029936",
 				"columns":[
-					{ "data": "id", "title":"id"},
+					{ "data": "_id", "title":"id"},
 					{ "data": "code", "title":"제품코드"},
 					{ "data": "name", "title":"제품이름" },
 					{ "data": "brand", "title":"제조사" }
 				]
 			},
-			"company-list":{
+			"company":{
 				"title":"고객사 리스트",
 				"buttonTitle":"신규 고객사",
-				"listName":"company-list",
+				"name":"company",
 				"formName":"company-form",
 				"boardId":"2569258608",
 				"columns":[
@@ -639,14 +280,14 @@ class Store{
 					{ "data": "userName", "title":"담당자" }
 				]
 			},
-			"customer-list":{
+			"customer":{
 				"title":"고객 리스트",
 				"buttonTitle":"신규 고객",
-				"listName":"customer-list",
+				"name":"customer",
 				"formName":"customer-form",
 				"boardId":"3231417172",
 				"columns":[
-					{ "data": "id", "title":"id"},
+					{ "data": "_id", "title":"id"},
 					{ "data": "name", "title":"고객 이름" },
 					{ "data": "companyName", "title":"고객사" },
 					{ "data": "hp", "title":"핸드폰" },
@@ -654,10 +295,10 @@ class Store{
 					{ "data": "userName", "title":"담당자" }
 				]
 			},
-			"user-list":{
+			"user":{
 				"title":"사용자 리스트",
 				"buttonTitle":"신규 사용자",
-				"listName":"user-list",
+				"name":"user",
 				"formName":"user-form",
 				"columns":[
 					{ "data": "_id", "title":"id"},
@@ -669,10 +310,10 @@ class Store{
 					{ "data": "degree", "title":"권한" }
 				]
 			},
-			"notice-list":{
+			"notice":{
 				"title":"공지사항 리스트",
 				"buttonTitle":"새로운 공지사항",
-				"listName":"notice-list",
+				"name":"notice",
 				"formName":"notice-form",
 				"columns":[
 					{ "data": "id", "title":"id"},
@@ -680,10 +321,10 @@ class Store{
 					{ "data": "date", "title":"등록일" }
 				]
 			},
-			"work-list":{
+			"work2":{
 				"title":"할일 리스트",
 				"buttonTitle":"새로운 할일",
-				"listName":"work-list",
+				"name":"work",
 				"formName":"work-form",
 				"columns":[
 					{ "data": "id", "title":"id"},
@@ -696,14 +337,14 @@ class Store{
 					{ "data": "duedate", "title":"날짜"}
 				]
 			},
-			"sales-work-list":{
+			"work":{
 				"title":"영업일지 리스트",
 				"buttonTitle":"영업일지 등록",
-				"listName":"sales-work-list",
-				"formName":"sales-work-form",
+				"name":"work",
+				"formName":"work-form",
 				"boardId":"871571433",
 				"columns":[
-					{ "data": "id", "title":"id"},
+					{ "data": "_id", "title":"id"},
 					{ "data": "name", "title":"제목"},
 					{ "data": "customerName", "title":"고객" },
 					{ "data": "companyName", "title":"고객사"},
@@ -712,18 +353,33 @@ class Store{
 					{ "data": "duedate", "title":"날짜"}
 				]
 			},
-			"custom-board":{
+			"board":{
 				"buttonTitle":"새로운 글",
-				"formName":"contents-container",
+				"name":"board",
+				"formName":"board-form",
+				"columnInvisible":[0,5,6],
 				"columns":[
-					{ "data": "no", "title":"no"},
-					{ "data": "id", "title":"id"},
-					{ "data": "duedate", "title":"날짜" },
-					{ "data": "productName", "title":"제품"},
+					{ "data": "_id", "title":"id"},
 					{ "data": "title", "title":"제목"},
-					{ "data": "companyName", "title":"고객사"},
 					{ "data": "customerName", "title":"고객"},
-					{ "data": "contents", "title":"내용" }
+					{ "data": "productName", "title":"제품"},
+					{ "data": "duedate", "title":"날짜" },
+					{ "data": "contents", "title":"내용" },
+					{ "data": "companyName", "title":"고객사"},
+					
+				]
+			},
+			"notice":{
+				"buttonTitle":"새로운 글",
+				"name":"board",
+				"formName":"board-form",
+				"columnInvisible":[0,2],
+				"order": [[3, 'desc']],
+				"columns":[
+					{ "data": "_id", "title":"id"},
+					{ "data": "title", "title":"제목"},
+					{ "data": "contents", "title":"내용" },
+					{ "data": "duedate", "title":"날짜" },
 				]
 			}
 		}

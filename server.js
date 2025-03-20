@@ -10,9 +10,17 @@ const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const clientRouter = require('./routes/client');
 const companyRouter = require('./routes/company');
+const customerRouter = require('./routes/customer');
+const productRouter = require('./routes/product');
+const workRouter = require('./routes/work');
+const sheetRouter = require('./routes/sheet');
 const fileRouter = require('./routes/file');
 const messageRouter = require('./routes/message');
 const excelRouter = require('./routes/excel');
+const memoRouter = require('./routes/memo');
+const boardInfoRouter = require('./routes/boardInfo');
+const boardRouter = require('./routes/board');
+const replyRouter = require('./routes/reply');
 const MongoStore = require('connect-mongo')
 const mongoose = require('mongoose');
 
@@ -59,20 +67,28 @@ app.use('/auth', authRouter);
 app.use('/user', userRouter );
 app.use('/client', clientRouter);
 app.use('/company', companyRouter);
+app.use('/customer', customerRouter);
+app.use('/product', productRouter);
 app.use('/upload', fileRouter);
 app.use('/message', messageRouter);
 app.use('/excel', excelRouter);
+app.use('/work', workRouter);
+app.use('/sheet', sheetRouter);
+app.use('/memo', memoRouter);
+app.use('/boardInfo', boardInfoRouter);
+app.use('/board', boardRouter);
+app.use('/reply', replyRouter)
 
 // app.listen -> server.listen 으로 변경(소켓 사용을 위해)
 app.listen(process.env.PORT,()=>{
 	console.log("starting Server port 8080??!!")
 })
 
-app.get('/dashboard/',  async(request,response)=>{
-	response.render('dashboard/index.ejs');
+app.get('/test/',  async(request,response)=>{
+	response.render('test/index.ejs');
 });
-app.get('/dashboard/dashboard',  async(request,response)=>{
-	response.render('dashboard/dashboard.ejs');
+app.get('/test/dashboard',  async(request,response)=>{
+	response.render('test/dashboard.ejs');
 });
 
 app.get('/',  async(request,response)=>{

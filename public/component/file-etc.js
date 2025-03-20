@@ -103,28 +103,27 @@ class FileEtc extends HTMLElement{
 }
 
 	#addAttachFileButton(info)
-{
-	
-			const button = document.createElement("button")
-	button.setAttribute('type', "button");
-	button.innerText = "삭제";
-	button.classList.add("command-delete-etc-file");
-	button.dataset.name = info.name;
-	button.dataset.folder = info.folder;
-	button.dataset.id = info.id;
+	{
+		
+		const button = document.createElement("button")
+		button.setAttribute('type', "button");
+		button.innerText = "삭제";
+		button.classList.add("command-delete-etc-file");
+		button.dataset.name = info.name;
+		button.dataset.folder = info.folder;
+		button.dataset.id = info.id;
 
-			const box = this.#makeDownLoadBox(info);
-			if(this.editable) box.appendChild(button);
-			this.querySelector('.etc-files').appendChild(box)
+		const box = this.#makeDownLoadBox(info);
+		if(this.editable) box.appendChild(button);
+		this.querySelector('.etc-files').appendChild(box)
+	}	
 
-}	
-
-#makeDownLoadBox(info)
-{
-	const box = document.createElement('div');
-	box.classList.add('download-box');
-	box.innerHTML = `<a href="/skin/ko/crm/files/etc/${info.name}" target="_blank">${info.name}</a>`;
-	return box;
+	#makeDownLoadBox(info)
+	{
+		const box = document.createElement('div');
+		box.classList.add('download-box');
+		box.innerHTML = `<a href="/skin/ko/crm/files/etc/${info.name}" target="_blank">${info.name}</a>`;
+		return box;
 }
 
 	#deleteInfo(formData)

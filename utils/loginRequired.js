@@ -2,7 +2,7 @@ class LoginRequired
 {
 	static redirectIfNotLogin = (req, res, next) =>{
 		if (!req.isAuthenticated()) {
-				res.redirect('/user/login');
+				res.redirect('/crm/login/'+req.params.clientId);
 				return;
 		}
 		next();

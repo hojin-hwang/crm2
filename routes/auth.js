@@ -4,9 +4,9 @@ var router = express.Router();
 const authController = require('../controllers/authController');
 
 
-router.get('/logout', (request,response)=>{
+router.get('/logout/:clientId', (request,response)=>{
 	request.logout(()=>{
-		response.redirect('/crm');
+		response.redirect('/crm/login/'+request.params.clientId);
 	})
 })
 

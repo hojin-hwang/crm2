@@ -4,14 +4,18 @@ const fileConfig = require('../config/fileConfig');
 class FileValidator {
     static validateFileType(mimetype, filename) {
         // 파일 타입 검사
-        if (!fileConfig.upload.allowedTypes.includes(mimetype)) {
-            throw new Error('지원하지 않는 파일 형식입니다.');
-        }
+        // if (!fileConfig.upload.allowedTypes.includes(mimetype)) {
+        //     throw new Error('지원하지 않는 파일 형식입니다.');
+        // }
 
         // 파일 확장자 검사
         const ext = path.extname(filename).toLowerCase();
-        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.pdf'];
-        if (!allowedExtensions.includes(ext)) {
+        // const allowedExtensions = ['.jpg', '.jpeg', '.png', '.pdf'];
+        // if (!allowedExtensions.includes(ext)) {
+        //     throw new Error('지원하지 않는 파일 확장자입니다.');
+        // }
+        const notAllowedExtensions = ['.ext'];
+        if (notAllowedExtensions.includes(ext)) {
             throw new Error('지원하지 않는 파일 확장자입니다.');
         }
     }

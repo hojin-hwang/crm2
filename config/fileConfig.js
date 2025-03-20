@@ -4,7 +4,7 @@ const MB = KB * 1024;
 module.exports = {
     upload: {
         maxSize: 5 * MB,  // 5MB
-        allowedTypes: ['image/jpeg', 'image/png', 'application/pdf'],
+        allowedTypes: ['image/jpeg', 'image/png',  'image/svg+xml', 'image/gif', 'application/pdf'],
         destination: 'public/uploads/',
     },
     image: {
@@ -12,6 +12,6 @@ module.exports = {
             width: 600,
             quality: 80,
         },
-        allowedTypes: ['image/jpeg', 'image/png'],
+        allowedTypes: ['image/jpeg', 'image/png', 'image/svg+xml', 'image/gif'],
     }
 }; 

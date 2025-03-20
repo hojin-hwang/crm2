@@ -1,0 +1,28 @@
+1. Client 생성시 만들어야 되는 것들
+		0. 필드(이름, clientId,  기본 비밀번호, 등급, 게시물갯수, 파일사이즈, 상태(삭제, 대기, 운영), )
+    1. User
+        1. admin
+        2. super admin
+				3. 일반 유저
+    2. Company
+    3. Customer
+    4. Product
+		5. BoardIndfo
+				1. user : all users
+				2. notice
+    5. Board
+				1. notice
+					1. file 있는 게시물
+
+2. 만들어야 되는 것들
+    1. card-header (접근권한 확인)
+    2. dash-board
+        1. loading basic data
+						(user, company, customer, boardInfo, product)
+    3. client/login
+    4. file delete when board, sheet delete
+    5. adjust file name when etc file uploads
+		6. boardInfo : notice - 사용자 관리 안하기
+				1. 삭제, 살리기 토글
+				2. 삭제된 게시판만 - 내용지우기
+		

@@ -1,4 +1,4 @@
-// 상수 정의
+// 상수 정의 ClientInfo로 빼자..
 const DEFAULT_PASSWORD = 'sooyk@1234';
 const FORM_CONFIG = {
     departments: ['경영진', '생산부', '관리부', '영업부', '기타'],
@@ -32,7 +32,7 @@ class UserForm extends AbsForm
     {
         if(data)
         {
-            Object.assign(this.data, store.getInfo(this.data.listName,'_id', data._id));
+            Object.assign(this.data, store.getInfo('user','_id', data._id));
             this.data["isNew"] = "update";
         }
         else
@@ -119,9 +119,10 @@ class UserForm extends AbsForm
             }
         </style>
         <div class="card">
-            <div class="card-header">
+            <div class="card-header form-header row-space-between">
                 <span class="fw-semibold">사용자 정보</span>
-                <button type="button" class="btn btn-outline-link m-1 command-close-modal"><i class="ti ti-x fs-8"></i></button>
+                <button type="button" class="btn btn-icon btn-black command-close-modal">
+                <i class="fas fa-times"></i></button>
             </div>
             <div class="card-body">
                 <div class="card">
@@ -139,10 +140,10 @@ class UserForm extends AbsForm
                         </div>
 
                         <div class="mb-3 repassword-check">
-                            <label for="init_password" class="form-label">비밀번호 초기화</label>
+                            <label for="repassword" class="form-label">비밀번호 초기화</label>
                             <div>
                             <input type="checkbox" class="form-check-input command-check-repassword" id="repassword">
-                            <label for="init_repassword" class="form-check-label">${DEFAULT_PASSWORD}로 초기화</label>
+                            <label for="repassword" class="form-check-label">${DEFAULT_PASSWORD}로 초기화</label>
                             </div>
                         </div>
                         <hr>
@@ -174,17 +175,14 @@ class UserForm extends AbsForm
                                     ).join('')}
                                 </select>
                             </div>
-
-                            <div class="mb-3 row-space-between">
-                                <div>
-                                    <label for="user_degree" class="form-label mb-3">상태</label>
-                                        <select name="degree" id="user_degree" class="form-select">
-                                            ${FORM_CONFIG.degrees.map(deg => 
-                                                `<option value="${deg}">${deg}</option>`
-                                            ).join('')}
-                                        </select>
-                                </div>
-                            </div>         
+                            <div>
+                                <label for="user_degree" class="form-label mb-3">상태</label>
+                                    <select name="degree" id="user_degree" class="form-select">
+                                        ${FORM_CONFIG.degrees.map(deg => 
+                                            `<option value="${deg}">${deg}</option>`
+                                        ).join('')}
+                                    </select>
+                            </div>
                         </div>
                         
                     </form>

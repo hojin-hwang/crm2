@@ -136,6 +136,16 @@ class NavBar extends AbstractComponent
     document.querySelector('.container-fluid').appendChild(tag);
   }
   
+  #changeTableContents(node)
+  {
+    const _list = new TableList(globalThis.config[node.getAttribute('tag')]);
+    _list.setAttribute('action', 'view');
+    _list.setAttribute('id', util.secureRandom())
+
+    document.querySelector('.container-fluid').innerHTML = '';
+    document.querySelector('.container-fluid').appendChild(_list);
+  }
+
   #showSalesSheetList(node)
   {
     document.querySelector('.container-fluid').innerHTML = '';
@@ -152,15 +162,7 @@ class NavBar extends AbstractComponent
     document.querySelector('.container-fluid').appendChild(boardInfo);
   }
 
-  #changeTableContents(node)
-  {
-    document.querySelector('.container-fluid').innerHTML = '';
-
-    const _list = new TableList(globalThis.config[node.getAttribute('tag')]);
-    _list.setAttribute('action', 'view');
-    _list.setAttribute('id', util.secureRandom())
-    document.querySelector('.container-fluid').appendChild(_list);
-  }
+  
 
   #showCustomBoard(node)
   {

@@ -4,9 +4,50 @@ const uuid4 = require('uuid4');
 const path = require("path");
 const sharp = require('sharp');
 const fs = require('fs');
+const mime = require('mime-types');
 const fileConfig = require('../config/fileConfig');
 const FileValidator = require('../utils/fileValidator');
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
+
+exports.list = async (req, res) => {
+	try {
+		const {
+			page = 1,
+			limit = 10,
+			search = '',
+			sortBy = 'date',
+			order = 'desc'
+		} = req.query;
+
+		// 검색 조건 구성
+		const query = { contentsId : req.body.contentsId, clientId: req.user.clientId };
+		if (search) {
+			query.$or = [
+				{ name: { $regex: search, $options: 'i' } },
+				{ email: { $regex: search, $options: 'i' } },
+				{ description: { $regex: search, $options: 'i' } }
+			];
+		}
+		// 정렬 조건
+		const sort = { [sortBy]: order === 'desc' ? -1 : 1 };
+
+		// 페이지네이션 적용하여 데이터 조회
+		const files = await File.find(query)
+			.sort(sort)
+			.lean()
+			.exec();
+
+		const fileList = files.map(file => ({
+			...file,
+		}));
+
+		return sendSuccessResponse(res, {
+			list: fileList
+		}, "파일 목록을 조회했습니다.");
+	} catch(error) {
+		return sendErrorResponse(res, 500, "파일 목록 조회 중 오류가 발생했습니다.", error.message);
+	}
+};
 
 const upload = multer({
 	storage: multer.diskStorage({
@@ -25,7 +66,7 @@ const upload = multer({
 		},
 		destination(req, file, done) {
 			// 업로드 디렉토리 존재 확인
-			const uploadDir = fileConfig.upload.destination;
+			const uploadDir = fileConfig.upload.destination + `/${req.user.clientId}`;
 			if (!fs.existsSync(uploadDir)) {
 				fs.mkdirSync(uploadDir, { recursive: true });
 			}
@@ -41,7 +82,7 @@ const upload = multer({
 			done(error, false);
 		}
 	}
-}).single('myFile');
+}).single('boardFile');
 
 // Promise 기반 미들웨어 래퍼 함수
 const uploadMiddlewarePromise = (req, res) => {
@@ -66,6 +107,8 @@ exports.uploadFile = async (req, res) => {
 			FileValidator.validateImageDimensions(metadata.width, metadata.height);
 		}
 		
+		
+
 		await resizeImage(req);
 		
 		const fileData = {
@@ -74,8 +117,26 @@ exports.uploadFile = async (req, res) => {
 			mimetype: req.file.mimetype,
 			path: req.file.path,
 		};
+
+		try {
+			const {...createData } = fileData;
+	
+			createData["clientId"] = req.user.clientId;
+			createData["contentsId"] = req.body.contentsId;
+			
+			const file = new File(createData);
+			const savedData = await file.save();
+	
+			const responseData = {
+				...savedData._doc,
+			};
+	
+			return sendSuccessResponse(res,responseData, "파일 정보가 등록되었습니다.");
+		} catch(error) {
+			return sendErrorResponse(res, 500, "파일 정보 생성 중 오류가 발생했습니다.", error.message);
+		}
+
 		
-		return sendSuccessResponse(res, fileData);
 	} catch (error) {
 		// 업로드된 파일이 있다면 삭제
 		if (req.file && req.file.path) {
@@ -103,15 +164,37 @@ exports.deleteFile = async (req, res) => {
 		FileValidator.validateFileName(req.body.name);
 		
 		// 파일 경로 검증
-		const filePath = path.join(fileConfig.upload.destination, req.body.name);
+		const filePath = path.join(fileConfig.upload.destination + `/${req.user.clientId}`, req.body.name);
 		const normalizedPath = path.normalize(filePath);
 		if (!normalizedPath.startsWith(path.normalize(fileConfig.upload.destination))) {
 			return sendErrorResponse(res, 400, '잘못된 파일 경로입니다.');
 		}
-		
-		await fs.promises.unlink(filePath);
-		return sendSuccessResponse(res, { name: req.body.name });
-	} catch(error) {
+
+		try {
+			const { name, boardId } = req.body;
+			
+			await File.deleteOne({name, boardId, clientId: req.user.clientId});
+			
+			const responseData = {};
+			responseData.name = req.body.name;
+
+			fs.stat(filePath, (err, stats) => {
+				if (err) {
+					console.error('파일을 찾을 수 없습니다.', err);
+					return;
+				}
+				responseData.size = stats.size;
+				responseData.mimetype = mime.lookup(filePath);
+			});
+			await fs.promises.unlink(filePath);
+
+			return sendSuccessResponse(res, responseData, "파일 정보가 삭제 되었습니다.");
+		} catch(error) {
+			return sendErrorResponse(res, 500, "파일 정보 삭제 중 오류가 발생했습니다.", error.message);
+		}
+		//client정보 업데이트 하자
+	} 
+	catch(error) {
 		if (error.code === 'ENOENT') {
 			return sendErrorResponse(res, 404, '파일을 찾을 수 없습니다.');
 		}

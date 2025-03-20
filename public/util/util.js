@@ -390,6 +390,13 @@ util.randomFloat = function(){
     return int;
 }
 
+//Random  ObjectId
+util.generateObjectId = () => {
+  const timestamp = Math.floor(Date.now() / 1000).toString(16);
+  const randomPart = [...Array(16)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+  return timestamp + randomPart;
+};
+
 // Random 문자열 생성
 util.getRandomId = function()
 {
