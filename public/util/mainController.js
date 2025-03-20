@@ -37,9 +37,18 @@ class MainController
       {collection:"customer", complete:false},
       {collection:"product", complete:false},
     ]
+
+    if(globalThis.user.degree === "대기")
+    {
+      this.#waitingInfo()
+    }
+    else
+    {
+      this.#loadingData();  
+    }
   }
 
-  loadingData(){
+  #loadingData(){
       this.dataList.forEach(data=>{
       store.getDataList(data.collection,false, "GET_INIT_DATA", null);
     })
@@ -105,30 +114,21 @@ class MainController
     }
   }
 
-  // <div class="wrapper">
-  //     <nav-left></nav-left>
+  #waitingInfo()
+  {
+    const body = document.querySelector('body');
+    body.appendChild(new ModalPage());
+    const _tempInfo = {"tagName":'waiting-user-info', "info":null}
+    const _message = {msg:"DO_SHOW_MODAL", data:_tempInfo}
+    window.postMessage(_message, location.href);
+  }
 
-  //     <div class="main-panel">
-  //       <nav-bar></nav-bar>
-  //         <div class="container">
-  //           <div class="page-inner">
   
-  //           </div>
-  //         </div>
-        
-
-  //       <footer-bar></footer-bar>
-  //     </div>
-
-  //     <modal-page></modal-page>
-  //     <search-list></search-list>
-  //   </div>
 
   #removeListener()
   {
     if(this.#isCompleteLoadingData() )
     {
-      console.log("remove listener!")
       window.removeEventListener("message", this.messageListener);
     }
   }
@@ -140,3 +140,5 @@ class MainController
   }
 
 }
+
+

@@ -79,14 +79,14 @@ class SheetView extends AbsForm
         if(this.data["_id"]) this.#setModalCondition();
         if(!this.data["memo"]) this.querySelector('.command-show-memo').classList.add('hidden')
         this.querySelector('.product-zone').appendChild(new ProductUpload(this.data.product, false))
-        //this.#getProductList();
+        
         const formData = new FormData();
         formData.append("sheet", this.data["_id"]);
-        //store.getSheetSalesWorkList(this.data["_id"]);
-        //store.getSheetSalesMemoList(this.data["_id"]);
-        //store.getDataList(formData, "memo", "GET_SALES_MEMO_LIST")
         store.getDataList("work",false, "GET_SALES_WORK_LIST", formData)
         store.getDataList("memo",false, "GET_SALES_MEMO_LIST", formData)
+        
+        this.#appendFileUpload();
+        
     }
     
     #handleToggleClass(className)
@@ -106,24 +106,7 @@ class SheetView extends AbsForm
         {
             Object.assign(this.data, store.getInfo('sheet','_id', data._id));
         }
-        
     }
-    
-    #getProductList()
-    {
-        this.data.product.forEach(product => {
-            const product_info = store.getInfo('product', '_id', product.id);
-            if(product_info) this.#addProduct(product_info.name, product.type)
-        });
-    }
-
-    #addProduct(name, type)
-    {
-        const span = `
-	        <label class="selectgroup-item"><span class="selectgroup-button ${type}">${name}</span></label>`;
-        this.querySelector('.product-group').innerHTML += span;
-    }
-
 
     #appendWorkList()
     {
@@ -144,6 +127,13 @@ class SheetView extends AbsForm
         this.querySelector('.sales-work-list').innerHTML = card;
     }
 
+    #appendFileUpload()
+    {
+        const fileUpload = new FileUpload(this.data)
+        fileUpload.setAttribute('editable', false);
+        this.querySelector('.card-body .container .file-zone').appendChild(fileUpload);
+    }
+
     #appendMemoList()
     {
         this.memo_list.forEach(memo=>{
@@ -161,7 +151,6 @@ class SheetView extends AbsForm
     #getMemo(memo)
     {
         return (memo)? `<hr><div class="mb-3"><pre>${memo}</pre></div>` : '';
-        
     }
 
     #getRemark(remark)
@@ -294,7 +283,7 @@ class SheetView extends AbsForm
             }
         </style>
         <div class="sheet-form sheet-view">
-            <div class="card">
+            <div class="card main">
                 <div class="card-header  form-header row-space-between">
                     <div>
                         <span class="fw-semibold mr-3">${this.data.name}</span>
@@ -323,8 +312,7 @@ class SheetView extends AbsForm
                             <div class="sales-work-list">
                             </div>
                             <hr>
-                            <file-image editable="false" contentsid="${this.data.id}" new="false"></file-image>
-                            <file-etc editable="false" contentsid="${this.data.id}" new="false"></file-etc>
+                            <div class="file-zone"></div>
                         </div>
                     </div>
                 </div>

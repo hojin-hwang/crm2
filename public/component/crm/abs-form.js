@@ -43,7 +43,7 @@ class AbsForm extends AbstractComponent
                         return;
                     }
                 }
-                if(this.data.isNew === 'update') store.updateInfo(_form, this.data.collection, "COMMAND_CHANGE_DATA");
+                if(!this.data.isNew) store.updateInfo(_form, this.data.collection, "COMMAND_CHANGE_DATA");
                 else store.addInfo(_form, this.data.collection, "COMMAND_CHANGE_DATA");
                 this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
                 this.sendPostMessage({msg:"HIDE_SEARCH_LIST", data:null});
@@ -193,7 +193,6 @@ class AbsForm extends AbstractComponent
         this.showDelete();
         this.showSave();
         this.afterRender();
-
     }
     
     afterRender()
@@ -203,12 +202,12 @@ class AbsForm extends AbstractComponent
 
     showDelete()
     {
-        if(this.#isAuthorized() && this.data.isNew !== 'save') this.querySelector('.command-show-delete-button').classList.remove('hidden');
+        if(this.#isAuthorized() && !this.data.isNew) this.querySelector('.command-show-delete-button').classList.remove('hidden');
     }
 
     showSave()
     {   
-        if(this.data.isNew === 'save') return;
+        if(this.data.isNew) return;
         if(!this.#isAuthorized())
         {
             this.querySelector('.command-save-form').classList.add('hidden');

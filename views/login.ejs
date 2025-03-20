@@ -53,6 +53,8 @@
 	<script src="/util/util.js"></script>
 
 	<script>
+    const clientId = JSON.parse(`<%= JSON.stringify(clientId) %>`.replaceAll('&#34;', '\"'));
+
 		document.addEventListener('DOMContentLoaded', function () {
 		document.addEventListener('click', handleClick);
 
@@ -66,7 +68,7 @@
 								const form = node.closest('form');
 								const formData = new FormData(form);
 								util.sendFormData("/auth/login", "POST", formData ).then((response) => {
-									if(response.success && response.data.loginSuccess) location.href = ("/crm");
+									if(response.success && response.data.loginSuccess) location.href = ("/crm/"+response.data.clientId);
                   else {
                     alert(response.message);
                   }
@@ -75,11 +77,11 @@
 							}
              if(node.className.match(/command-move-register/))
 						 {
-							location.href = '/user/register'
+							location.href = '/user/register?clientId='+clientId
 						 }
              if(node.className.match(/command-google-login/))
 						 {
-							location.href = '/auth/google'
+							location.href = '/auth/google?clientId='+clientId
 						 }
 				 });
 		 }

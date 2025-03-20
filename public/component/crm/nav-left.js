@@ -40,6 +40,13 @@ class NavLeft extends AbstractComponent
         this.#showSheetList(node);
         return;
       }
+      if(node.className.match(/command-close-nav-left/))
+      {
+        this.#hideThisBar();
+        node.classList.toggle('command-close-nav-left')
+        return;
+      }
+      
     });
   }
 
@@ -54,7 +61,10 @@ class NavLeft extends AbstractComponent
           case "SELECT_TABLE_MENU":
             this.#changeTableContents(event.data.data);
           break;
-          case "SELECT_CONTENTS_MENU":
+          case "DO_SHOW_NAV_LEFT":
+            console.log("FDFDDFDS")
+            this.#showThisBar();
+            this.#appendCloseCommand();
             //this.#selectContentsMenu(event.data.data)
           break;
           case "SELECT_BOARD_MENU":
@@ -78,6 +88,12 @@ class NavLeft extends AbstractComponent
     this.render();
   }
 
+  disconnectedCallback()
+  {
+    window.removeEventListener("message", this.messageListener)
+    this.removeEventListener("click", this.handleClick)
+  }
+
   render()
   {
     const template = this.#getTemplate();
@@ -85,8 +101,27 @@ class NavLeft extends AbstractComponent
 
     this.#showBasicBoard();
     this.#appendCustomerBoard();
-    if(this.#isManager()) this.#removeManagerMenu()
+    if(!this.#isManager()) this.#removeManagerMenu()
     return;
+  }
+
+  #showThisBar()
+  {
+    this.querySelector('.sidebar').classList.add('show')
+    this.querySelector('.sidebar-logo').classList.add('show')
+    this.querySelector('.nav-toggle').classList.add('show')
+  }
+
+  #hideThisBar()
+  {
+    this.querySelector('.sidebar').classList.remove('show')
+    this.querySelector('.sidebar-logo').classList.remove('show')
+    this.querySelector('.nav-toggle').classList.remove('show')
+  }
+
+  #appendCloseCommand()
+  {
+    this.querySelector('.nav-toggle').classList.toggle('command-close-nav-left')
   }
 
   #isManager()
@@ -149,7 +184,6 @@ class NavLeft extends AbstractComponent
   #removeManagerMenu()
   {
     this.querySelector('ul.manage-menu')?.remove();
-    console.log(this.querySelector('ul.manage-menu'))
   }
 
   #changeTableContents(collection)
@@ -193,6 +227,16 @@ class NavLeft extends AbstractComponent
   {
       const tempalate = document.createElement('template');
       tempalate.innerHTML = `
+        <style>
+          .sidebar.show{
+            transform: translate3d(0, 0, 0) !important;
+          }
+          .sidebar-logo.show{
+            display:block;
+          }
+          .nav-toggle.show{right: 18px!important;justify-content: right;}
+
+        </style>
         <div class="sidebar" data-background-color="dark">
         <div class="sidebar-logo">
           <div class="logo-header" data-background-color="dark">
@@ -209,12 +253,12 @@ class NavLeft extends AbstractComponent
                 <i class="gg-menu-right"></i>
               </button>
               <button class="btn btn-toggle sidenav-toggler">
-                <i class="gg-menu-left"></i>
+                <i class="fas fa-times"></i>
               </button>
             </div>
-            <button class="topbar-toggler more">
+            <!--<button class="topbar-toggler more">
               <i class="gg-more-vertical-alt"></i>
-            </button>
+            </button>-->
           </div>
         </div>
         <div class="sidebar-wrapper scrollbar scrollbar-inner">
@@ -236,13 +280,13 @@ class NavLeft extends AbstractComponent
 
                 <li class="nav-item hidden sheet">
                   <a href="#" class="command-show-sheet-list" tag="sheet">
-                    <i class="fas fa-book"></i>
+                    <i class="fas fa-briefcase"></i>
                     <p>영업기회</p>
                   </a>
                 </li>
                 <li class="nav-item hidden work">
                   <a href="#" class="command-show-table" tag="work">
-                    <i class="fas fa-paste"></i>
+                    <i class="fas fa-book"></i>
                     <p>영업일지</p>
                   </a>
                 </li>

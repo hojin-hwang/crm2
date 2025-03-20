@@ -35,10 +35,6 @@ class BoardCheck extends HTMLElement{
     connectedCallback() {
         this._render();
     }
-        
-    disconnectedCallback(){
-        window.removeEventListener("message", this.receiveMessage);
-    }
     
     attributeChangedCallback(name, oldValue, newValue) {
         if(name == 'contentsid') this.contentsId = newValue;

@@ -86,8 +86,10 @@
     <script src="/component/crm/board-check.js"></script>
     <script src="/component/crm/board-reply.js"></script>
     <script src="/component/crm/board-user-form.js"></script>
+    <script src="/component/crm/password-form.js"></script>
     <script src="/component/crm/file-upload.js"></script>
     
+    <script src="/component/crm/waiting-user-info.js"></script>
     <!-- Fonts and icons -->
     <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -117,7 +119,7 @@
 
         const mainController = new MainController(_userInfo_s, _clientInfo_s);
         mainController.init();
-        mainController.loadingData();
+        //mainController.loadingData();
         //document.querySelector('nav-left').setAttribute('degree', globalThis.user.degree);
         
 

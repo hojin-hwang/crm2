@@ -32,8 +32,8 @@ exports.create = async (req, res, next) => {
 			return sendErrorResponse(res, 400, '입력값이 유효하지 않습니다.', validationErrors);
 		}
 
-		delete createData._id;
-		
+		//delete createData._id;
+		createData["_id"] = ObjectId.createFromHexString(createData._id);
 		createData["clientId"] = req.user.clientId;
 		createData["user"] = ObjectId.createFromHexString(createData.user);
 		createData["company"] = ObjectId.createFromHexString(createData.company);

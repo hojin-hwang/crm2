@@ -35,3 +35,18 @@ input[type='number'] {
     margin-bottom: 0px;
     padding-bottom: 0px;
 }
+
+.swal-overlay{
+    z-index: 1024;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    min-width: 320px;
+    margin: 0px auto;
+    background-color: rgba(223, 229, 239, 0.63);
+    position: fixed;
+    top: 0px;
+    left: -400px;
+    transform: translate3d(400px, 0px, 0px);
+    transition: 0.5s;
+}

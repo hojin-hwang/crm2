@@ -32,8 +32,8 @@ exports.create = async (req, res, next) => {
 			return sendErrorResponse(res, 400, '입력값이 유효하지 않습니다.', validationErrors);
 		}
 
-		delete createData._id;
-		
+		// delete createData._id;
+		createData["_id"] = ObjectId.createFromHexString(createData._id);
 		createData["clientId"] = req.user.clientId;
 		createData["user"] = ObjectId.createFromHexString(createData.user);
 		createData["company"] = ObjectId.createFromHexString(createData.company);
@@ -46,11 +46,15 @@ exports.create = async (req, res, next) => {
 		const workData = {
 			...savedWork._doc,
 			userId: savedWork.user,
+			companyId: savedWork.company,
+			customerId: savedWork.customer,
+			sheetId: savedWork.sheet,
 			userName:createData.userName,
 			companyName:createData.companyName,
 			customerName:createData.customerName,
 			sheetName:createData.sheetName,
-			date: savedWork.date.toISOString().substring(0,10)
+			date: savedWork.date.toISOString().substring(0,10),
+			duedate: savedWork.duedate.toISOString().substring(0,10)
 		};
 
 		return sendSuccessResponse(res, { info: workData }, "일지 정보가 등록되었습니다.");

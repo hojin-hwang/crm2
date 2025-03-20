@@ -10,7 +10,7 @@ class CustomerForm extends AbsForm
         if(data)
         {
             Object.assign(this.data, store.getInfo('customer', '_id', data._id));
-            this.data["isNew"] = 'update'
+            this.data["isNew"] = false
         }
         else
         {
@@ -27,7 +27,7 @@ class CustomerForm extends AbsForm
             _data["memo"] = "";
             _data["address"] = "";
             _data["companyAddress"] = "";
-            _data["isNew"] = "save";
+            _data["isNew"] = true;
             _data["userId"] = globalThis.user._id;
             _data["userName"] = globalThis.user.name;
             _data["company"] = "";

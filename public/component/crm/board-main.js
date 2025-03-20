@@ -10,11 +10,7 @@ class BoardMain extends AbstractComponent{
     connectedCallback() {
         this.#render();
     }
-        
-    disconnectedCallback(){
-        window.removeEventListener("message", this.receiveMessage);
-    }
-    
+          
     attributeChangedCallback(name, oldValue, newValue) {
         if(name == 'boardid') this.boardId = newValue;
         if(name == 'id') this.contentsId = newValue;
@@ -50,8 +46,8 @@ class BoardMain extends AbstractComponent{
                         const boardContents = new BoardContents(this.data);
                         boardContents.setAttribute("id", this.contentsId);
                         this.appendChild(boardContents);
-                        const fileImage = new FileUpload(this.data)
-                        this.appendChild(fileImage);                        
+                        const fileUpload = new FileUpload(this.data)
+                        this.appendChild(fileUpload);                        
                         return;
                     }
                     else
@@ -71,8 +67,8 @@ class BoardMain extends AbstractComponent{
             const defaultData = {isNew:true, boardId : this.boardId, _id:util.generateObjectId()}
             const boardContents = new BoardContents(defaultData);
             this.appendChild(boardContents);
-            const fileImage = new FileImage(defaultData)
-            this.appendChild(fileImage);
+            const fileUpload = new FileUpload(defaultData)
+            this.appendChild(fileUpload);
         }
     }
 

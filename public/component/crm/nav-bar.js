@@ -6,40 +6,29 @@ class NavBar extends AbstractComponent
     if(info) Object.assign(this.info, info);
   }
 
-  static get observedAttributes(){return [];}
-
   handleClick(e) {
-    //e.preventDefault();
+    e.preventDefault();
     e.composedPath().find((node)=>{
       if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
       if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
-      if(node.className.match(/command-show-table/))
+      if(node.className.match(/command-user-logout/))
       {
-        
+        location.href = `/auth//logout/${globalThis.user.clientId}`
+        return;
+      }
+      if(node.className.match(/command-show-password-form/))
+      {
+        this.#showPasswordForm();
+        return;
+      }
+      if(node.className.match(/command-show-nav-left/))
+      {
+        const _message = {msg:"DO_SHOW_NAV_LEFT", data:null}
+        window.postMessage(_message, location.href);
         return;
       }
       
     });
-  }
-
-  onMessage(event)
-  {
-    const window_url = window.location.hostname;
-    if(event.origin.indexOf(window_url) < 0) return;
-    if(event.data.msg)
-    {
-        switch(event.data.msg)
-        {
-          default:
-          break;
-            
-        }
-    }
-  }
-
-  connectedCallback()
-  {
-    this.render();
   }
 
   render()
@@ -47,6 +36,13 @@ class NavBar extends AbstractComponent
     const template = this.#getTemplate();
     if(template) this.appendChild(template.content.cloneNode(true));
     return;
+  }
+
+  #showPasswordForm()
+  {
+    const _tempInfo = {"tagName":'password-form', "info":this.info}
+    const _message = {msg:"DO_SHOW_MODAL", data:_tempInfo}
+    window.postMessage(_message, location.href);
   }
 
 
@@ -58,7 +54,7 @@ class NavBar extends AbstractComponent
           <div class="main-header-logo">
             <!-- Logo Header -->
             <div class="logo-header" data-background-color="dark">
-              <a href="index.html" class="logo">
+              <a href="/crm/${globalThis.user.clientId}" class="logo">
                 <img
                   src="/assets/img/kaiadmin/logo_light.svg"
                   alt="navbar brand"
@@ -66,7 +62,7 @@ class NavBar extends AbstractComponent
                   height="20"
                 />
               </a>
-              <div class="nav-toggle">
+              <div class="nav-toggle command-show-nav-left">
                 <button class="btn btn-toggle toggle-sidebar">
                   <i class="gg-menu-right"></i>
                 </button>
@@ -87,88 +83,6 @@ class NavBar extends AbstractComponent
             <div class="container-fluid">
 
               <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-          
-                
-                <li class="nav-item topbar-icon dropdown hidden-caret">
-                  <a
-                    class="nav-link dropdown-toggle"
-                    href="#"
-                    id="notifDropdown"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    <i class="fa fa-bell"></i>
-                    <span class="notification">4</span>
-                  </a>
-                  <ul
-                    class="dropdown-menu notif-box animated fadeIn"
-                    aria-labelledby="notifDropdown"
-                  >
-                    <li>
-                      <div class="dropdown-title">
-                        You have 4 new notification
-                      </div>
-                    </li>
-                    <li>
-                      <div class="notif-scroll scrollbar-outer">
-                        <div class="notif-center">
-                          <a href="#">
-                            <div class="notif-icon notif-primary">
-                              <i class="fa fa-user-plus"></i>
-                            </div>
-                            <div class="notif-content">
-                              <span class="block"> New user registered </span>
-                              <span class="time">5 minutes ago</span>
-                            </div>
-                          </a>
-                          <a href="#">
-                            <div class="notif-icon notif-success">
-                              <i class="fa fa-comment"></i>
-                            </div>
-                            <div class="notif-content">
-                              <span class="block">
-                                Rahmad commented on Admin
-                              </span>
-                              <span class="time">12 minutes ago</span>
-                            </div>
-                          </a>
-                          <a href="#">
-                            <div class="notif-img">
-                              <img
-                                src="/assets/img/profile2.jpg"
-                                alt="Img Profile"
-                              />
-                            </div>
-                            <div class="notif-content">
-                              <span class="block">
-                                Reza send messages to you
-                              </span>
-                              <span class="time">12 minutes ago</span>
-                            </div>
-                          </a>
-                          <a href="#">
-                            <div class="notif-icon notif-danger">
-                              <i class="fa fa-heart"></i>
-                            </div>
-                            <div class="notif-content">
-                              <span class="block"> Farrah liked Admin </span>
-                              <span class="time">17 minutes ago</span>
-                            </div>
-                          </a>
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <a class="see-all" href="javascript:void(0);"
-                        >See all notifications<i class="fa fa-angle-right"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                
-
                 <li class="nav-item topbar-user dropdown hidden-caret">
                   <a
                     class="dropdown-toggle profile-pic"
@@ -178,47 +92,22 @@ class NavBar extends AbstractComponent
                   >
                     <div class="avatar-sm">
                       <img
-                        src="/assets/img/profile.jpg"
+                        src="${globalThis.user.profile}"
                         alt="..."
                         class="avatar-img rounded-circle"
                       />
                     </div>
                     <span class="profile-username">
                       <span class="op-7">Hi,</span>
-                      <span class="fw-bold">Hizrian</span>
+                      <span class="fw-bold">${globalThis.user.name}</span>
                     </span>
                   </a>
                   <ul class="dropdown-menu dropdown-user animated fadeIn">
                     <div class="dropdown-user-scroll scrollbar-outer">
                       <li>
-                        <div class="user-box">
-                          <div class="avatar-lg">
-                            <img
-                              src="/assets/img/profile.jpg"
-                              alt="image profile"
-                              class="avatar-img rounded"
-                            />
-                          </div>
-                          <div class="u-text">
-                            <h4>Hizrian</h4>
-                            <p class="text-muted">hello@example.com</p>
-                            <a
-                              href="profile.html"
-                              class="btn btn-xs btn-secondary btn-sm"
-                              >View Profile</a
-                            >
-                          </div>
-                        </div>
-                      </li>
-                      <li>
+                        <a class="dropdown-item command-show-password-form" href="#">Account Setting</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">My Profile</a>
-                        <a class="dropdown-item" href="#">My Balance</a>
-                        <a class="dropdown-item" href="#">Inbox</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Account Setting</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Logout</a>
+                        <a class="dropdown-item command-user-logout" href="#">Logout</a>
                       </li>
                     </div>
                   </ul>

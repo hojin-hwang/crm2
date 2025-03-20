@@ -70,6 +70,7 @@ class ModalPage extends AbstractComponent
         const body = this.querySelector('.modal');
         if(this.z_index) body.style.zIndex = this.z_index;
         else body.style.zIndex = "1024";
+        
         body.style.display = " block";
         body.style.width = " 100vw";
         body.style.height = "100vh";

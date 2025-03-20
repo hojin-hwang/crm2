@@ -16,6 +16,7 @@ const userSchema = new mongooes.Schema({
 		snsId: {type: String, required: false},
 		provider: {type: String, required: false},
 		email: {type: String, required: false},
+		profile: {type: String, required: false},
 		date:{type: Date, required: true, default: Date.now},
 });
 

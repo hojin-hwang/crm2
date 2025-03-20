@@ -10,10 +10,11 @@ class FileUpload extends HTMLElement{
         this.BOXSIZE = 6;
         this.addEventListener('click', this.handleClick);
         this.data = {};
-        Object.assign(this.data, data)
+        Object.assign(this.data, data);
+        this.editable = true;
      }
      
-    static get observedAttributes() {return []; }
+    static get observedAttributes() {return ['editable']; }
      
     post_message(message, data = null)
     {
@@ -43,7 +44,6 @@ class FileUpload extends HTMLElement{
     }
         
     disconnectedCallback(){
-        window.removeEventListener("message", this.receiveMessage);
         // Swiper 인스턴스 정리
         if (this.swiper) {
             this.swiper.destroy();
@@ -59,16 +59,15 @@ class FileUpload extends HTMLElement{
     }
     
     attributeChangedCallback(name, oldValue, newValue) {
-        
+        this[name] = JSON.parse(newValue)
     }
   
     _render()
     {
-        
         const template = this.#getTemplate();
         if(template) this.appendChild(template.content.cloneNode(true));
 
-        if(!this.#isAuthorized()) this.querySelector('input[type=file]').classList.add('hidden');
+        if(!this.#isAuthorized() || !this.editable) this.querySelector('input[type=file]').classList.add('hidden');
         this.querySelector('input[type=file]').addEventListener('change', e => this._load_image(e));
 
         this.slidesPerView = 2;
@@ -146,7 +145,7 @@ class FileUpload extends HTMLElement{
 
     #addAttachFileButton(info, id)
 	{
-        if(!this.#isAuthorized()) return;
+        if(!this.#isAuthorized()  || !this.editable) return;
         const button = document.createElement("button")
 		button.setAttribute('type', "button");
         button.classList.add("btn", "btn-icon")
@@ -380,9 +379,6 @@ class FileUpload extends HTMLElement{
                 </div>
             </div>    
             <div class="etc-files"></div>
-							
-					
-            
         `;  
         return tempalate;
     }

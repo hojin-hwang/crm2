@@ -9,13 +9,25 @@ class SheetForm extends AbsForm
     {
         util.selectOption(this, '#sheet_status', this.data["status"]);
         util.selectOption(this, '#sheet_step', this.data["step"])
-        if(this.data["isNew"] === 'update') this.querySelector('.command-show-delete-button').classList.remove('hidden');
-        if(this.data["isNew"] === 'update') this.#setModalCondition();
+        if(!this.data["isNew"]) this.querySelector('.command-show-delete-button').classList.remove('hidden');
+        if(!this.data["isNew"]) this.#setModalCondition();
 
         this.querySelector('.product-zone').appendChild(new ProductUpload(this.data.product, true))
 
         this.showDelete();
         this.showSave();
+
+        if(this.data["isNew"])
+        {
+            const fileUpload = new FileUpload({isNew:true, _id:this.data._id})
+            this.querySelector('.card.main .card-body').appendChild(fileUpload);
+        }
+        else
+        {
+            const fileUpload = new FileUpload(this.data)
+            this.querySelector('.card.main .card-body').appendChild(fileUpload);
+        }
+          
     }
 
     #setModalCondition()
@@ -28,12 +40,12 @@ class SheetForm extends AbsForm
         if(data)
         {
             Object.assign(this.data, store.getInfo('sheet','_id', data._id));
-            this.data["isNew"] = "update";
+            this.data["isNew"] = false;
         }
         else
         {
             const _data = {};
-            _data["_id"] = "";
+            _data["_id"] = util.generateObjectId();
             _data["name"] = "";
             _data["userName"] = globalThis.user.name;
             _data["userId"] = globalThis.user._id;
@@ -44,7 +56,7 @@ class SheetForm extends AbsForm
             _data["companyName"] = "없음";
             _data["productName"] = "";
             _data["step"] = "제안";
-            _data["isNew"] = "save";
+            _data["isNew"] = true;
             _data["issuedate"] = util.getDayDashFormat(new Date());
             _data["date"] = util.getDayDashFormat(new Date());
             _data["memo"] = "";
@@ -82,7 +94,7 @@ class SheetForm extends AbsForm
             }
         </style>
         <div class="sheet-form">
-            <div class="card">
+            <div class="card main">
                 <div class="card-header form-header row-space-between">
                     <span class="fw-semibold">영업 기회</span>
                     <button type="button" class="btn btn-icon btn-black command-close-modal">
@@ -175,8 +187,6 @@ class SheetForm extends AbsForm
                     </div>
                 </div>
                 <hr>
-                <file-image editable="true" contentsid="${this.data.id}" new="false"></file-image>
-                <file-etc editable="true" contentsid="${this.data.id}" new="false"></file-etc>
                 </div>
             </div>
         </div>

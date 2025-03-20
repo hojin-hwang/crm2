@@ -206,7 +206,7 @@
 								{
 									const formData = new FormData();
                   formData.append('username', 'guest@test.com');
-                  formData.append('password', '1111');
+                  formData.append('password', '22222');
 									util.sendFormData("/auth/login", "POST", formData ).then((response) => {
 										if(response.success && response.data.loginSuccess) location.href = ("/crm/"+response.data.clientId);
 										else {

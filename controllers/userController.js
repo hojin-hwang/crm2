@@ -17,6 +17,7 @@ exports.create = async (req, res) => {
 			date: savedUser.date.toISOString().substring(0,10)
 		};
 		delete userData.password;
+
 		return sendSuccessResponse(res, {info :userData}, "정상등록되었습니다.");
 	} catch(error) {
 		return sendErrorResponse(res, 500, "사용자 생성 중 오류가 발생했습니다."+error.message, error.message);

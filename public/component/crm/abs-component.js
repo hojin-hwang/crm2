@@ -28,12 +28,12 @@ class AbstractComponent extends HTMLElement
 
   connectedCallback()
   {
-    
+    this.render();
   }
 
   disconnectedCallback()
   {
-    window.removeEventListener("message", this.receiveMessage)
+    window.removeEventListener("message", this.messageListener)
     this.removeEventListener("click", this.handleClick)
   }
 

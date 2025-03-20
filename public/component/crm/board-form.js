@@ -11,11 +11,7 @@ class BoardForm extends AbstractComponent{
         this.title = document.querySelector('.page-header').innerText;
         this.#render();
     }
-        
-    disconnectedCallback(){
-        window.removeEventListener("message", this.receiveMessage);
-    }
-    
+          
     setData(info)
     {
         if(info)

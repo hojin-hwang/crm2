@@ -10,7 +10,7 @@ class ProductForm extends AbsForm
         const template = this.#getTemplate();
         this.appendChild(template.content.cloneNode(true));
         util.selectOption(this, '#code', this.data["code"].replaceAll('[','').replaceAll(']',''));
-        if(this.data["isNew"] === 'update') this.querySelector('.command-show-delete-button').classList.remove('hidden')
+        if(!this.data["isNew"]) this.querySelector('.command-show-delete-button').classList.remove('hidden')
     }
     
     setData(data)
@@ -19,7 +19,7 @@ class ProductForm extends AbsForm
         {
             console.log(data)
             Object.assign(this.data, store.getInfo('product','_id', data._id));
-            this.data["isNew"] = 'update';
+            this.data["isNew"] = false;
         }
         else
         {
@@ -30,7 +30,7 @@ class ProductForm extends AbsForm
             _data["brand"] = "";
             _data["memo"] = ""
             _data["user"] = globalThis.user.name;
-            _data["isNew"] = "save";
+            _data["isNew"] = true;
             Object.assign(this.data, _data);
         }
     }

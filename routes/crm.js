@@ -5,13 +5,14 @@ const clientController = require('../controllers/clientController');
 
 router.get('/:clientId',  async(request,response)=>{
    if(!request.user){
-      response.redirect('/crm/login/'+request.params.clientId);
+      response.redirect('/user/login/'+request.params.clientId);
 		return;
 	}
 	clientController.get(request).then(data=>{
 		response.render('crm.ejs', {"userInfo":request.user, "clientInfo":data});
 	})
 });
+
 
 
 

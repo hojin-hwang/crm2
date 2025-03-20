@@ -11,8 +11,13 @@ const LoginRequired = require('../utils/loginRequired');
 	
 // 	response.render('login.ejs');
 // })
+router.get('/login/:clientId', (request,response)=>{
+	response.render('login.ejs' ,{clientId : request.params.clientId});
+})
 
-
+router.get('/register', (request,response)=>{
+	response.render('register.ejs');
+})
 
 router.post('/add',  userController.create);
 

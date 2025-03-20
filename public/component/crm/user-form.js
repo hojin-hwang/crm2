@@ -33,7 +33,7 @@ class UserForm extends AbsForm
         if(data)
         {
             Object.assign(this.data, store.getInfo('user','_id', data._id));
-            this.data["isNew"] = "update";
+            this.data["isNew"] = false;
         }
         else
         {

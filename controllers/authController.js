@@ -39,7 +39,7 @@ exports.googleCallback = (req, res, next) => {
 	passport.authenticate('google', { 
 		failureRedirect: '/user/login' 
 	}, (err, user, info) => {
-		console.log(user);
+		
 		if (err) {
 			return next(err);
 		}
@@ -47,13 +47,12 @@ exports.googleCallback = (req, res, next) => {
 			return res.redirect('/user/login');
 		}
 		// 새로운 사용자인 경우 등록 페이지로 리다이렉트
-		if (user.isNewUser && user.clientId === 'client') {
-			//const userInfo = encodeURIComponent(JSON.stringify(user));
-			//return res.redirect(`/user/register?userInfo=${userInfo}`);
-			return res.render('client/register.ejs', {"userInfo":user});
+		if (user.isNewUser && user.clientId) {
+			const userInfo = encodeURIComponent(JSON.stringify(user));
+			return res.redirect(`/user/register?userInfo=${userInfo}`);
 		}
 		else if(user.isNewUser && !user.clientId) {// 
-			return res.redirect('/user/login');//클라이언트가 없으며 새로운 사용자인경우로 안내페이지로 이동
+			return res.redirect('/');//클라이언트가 없으며 새로운 사용자인경우로 안내페이지로 이동
 		}
 
 		req.logIn(user, (err) => {

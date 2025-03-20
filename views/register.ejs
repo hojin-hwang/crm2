@@ -61,6 +61,8 @@
     // URL에서 userInfo 파라미터 가져오기
     const urlParams = new URLSearchParams(window.location.search);
     const userInfoParam = urlParams.get('userInfo');
+    const clientIdParam = urlParams.get('clientId');
+
     let userInfo = null;
 
     if (userInfoParam) {
@@ -100,7 +102,11 @@
             console.error('userInfo 파싱 에러:', error);
         }
     }
-
+    else if(clientIdParam)
+    {
+      userInfo = {};
+      userInfo.clientId = clientIdParam;
+    }
     document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('click', handleClick);
 
@@ -121,21 +127,24 @@
                         formData.append('provider', userInfo.provider);
                         formData.append('clientId', userInfo.clientId);
                         if (userInfo.profileImage) {
-                            formData.append('profileImage', userInfo.profileImage);
+                            formData.append('profile', userInfo.profileImage);
                         }
                     } else {
                         if(!userJoinCondition(form)) return;
+                        formData.append('clientId', userInfo.clientId);
+                        formData.append('profile', getRandomProfileImage(3))
+                        
                     }
 
                     util.sendFormData("/user/add", "POST", formData).then((response) => {
-                        if(response.success) location.href = ("/user/login");
+                        if(response.success) location.href = ("/user/login/"+userInfo.clientId);
                         else alert(response.message);
                     });
                 }
 
                 if(node.className.match(/command-go-signin/))
                 {
-                    location.href = '/user/login';
+                    location.href = '/user/login/'+userInfo.clientId;
                 }
             });
         }
@@ -180,6 +189,13 @@
         return false;
       }
       return true;
+    }
+
+    const getRandomProfileImage = (count)=>{
+      const arr = [];
+      for(let i=0; i < count; i++) arr.push(i);
+      const randomItem = arr[Math.floor(Math.random() * arr.length)];
+      return "/assets/img/profile/profile_"+randomItem+".jpg";
     }
  </script>
 </body>

@@ -117,7 +117,6 @@ class CalendarBoard extends AbstractComponent
 
   #setEvents(data)
   {
-    console.log(data);
     for(let i=0; i< data.list.length; i++){
       const event = {className:"work"};
       event["id"] = util.secureRandom();
@@ -152,8 +151,6 @@ class CalendarBoard extends AbstractComponent
 
   #setEventData(data, listName)
   {
-    console.log(data);
-    console.log(listName);
     const event = (listName === 'work-list')? {className:"work"} : {className:"sales-work"};
     event["id"] = util.secureRandom();
     event["title"] = `${data["customerName"]} (${data["userName"]})`;

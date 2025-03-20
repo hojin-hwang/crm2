@@ -6,7 +6,7 @@ const authController = require('../controllers/authController');
 
 router.get('/logout/:clientId', (request,response)=>{
 	request.logout(()=>{
-		response.redirect('/crm/login/'+request.params.clientId);
+		response.redirect('/user/login/'+request.params.clientId);
 	})
 })
 

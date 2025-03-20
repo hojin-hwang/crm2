@@ -9,18 +9,27 @@ class WorkForm extends AbsForm
     afterRender()
     {
         util.selectOption(this, '#sales_status', this.data["status"]);
-        if(this.data["isNew"] === "update") this.querySelector('.command-show-delete-button').classList.remove('hidden');
+        if(!this.data["isNew"]) this.querySelector('.command-show-delete-button').classList.remove('hidden');
         else this.querySelector('.meta-data').classList.add('hidden');
+
+        if(this.data["isNew"])
+        {
+            const fileUpload = new FileUpload({isNew:true, _id:this.data._id})
+            this.querySelector('.card.main .card-body').appendChild(fileUpload);
+        }
+        else
+        {
+            const fileUpload = new FileUpload(this.data)
+            this.querySelector('.card.main .card-body').appendChild(fileUpload);
+        }
     }
     
     setData(data)
     {
-        console.log(data);
-        
         if(data?.collection === 'sheet-view')
         {
             const _data = {};
-            _data["id"] = "";
+            _data["id"] = util.generateObjectId();
             _data["name"] = "";
             _data["user"] = globalThis.user._id;
             _data["userName"] = globalThis.user.name;
@@ -31,7 +40,7 @@ class WorkForm extends AbsForm
             _data["companyName"] = data.company.name;
             _data["sheetName"] = data.name;
             _data["status"] = "경쟁사 정보";
-            _data["isNew"] = "save";
+            _data["isNew"] = true;
             _data["duedate"] = (data && data.duedate)? data.duedate:util.getDayDashFormat(new Date());
             _data["date"] = util.getDayDashFormat(new Date());
             _data["memo"] = "";
@@ -41,12 +50,12 @@ class WorkForm extends AbsForm
         else if(data)
         {
             Object.assign(this.data, data);
-            this.data["isNew"] = "update";
+            this.data["isNew"] = false;
         }
         else
         {
             const _data = {};
-            _data["_id"] = "";
+            _data["_id"] = util.generateObjectId();
             _data["name"] = "";
             _data["userId"] = globalThis.user._id;
             _data["userName"] = globalThis.user.name;
@@ -57,7 +66,7 @@ class WorkForm extends AbsForm
             _data["companyName"] = "";
             _data["sheetName"] = "";
             _data["status"] = "경쟁사 정보";
-            _data["isNew"] = "save";
+            _data["isNew"] = true;
             _data["duedate"] = (data && data.duedate)? data.duedate:util.getDayDashFormat(new Date());
             _data["date"] = util.getDayDashFormat(new Date());
             _data["memo"] = "";
@@ -74,12 +83,12 @@ class WorkForm extends AbsForm
         <style>
             hr{opacity: 0.1;}
         </style>
-        <div class="card">
+        <div class="card main">
             <div class="card-header form-header row-space-between">
-                    <span class="fw-semibold">영업 일지</span>
-                    <button type="button" class="btn btn-icon btn-black command-close-modal">
-                    <i class="fas fa-times"></i></button>
-                </div>
+                <span class="fw-semibold">영업 일지</span>
+                <button type="button" class="btn btn-icon btn-black command-close-modal">
+                <i class="fas fa-times"></i></button>
+            </div>
             <div class="card-body">
                 <div class="card">
                     <div class="card-body">
@@ -182,8 +191,6 @@ class WorkForm extends AbsForm
                 </div>
                 
                 <hr>
-                <file-image editable="true" contentsid="${this.data.id}" new="false"></file-image>
-                <file-etc editable="true" contentsid="${this.data.id}" new="false"></file-etc>
             </div>
             
 

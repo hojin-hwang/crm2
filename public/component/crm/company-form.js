@@ -10,7 +10,7 @@ class CompanyForm extends AbsForm
         if(data)
         {
             Object.assign(this.data, store.getInfo('company', '_id', data._id));
-            this.data["isNew"] = "update";
+            this.data["isNew"] = false;
         }
         else
         {
@@ -25,7 +25,7 @@ class CompanyForm extends AbsForm
             _data["memo"] = "";
             _data["userName"] = globalThis.user.name;
             _data["userId"] = globalThis.user._id;
-            _data["isNew"] = "save";
+            _data["isNew"] = true;
             Object.assign(this.data, _data);
         }
 
