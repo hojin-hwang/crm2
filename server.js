@@ -21,6 +21,7 @@ const memoRouter = require('./routes/memo');
 const boardInfoRouter = require('./routes/boardInfo');
 const boardRouter = require('./routes/board');
 const replyRouter = require('./routes/reply');
+const adminRouter = require('./routes/admin');
 const MongoStore = require('connect-mongo')
 const mongoose = require('mongoose');
 
@@ -77,7 +78,8 @@ app.use('/sheet', sheetRouter);
 app.use('/memo', memoRouter);
 app.use('/boardInfo', boardInfoRouter);
 app.use('/board', boardRouter);
-app.use('/reply', replyRouter)
+app.use('/reply', replyRouter);
+app.use('/admin', adminRouter);
 
 // app.listen -> server.listen 으로 변경(소켓 사용을 위해)
 app.listen(process.env.PORT,()=>{

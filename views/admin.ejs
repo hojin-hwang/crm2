@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Simple CRM</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link rel="icon" href="/assets/img/favicon-sc.svg" type="image/x-icon"/>
+    
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
+    <!-- <link rel="stylesheet" href="/assets/css/plugins.min.css" /> -->
+    <link rel="stylesheet" href="/assets/css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="/assets/css/datatables.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+    <link href="/assets/css/swiper-bundle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/crm.css" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <!-- <link rel="stylesheet" href="/assets/css/demo.css" /> -->
+  </head>
+  <body>
+    <div class="wrapper">
+      
+      <style>
+        .make-client{
+          width: 600px;
+        }
+        .make-table{
+          display: flex;
+          flex-direction: column;
+          gap:12px;
+        }
+        .form-group{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+      </style>
+      <section class="make-client">
+        <div class="card">
+          <div class="card-header form-header row-space-between">
+            <span class="fw-semibold">영업 기회</span>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="clientId">Client Id</label>
+              <input type="text" id="clientId" value="" placeholder="client name" class="form-control" style="width: auto;">
+            </div>
+            <button class="btn btn-primary form-control">Make Client</button>
+            <hr>
+            <div class="make-table">
+              <div class="form-group">
+                <label for="user_table">Make User Table</label>
+                <button class="btn btn-primary" id="user_table" disabled="disabled">User Table</button>
+              </div>
+              <div class="form-group">
+                <label for="company_table">Make Company Table</label>
+                <button class="btn btn-secondary" id="company_table" disabled="disabled">Company Table</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </div>
+    
+    <!--   Core JS Files   -->
+    <script src="/assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+    <!-- jQuery Scrollbar -->
+    <script src="/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="/assets/js/plugin/datatables/datatables.min.js"></script>
+    <script src="/assets/js/plugin/calendar/index.global.js"></script>
+    <script src="/assets/js/plugin/quill/quill.js"></script>
+    <script src="/assets/js/plugin/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="/util/util.js"></script>
+    <!-- 컴포넌트 -->
+    <script src="/component/crm/abs-component.js"></script>
+    <script src="/component/crm/modal-page.js"></script>
+
+    
+    
+    <!-- Fonts and icons -->
+    <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["/assets/css/fonts.min.css"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+    <script>
+      // const _userInfo_s = `<%= JSON.stringify(userInfo) %>`;
+
+      document.addEventListener('DOMContentLoaded', function () {
+        
+        
+
+
+      });
+
+      
+     
+
+      
+    </script>
+  </body>
+</html>
+
+
+
