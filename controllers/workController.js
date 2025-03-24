@@ -1,5 +1,8 @@
 const Work = require('../models/work');
+const File = require('../models/file');
+const fs = require('fs');
 const { ObjectId } = require('mongoose').Types;
+const FileDelete = require('../utils/fileDelete');
 
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
@@ -31,10 +34,10 @@ exports.create = async (req, res, next) => {
 		if (validationErrors.length > 0) {
 			return sendErrorResponse(res, 400, '입력값이 유효하지 않습니다.', validationErrors);
 		}
-
+		const clientId = (req.user && req.user.clientId)? req.user.clientId : req.body.clientId;
 		// delete createData._id;
 		createData["_id"] = ObjectId.createFromHexString(createData._id);
-		createData["clientId"] = req.user.clientId;
+		createData["clientId"] = clientId;
 		createData["user"] = ObjectId.createFromHexString(createData.user);
 		createData["company"] = ObjectId.createFromHexString(createData.company);
 		createData["sheet"] = ObjectId.createFromHexString(createData.sheet);
@@ -186,43 +189,73 @@ exports.update = async (req, res) => {
 	}
 };
 
-
 exports.delete = async (req, res) => {
 	try {
-		const { _id, ...updateData } = req.body;
-
-		if (!_id) {
-			return sendErrorResponse(res, 400, "일지 ID가 필요합니다.");
-		}
-
-		const work = await Work.findById({_id, clientId: req.user.clientId});
-		if (!work) {
-			return sendErrorResponse(res, 404, "일지 정보를 찾을 수 없습니다.");
-		}
-
-		// 변경된 필드만 업데이트
-		const updatedFields = {};
-		for (const [key, value] of Object.entries(updateData)) {
-			if (work[key] !== value) {
-				updatedFields[key] = value;
-			}
-		}
-
-		if (Object.keys(updatedFields).length === 0) {
-			return sendSuccessResponse(res, { info: work }, "변경된 내용이 없습니다.");
-		}
-
-		Object.assign(work, updatedFields);
-		const savedWork = await work.save();
-		const workData = {
-			...savedWork._doc,
-			duedate: savedWork.duedate.toISOString().substring(0,10)
-		};
-		return sendSuccessResponse(res, { info: workData }, "일지 정보가 삭제 되었습니다.");
+		const { _id} = req.body;
+		await Work.deleteOne({_id, clientId: req.user.clientId});
+		await FileDelete.removeFile(req, _id);
+		return sendSuccessResponse(res, { info: null }, " 정보가 삭제 되었습니다.");
 	} catch(error) {
-		return sendErrorResponse(res, 500, "일지 정보 삭제 중 오류가 발생했습니다.", error.message);
+		return sendErrorResponse(res, 500, " 정보 삭제 중 오류가 발생했습니다.", error.message);
 	}
 };
+
+async function deleteFile(req, contentsId)
+{
+	try {
+				const fileList = await File.find({contentsId, clientId: req.user.clientId}).exec();
+				fileList.forEach(async (file) => {
+					await File.deleteOne({contentsId : file.contentsId, clientId: req.user.clientId});
+					fs.stat(file.path, (err, stats) => {
+						if (err) {
+							console.error('파일을 찾을 수 없습니다.', err);
+							return;
+						}
+					});
+					await fs.promises.unlink(file.path);
+				});
+			}
+			catch(error) {
+				console.log(error)
+			}
+}
+
+// exports.delete = async (req, res) => {
+// 	try {
+// 		const { _id, ...updateData } = req.body;
+
+// 		if (!_id) {
+// 			return sendErrorResponse(res, 400, "일지 ID가 필요합니다.");
+// 		}
+
+// 		const work = await Work.findById({_id, clientId: req.user.clientId});
+// 		if (!work) {
+// 			return sendErrorResponse(res, 404, "일지 정보를 찾을 수 없습니다.");
+// 		}
+
+// 		// 변경된 필드만 업데이트
+// 		const updatedFields = {};
+// 		for (const [key, value] of Object.entries(updateData)) {
+// 			if (work[key] !== value) {
+// 				updatedFields[key] = value;
+// 			}
+// 		}
+
+// 		if (Object.keys(updatedFields).length === 0) {
+// 			return sendSuccessResponse(res, { info: work }, "변경된 내용이 없습니다.");
+// 		}
+
+// 		Object.assign(work, updatedFields);
+// 		const savedWork = await work.save();
+// 		const workData = {
+// 			...savedWork._doc,
+// 			duedate: savedWork.duedate.toISOString().substring(0,10)
+// 		};
+// 		return sendSuccessResponse(res, { info: workData }, "일지 정보가 삭제 되었습니다.");
+// 	} catch(error) {
+// 		return sendErrorResponse(res, 500, "일지 정보 삭제 중 오류가 발생했습니다.", error.message);
+// 	}
+// };
 
 // 일지 상세 정보 조회 추가	
 exports.get = async (req, res) => {

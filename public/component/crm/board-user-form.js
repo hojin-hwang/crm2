@@ -97,9 +97,7 @@ class BoardUserForm extends AbsForm
 
         this.#makeUserSelect(accessList, 'access_users')
 
-        
         const accessListSet = new Set(accessList)
-        console.log(accessListSet)
         const result = globalThis.userList.filter(item => !accessListSet.has(item));
         this.#makeUserSelect(result, 'users')
 

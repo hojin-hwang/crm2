@@ -128,7 +128,10 @@
 												<label for="password">Password</label>
 												<input type="password" class="form-control" id="password" name="password" autocomplete="current-password" placeholder="Password">
 											</div>
-
+                      <div class="form-group">
+												<label for="clientId">ClientId</label>
+												<input type="text" class="form-control" id="clientId" name="clientId" autocomplete="current-clientId" placeholder="ClientId">
+											</div>
 											<div class="form-group">
 												<button type="button" class="command-pass-user btn btn-primary">email로 로그인</button>
 											</div>
@@ -207,6 +210,7 @@
 									const formData = new FormData();
                   formData.append('username', 'guest@test.com');
                   formData.append('password', '22222');
+                  formData.append('clientId', 'demo');
 									util.sendFormData("/auth/login", "POST", formData ).then((response) => {
 										if(response.success && response.data.loginSuccess) location.href = ("/crm/"+response.data.clientId);
 										else {
@@ -228,7 +232,7 @@
 			})
 
 		const userLoginCondition = (form)=>{
-		return ( checkEmail(form) && checkPassword(form));
+		return ( checkEmail(form) && checkPassword(form) && checkClientId(form));
     }
     
     const checkEmail = (form)=>{
@@ -253,7 +257,13 @@
       }
       return true;
     }
-    
+    const checkClientId = (form)=>{
+      if(form.clientId.value.length < 3) {
+        alert('client는 3자 이상이어야 합니다');
+        return false;
+      }
+      return true;
+    }
 	 </script>
     
     

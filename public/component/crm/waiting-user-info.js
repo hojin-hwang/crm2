@@ -12,7 +12,7 @@ class WaitingUserInfo extends AbstractComponent
         e.composedPath().find((node)=>{
           if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
           if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
-          if(node.className.match(/command-go-login/))
+          if(node.className.match(/command-go-link/))
           {
             location.href = '/user/login/'+globalThis.user.clientId;
             return;
@@ -49,7 +49,7 @@ class WaitingUserInfo extends AbstractComponent
                     </div>
                 </div>
                 <div class="mt-1">
-                    <button type="button" class="btn btn-primary command-go-login">로그인으로 돌아가기</button> 
+                    <button type="button" class="btn btn-primary command-go-link">로그인으로 돌아가기</button> 
                 </div>
 
             </div>

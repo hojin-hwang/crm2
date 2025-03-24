@@ -1,5 +1,5 @@
 // 상수 정의 ClientInfo로 빼자..
-const DEFAULT_PASSWORD = 'sooyk@1234';
+const DEFAULT_PASSWORD = 'simple_crm@9999';
 const FORM_CONFIG = {
     departments: ['경영진', '생산부', '관리부', '영업부', '기타'],
     positions: ['사원', '주임', '대리', '과장', '차장', '부장', '이사', '대표'],
@@ -61,8 +61,18 @@ class UserForm extends AbsForm
     #handleUserState() {
         if (this.data["username"]) {
             this.#handleExistingUser();
+            this.#exceptSuperUser();
         } else {
             this.#handleNewUser();
+        }
+    }
+
+    #exceptSuperUser()
+    {
+        if(this.data["username"] === 'admin')
+        {
+            this.querySelector('.command-save-form').classList.add('hidden');
+            this.querySelector('.action-zone').classList.add('hidden');
         }
     }
 
@@ -188,7 +198,7 @@ class UserForm extends AbsForm
                     </form>
                     </div>
                 </div>
-                <div class="mt-1 row-space-between">
+                <div class="mt-1 row-space-between action-zone">
                     <div>
                         <button type="button" class="btn btn-link m-1 command-show-delete-button hidden">사용자 정보 삭제</button>
                         <button type="button" class="btn btn-outline-dark m-1 command-delete-form hidden" data-value="${this.data._id}">삭제하시겠습니까? 삭제해도 과거데이터는 남아있습니다. </button>

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Simple CRM</title>
+    <title>Controll Simple CRM</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -42,24 +42,53 @@
       <section class="make-client">
         <div class="card">
           <div class="card-header form-header row-space-between">
-            <span class="fw-semibold">영업 기회</span>
+            <span class="fw-semibold">Make Client</span>
           </div>
           <div class="card-body">
-            <div class="form-group">
-              <label for="clientId">Client Id</label>
-              <input type="text" id="clientId" value="" placeholder="client name" class="form-control" style="width: auto;">
-            </div>
-            <button class="btn btn-primary form-control">Make Client</button>
+            <form>
+              <div class="form-group">
+                <label for="clientId">Client Id</label>
+                <input type="text" id="clientId" value="" name="clientId" placeholder="client name" class="form-control" style="width: auto;">
+              </div>
+              <button type="button" class="btn btn-primary form-control command-create-client">Make Client</button>
+            </form>
             <hr>
             <div class="make-table">
               <div class="form-group">
                 <label for="user_table">Make User Table</label>
-                <button class="btn btn-primary" id="user_table" disabled="disabled">User Table</button>
+                <button type="button" class="btn btn-primary command-create-user" id="user_table" disabled="disabled">User Table</button>
               </div>
               <div class="form-group">
                 <label for="company_table">Make Company Table</label>
-                <button class="btn btn-secondary" id="company_table" disabled="disabled">Company Table</button>
+                <button type="button" class="btn btn-black command-create-company" id="company_table" disabled="disabled">Company Table</button>
               </div>
+              <div class="form-group">
+                <label for="customer_table">Make Customer Table</label>
+                <button type="button" class="btn btn-black command-create-customer" id="customer_table" disabled="disabled">Customer Table</button>
+              </div>
+              <div class="form-group">
+                <label for="product_table">Make Product Table</label>
+                <button type="button" class="btn btn-black command-create-product" id="product_table" disabled="disabled">Product Table</button>
+              </div>
+              <div class="form-group">
+                <label for="sheet_table">Make Sheet Table</label>
+                <button type="button" class="btn btn-black command-create-sheet" id="sheet_table" disabled="disabled">Sheet Table</button>
+              </div>
+              <div class="form-group">
+                <label for="work_table">Make Work Table</label>
+                <button type="button" class="btn btn-black command-create-work" id="work_table" disabled="disabled">Work Table</button>
+              </div>
+
+              <div class="form-group">
+                <label for="boardInfo_table">Make BoardInfo Table</label>
+                <button type="button" class="btn btn-black command-create-boardInfo" id="boardInfo_table" disabled="disabled">BoardInfo Table</button>
+              </div>
+
+              <div class="form-group">
+                <label for="notice_table">Make Notice Table</label>
+                <button type="button" class="btn btn-black command-create-notice" id="notice_table" disabled="disabled">Notice Table</button>
+              </div>
+
             </div>
 
           </div>
@@ -81,6 +110,7 @@
 
     <!-- Kaiadmin DEMO methods, don't include it in your project! -->
     <script src="/util/util.js"></script>
+    <!-- <script src="/util/admin/store.js"></script> -->
     <!-- 컴포넌트 -->
     <script src="/component/crm/abs-component.js"></script>
     <script src="/component/crm/modal-page.js"></script>
@@ -108,7 +138,9 @@
     </script>
     <script>
       // const _userInfo_s = `<%= JSON.stringify(userInfo) %>`;
-
+      globalThis.clientId = '';
+      globalThis.userInfo = {};
+      globalThis.boardInfoList = [];
       document.addEventListener('DOMContentLoaded', function () {
         
         
@@ -116,8 +148,325 @@
 
       });
 
-      
-     
+      document.addEventListener('click', (e) => {
+        e.composedPath().find((node) => 
+        {
+            if (typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
+            if(node.className.match(/command-create-client/))
+            {
+                const form = node.closest('form');
+                const formData = new FormData(form);
+                const result = addInfo(formData, 'client', "COMMAND-")
+                result.then((response) => {
+                  console.log(response);
+                  if(response.code === 100)
+                  { 
+                    //Button Abled Super Admin User
+                    globalThis.clientId = response.data.clientId;
+                    enableButton(document.getElementById('user_table'));
+                  }
+                  else
+                  {
+                    alert(response.message);
+                  }
+                });
+                return;
+            }
+            if(node.className.match(/command-create-user/))
+            {
+                const result = makeUserTable()
+                return;
+            }
+            if(node.className.match(/command-create-company/))
+            {
+                const result = makeCompanyTable()
+                return;
+            } 
+            if(node.className.match(/command-create-customer/))
+            {
+                const result = makeCustomerTable()
+                return;
+            }
+            if(node.className.match(/command-create-product/))
+            {
+                const result = makeProductTable()
+                return;
+            }
+            if(node.className.match(/command-create-sheet/))
+            {
+                const result = makeSheetTable()
+                return;
+            }
+            if(node.className.match(/command-create-work/))
+            {
+                const result = makeWorkTable()
+                return;
+            }
+            if(node.className.match(/command-create-notice/))
+            {
+                const result = makeNoticeTable()
+                return;
+            }
+            if(node.className.match(/command-create-boardInfo/))
+            {
+                const result = makeBoardInfoTable()
+                return;
+            }   
+        })
+    });
+  
+  makeUserTable = async () => {
+    const formData = new FormData();
+    formData.append('model', 'User');
+    formData.append('username', 'admin');
+    formData.append('password', 'admin@9876');
+    formData.append('name', '관리자');
+    formData.append('degree', '관리자')
+    formData.append('department', '기타')
+    formData.append('position', '사원')
+    formData.append('clientId', globalThis.clientId)
+    const result = addDoc(formData, "COMMAND-");
+    result.then((response) => {
+      if(response.code === 100)
+      { 
+        Object.assign(globalThis.userInfo, response.data.info);
+        enableButton(document.getElementById('company_table'));
+        console.log(globalThis.userInfo);
+      }
+    });
+    
+  }
+
+  makeCompanyTable = async () => {
+    const formData = new FormData();
+    formData.append('model', 'Company');
+    formData.append('name', 'Sample Company');
+    formData.append('user', globalThis.userInfo._id);
+    formData.append('address', '가산시 가상동 123-456');
+    formData.append('memo', 'Sample Company Memo')
+    formData.append('tel', '02-1234-5678')
+    formData.append('fax', '02-1234-9999')
+    formData.append('clientId', globalThis.clientId)
+    const result = addDoc(formData, "COMMAND-");
+    result.then((response) => {
+      if(response.code === 100)
+      { 
+        globalThis.companyInfo = {};
+        Object.assign(globalThis.companyInfo, response.data.info);
+        enableButton(document.getElementById('customer_table'));
+      }
+    });
+    
+  }
+    
+  makeCustomerTable = async () => {
+    const formData = new FormData();
+    formData.append('model', 'Customer');
+    formData.append('name', '홍길동');
+    formData.append('user', globalThis.userInfo._id);
+    formData.append('address', '가산시 가상동 123-456 2층');
+    formData.append('memo', 'Sample Customer Memo')
+    formData.append('position', 'Manager')
+    formData.append('email', 'hong@test.com')
+    formData.append('tel', '02-1234-5678')
+    formData.append('hp', '010-1234-9999')
+    formData.append('clientId', globalThis.clientId)
+    formData.append('company', globalThis.companyInfo._id)
+    const result = addDoc(formData, "COMMAND-");
+    result.then((response) => {
+      if(response.code === 100)
+      { 
+        globalThis.customerInfo = {};
+        Object.assign(globalThis.customerInfo, response.data.info);
+        enableButton(document.getElementById('product_table'));
+      }
+    });
+    
+  }
+
+  makeProductTable = async () => {
+    const formData = new FormData();
+    formData.append('model', 'Product');
+    formData.append('name', '아이템 A212-3(샘플)');
+    formData.append('code', '제품')
+    formData.append('brand', '자체생산')
+    formData.append('memo', '2025년까지 판매 예정')
+    formData.append('clientId', globalThis.clientId)
+    const result = addDoc(formData, "COMMAND-");
+    result.then((response) => {
+      if(response.code === 100)
+      { 
+        globalThis.productInfo = {};
+        Object.assign(globalThis.productInfo, response.data.info);
+        enableButton(document.getElementById('sheet_table'));
+      }
+    });
+    
+  }
+
+  makeSheetTable = async () => {
+
+    const product = globalThis.productInfo;
+    const productInfo = {
+      id: product._id,
+      code: product.code,
+    }
+    const formData = new FormData();
+    formData.append('model', 'Sheet');
+    formData.append('name', '글로벌 컴퍼니 영업기회(샘플)');
+    formData.append('memo', 'Sample 영업기회 Memo')
+    formData.append('product', JSON.stringify(productInfo))
+    formData.append('step', '제안')
+    formData.append('clientId', globalThis.clientId)
+    formData.append('company', globalThis.companyInfo._id)
+    formData.append('user', globalThis.userInfo._id);
+    formData.append('customer', globalThis.customerInfo._id);
+    const result = addDoc(formData, "COMMAND-");
+    result.then((response) => {
+      if(response.code === 100)
+      { 
+        globalThis.sheetInfo = {};
+        Object.assign(globalThis.sheetInfo, response.data.info);
+        enableButton(document.getElementById('work_table'));
+      }
+    });
+  }
+
+  makeWorkTable = async () => {
+    const formData = new FormData();
+    formData.append('model', 'Work');
+    formData.append('name', '담당자 첫미팅(샘플)');
+    formData.append('memo', 'Sample 영업일지 Memo')
+    formData.append('remark', 'Sample 영업일지 고려사항')
+    formData.append('status', '타겟제품정보')
+    formData.append('sheet', globalThis.sheetInfo._id)
+    formData.append('clientId', globalThis.clientId)
+    formData.append('company', globalThis.companyInfo._id)
+    formData.append('user', globalThis.userInfo._id);
+    formData.append('customer', globalThis.customerInfo._id);
+    const result = addDoc(formData, "COMMAND-");
+    result.then((response) => {
+      if(response.code === 100)
+      { 
+        globalThis.workInfo = {};
+        Object.assign(globalThis.workInfo, response.data.info);
+        enableButton(document.getElementById('boardInfo_table'));
+      }
+    });
+  }
+
+
+  makeBoardInfoTable = async () => {
+    const tableList = [
+      {
+        name:"고객사",
+        type:"default",
+        tag:"company",
+      },
+      {
+        name:"고객",
+        type:"default",
+        tag:"customer",
+      },
+      {
+        name:"품목",
+        type:"default",
+        tag:"product",
+      },
+      {
+        name:"캘린더",
+        type:"default",
+        tag:"calendar",
+      },
+      {
+        name:"영업기회",
+        type:"default",
+        tag:"sheet",
+      },
+      {
+        name:"영업일지",
+        type:"default",
+        tag:"work",
+      },
+      {
+        name:"공지사항",
+        type:"custom",
+        tag:"notice",
+      }
+    ];
+    tableList.forEach((table) => {
+      const formData = new FormData();
+      formData.append('model', 'BoardInfo');
+      formData.append('name', table.name);
+      formData.append('type', table.type)
+      formData.append('tag', table.tag)
+      formData.append('clientId', globalThis.clientId)
+      formData.append('user', globalThis.userInfo._id);
+      const result = addDoc(formData, "COMMAND-");
+      result.then((response) => {
+        if(response.code === 100)
+        { 
+          globalThis.boardInfo = {};
+          globalThis.boardInfoList.push(response.data.info);
+        }
+      });
+    });
+    
+  }
+
+  makeNoticeTable = async () => {
+    let boardInfo = globalThis.boardInfoList.find((info) => info.tag === 'notice');
+    const formData = new FormData();
+    formData.append('model', 'Board');
+    formData.append('title', 'Simple CRM 공지사항');
+    formData.append('contents', 'Simple CRM 공지사항 내용')
+    formData.append('boardId', boardInfo._id)
+    formData.append('clientId', globalThis.clientId)
+    formData.append('user', globalThis.userInfo._id);
+    const result = addDoc(formData, "COMMAND-");
+    result.then((response) => {
+      if(response.code === 100)
+      { 
+        document.querySelectorAll('.make-table').forEach((table) => {
+          table.querySelectorAll('button').forEach((button) => {
+            disableButton(button);
+          });
+        });
+      }
+    });
+  }
+
+  disableButton = (button) => {
+    button.addAttribute('disabled','disabled');
+  }
+
+  enableButton = (button) => {
+    button.removeAttribute('disabled');
+  }  
+    
+  async function addInfo(formData, collection, command)
+	{
+		try{
+			return await util.sendFormData(`/${collection}/add`, "POST", formData);
+		}
+		catch (error) {
+            console.error('오류:', error);
+            alert('실패했습니다.');
+        }
+		return;
+	}
+
+  async function addDoc(formData, command)
+	{
+		try{
+			return await util.sendFormData(`/client/addDoc`, "POST", formData);
+		}
+		catch (error) {
+            console.error('오류:', error);
+            alert('실패했습니다.');
+        }
+		return;
+	}
 
       
     </script>

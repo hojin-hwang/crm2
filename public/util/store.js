@@ -130,8 +130,6 @@ class Store{
 					_listInfo.info = response.data.info;
 					_listInfo.collection = collection;
 
-					console.log(_listInfo)
-
 					const message = {msg:command, data:_listInfo}
 					window.postMessage(message, location.href);
 
@@ -182,26 +180,6 @@ class Store{
 		this.#performanceMonitor.end('데이터 목록 로딩');
 	}
 
-	getCustomBoard(id)
-	{
-		const formData = new FormData();
-		formData.append("boardId", id);
-
-		ttb.get_json_request("POST", '/api/crm/board/getList', formData, (response)=>
-		{
-				if (100 == response.code)
-				{
-					const message = {msg:"GET_BOARD_LIST", data:response.data}
-					window.postMessage(message, location.href);
-					return;
-				}
-				else
-				{
-						if (response.message) alert(response.message, true);
-						else console.dir(response); 
-				}       
-		});
-	}
 
 	getListApiUrl(collectionName, code = null)
 	{
@@ -315,26 +293,11 @@ class Store{
 				"buttonTitle":"새로운 공지사항",
 				"name":"notice",
 				"formName":"notice-form",
+				"order":[[3, 'desc']],
 				"columns":[
 					{ "data": "id", "title":"id"},
 					{ "data": "title", "title":"제목"},
 					{ "data": "date", "title":"등록일" }
-				]
-			},
-			"work2":{
-				"title":"할일 리스트",
-				"buttonTitle":"새로운 할일",
-				"name":"work",
-				"formName":"work-form",
-				"columns":[
-					{ "data": "id", "title":"id"},
-					{ "data": "title", "title":"제목"},
-					{ "data": "customer", "title":"고객" },
-					{ "data": "company", "title":"고객사"},
-					{ "data": "work", "title":"할일"},
-					{ "data": "status", "title":"상태"},
-					{ "data": "user", "title":"담당자"},
-					{ "data": "duedate", "title":"날짜"}
 				]
 			},
 			"work":{
@@ -358,6 +321,7 @@ class Store{
 				"name":"board",
 				"formName":"board-form",
 				"columnInvisible":[0,5,6],
+				"order":[[4, 'desc']],
 				"columns":[
 					{ "data": "_id", "title":"id"},
 					{ "data": "title", "title":"제목"},

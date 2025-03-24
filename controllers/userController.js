@@ -3,13 +3,15 @@ const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHel
 
 exports.create = async (req, res) => {
 	try {
-		const userInfo = await User.findOne({ username: req.body.username }).exec();
+		const userInfo = await User.findOne({ username: req.body.username, clientId }).exec();
 		if (userInfo) {
 			return sendErrorResponse(res, 400, "중복된 아이디입니다.");
 		}
-
 		delete req.body._id;
-		const user = new User(req.body);
+		
+		const {...createData } = req.body;
+		
+		const user = new User(createData);
 		const savedUser = await user.save();
 
 		const userData = {

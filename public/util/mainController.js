@@ -16,11 +16,10 @@ class MainController
     const _clientInfo_r = this.clientString.replaceAll('&#34;', '\"');
     const clientInfo = JSON.parse(_clientInfo_r)
 
-    console.log(clientInfo)
 
     // checkPassClientId
     if(clientInfo.clientId !== userInfo.clientId){
-      window.location.href = "/auth/logout";
+      window.location.href = "/";
     }
 
     globalThis.config = {};
@@ -36,6 +35,8 @@ class MainController
       {collection:"company", complete:false}, 
       {collection:"customer", complete:false},
       {collection:"product", complete:false},
+      {collection:"sheet", complete:false},
+      {collection:"work", complete:false},
     ]
 
     if(globalThis.user.degree === "대기")
@@ -110,6 +111,8 @@ class MainController
         wrapper.appendChild(new ModalPage());
         wrapper.appendChild(new SearchList());
         body.appendChild(wrapper);
+
+        this.#getFirstComponent();
         
     }
   }
@@ -123,7 +126,60 @@ class MainController
     window.postMessage(_message, location.href);
   }
 
-  
+  #getFirstComponent()
+  {
+    this.#accessableMenu()
+    
+    for(let i = 0; i < this.accessMenu.length; i++)
+    {
+      if(this.accessMenu[i].tag === "calendar")
+      {
+        const component = document.createElement('calendar-board');
+        document.querySelector('.page-inner').innerHTML = '';
+        document.querySelector('.page-inner').appendChild(component);
+        return;
+      }
+    }
+    
+    for(let i = 0; i < this.accessMenu.length; i++)
+    {
+      if(this.accessMenu[i].type === "custom")
+      {
+        const info = (this.accessMenu[i].tag === 'notice')? globalThis.config["notice"] : globalThis.config["board"]
+        info.boardId = this.accessMenu[i]._id;
+        info.title = this.accessMenu[i].name;
+        info.tag = this.accessMenu[i].tag;
+        const formData = new FormData();
+        formData.append("boardId", info.boardId);
+        info.formData = formData;
+        document.querySelector('.page-inner').innerHTML = '';
+        document.querySelector('.page-inner').appendChild(new TableList(info));
+        return;
+      }
+    }
+
+    this.#appendInfoMessage()
+  }
+
+  #accessableMenu()
+  {
+    this.accessMenu = [];
+    globalThis.boardInfoList.forEach(board=>{
+      board.user.includes(globalThis.user._id) ? this.accessMenu.push(board) : null
+    });
+  }
+
+  #appendInfoMessage()
+  {
+    const defaultMessage = {
+      title:"접근가능한 메뉴 없음",
+      message:"접근가능한 메뉴가 없습니다. <br> 관리자에게 문의하세요"
+    };
+    
+    document.querySelector('.page-inner').innerHTML = '';
+    document.querySelector('.page-inner').appendChild(new InfoMessage(defaultMessage));
+    console.log("not found")
+  }
 
   #removeListener()
   {

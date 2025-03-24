@@ -1,5 +1,6 @@
 const Sheet = require('../models/sheet');
 const { ObjectId } = require('mongoose').Types;
+const FileDelete = require('../utils/fileDelete');
 
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
@@ -31,7 +32,6 @@ exports.create = async (req, res, next) => {
 		if (validationErrors.length > 0) {
 			return sendErrorResponse(res, 400, '입력값이 유효하지 않습니다.', validationErrors);
 		}
-
 		//delete createData._id;
 		createData["_id"] = ObjectId.createFromHexString(createData._id);
 		createData["clientId"] = req.user.clientId;
@@ -208,11 +208,15 @@ exports.delete = async (req, res) => {
 		const sheetData = {
 			...savedSheet._doc,
 		};
+
+		await FileDelete.removeFile(req, _id);
+
 		return sendSuccessResponse(res, { info: sheetData }, "일지 정보가 삭제 되었습니다.");
 	} catch(error) {
 		return sendErrorResponse(res, 500, "일지 정보 삭제 중 오류가 발생했습니다.", error.message);
 	}
 };
+
 
 // 일지 상세 정보 조회 추가	
 exports.get = async (req, res) => {

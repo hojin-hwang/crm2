@@ -1,5 +1,8 @@
 const Board = require('../models/board');
+const File = require('../models/file');
+
 const { ObjectId } = require('mongoose').Types;
+const FileDelete = require('../utils/fileDelete');
 
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
@@ -23,7 +26,6 @@ exports.create = async (req, res, next) => {
 		if (validationErrors.length > 0) {
 			return sendErrorResponse(res, 400, '입력값이 유효하지 않습니다.', validationErrors);
 		}
-
 		//delete createData._id;
 		createData["_id"] = ObjectId.createFromHexString(createData._id);
 		createData["clientId"] = req.user.clientId;
@@ -201,12 +203,13 @@ exports.delete = async (req, res) => {
 		const { _id , boardId} = req.body;
 		
 		await Board.deleteOne({_id, clientId: req.user.clientId, boardId});
-		
+		await FileDelete.removeFile(req, _id);
 		return sendSuccessResponse(res, { info: null }, "게시판 정보가 삭제 되었습니다.");
 	} catch(error) {
 		return sendErrorResponse(res, 500, "게시판 정보 삭제 중 오류가 발생했습니다.", error.message);
 	}
 };
+
 
 // 게시판 상세 정보 조회 추가	
 exports.get = async (req, res) => {

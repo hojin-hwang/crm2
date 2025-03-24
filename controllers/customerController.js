@@ -41,7 +41,6 @@ exports.create = async (req, res, next) => {
 		}
 
 		delete createData._id;
-		
 		createData["clientId"] = req.user.clientId;
 		createData["user"] = ObjectId.createFromHexString(createData.user);
 		createData["company"] = ObjectId.createFromHexString(createData.company);

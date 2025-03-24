@@ -50,3 +50,32 @@ input[type='number'] {
     transform: translate3d(400px, 0px, 0px);
     transition: 0.5s;
 }
+
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+    color: #757575;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #dadce0;
+  }
+
+  .divider span {
+    padding: 0 10px;
+    font-size: 14px;
+  }
+
+  .center-div {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 세로 중앙 정렬 */
+    height: 100vh; /* 화면 전체 높이 기준 */
+    padding: 12px;
+  }

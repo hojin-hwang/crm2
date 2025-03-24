@@ -1,78 +1,144 @@
 const Client = require('../models/client');
 const User = require('../models/user');
+const Company = require('../models/company');
+const Customer = require('../models/customer');
+const Product = require('../models/product');
+const Sheet = require('../models/sheet');	
+const Work = require('../models/work');
+const BoardInfo = require('../models/boardInfo');
+const Board = require('../models/board');
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
-exports.createClient = async (req, res) => {
+//데이터 유효성 검사
+const validateData = (data) => {
+	const errors = [];	
+	
+	if (!data.clientId?.trim()) {
+		errors.push('ID는 필수입니다.');
+	}
+
+	return errors;
+};
+
+exports.create = async (req, res) => {
 	try {
-		// const userInfo = await User.findOne({ username: req.body.username }).exec();
-		// if (userInfo) {
-		// 	return sendErrorResponse(res, 400, "중복된 아이디입니다.");
-		// }
-		const client = new Client(req.body);
+		const {...createData } = req.body;
+		const validationErrors = validateData(createData);
+		if (validationErrors.length > 0) {
+			return sendErrorResponse(res, 400, '입력값이 유효하지 않습니다.', validationErrors);
+		}
+
+		createData["clientId"] = (createData.clientId).toLowerCase();
+		createData["config"] = (createData.config)? JSON.parse(createData.config) : {color:"white"};
+
+		const findInfo = await Client.findOne({ clientId: createData.clientId }).exec();
+		if (findInfo) {
+			return sendErrorResponse(res, 400, "중복된 아이디입니다.");
+		}
+		const client = new Client(createData);
 		const savedClient = await client.save();
 
-		const user = new User({
-			username: req.body.username,
-			password: req.body.password,
-			clientId: savedClient.clientId,
-			degree: 'super-admin'
-		});
-		const savedUser = await user.save();
-
-		const userData = {
-			...savedUser._doc,
-			date: savedUser.date.toISOString().substring(0,10)
-		};
-
-		return sendSuccessResponse(res, userData, "정상등록되었습니다.");
+		return sendSuccessResponse(res, savedClient, "정상등록되었습니다.");
 	} catch(error) {
 		console.log(error);
 		return sendErrorResponse(res, 500, "Client 생성 중 오류가 발생했습니다.", error.message);
 	}
 };
 
-
-
-exports.listUser = async (req, res) => {
+exports.addDoc = async(req, res) => {
 	try {
-		const users = await User.find({ used: { $ne: 'N' } })
-			.select('-password')
+		const {...createData } = req.body;
+		const collection = getModel(createData)
+		const savedDoc = await collection.save();
+
+		const infoData = {
+			...savedDoc._doc,
+			date: savedDoc.date.toISOString().substring(0,10)
+		};
+
+		if(createData.model === "User") delete infoData.password;
+
+		return sendSuccessResponse(res, {info :infoData}, "정상등록되었습니다.");
+	}
+	catch(error) {
+		return sendErrorResponse(res, 500, "addUser 생성 중 오류가 발생했습니다."+error.message, error.message);
+	}
+}; 
+
+const getModel = (data) => {
+	switch(data.model) {
+		case "User":
+			return new User(data);
+		case "Company":
+			return new Company(data);
+		case "Customer":
+			return new Customer(data);
+		case "Product":
+			return new Product(data);
+		case "Sheet":
+			return new Sheet(data);
+		case "Work":
+			return new Work(data);
+		case "Board":
+			return new Board(data);
+		case "BoardInfo":
+			return new BoardInfo(data);
+		default:
+			return new User(data);
+	}
+}
+
+
+exports.list = async (req, res) => {
+	try {
+		const clients = await Client.find({ used: { $ne: 'N' } })
 			.lean()
 			.exec();
 
-		const userList = users.map(user => ({
-			...user,
-			date: user.date.toISOString().substring(0,10)
+		const list = clients.map(client => ({
+			...client,
+			date: clients.date.toISOString().substring(0,10)
 		}));
 
-		return sendSuccessResponse(res, {list: userList});
+		return sendSuccessResponse(res, {list: list});
 	} catch(error) {
 		return sendErrorResponse(res, 500, "사용자 목록 조회 중 오류가 발생했습니다.", error.message);
 	}
 };
 
-exports.updateUser = async (req, res) => {
+exports.update = async (req, res) => {
 	try {
 		const { _id, ...updateData } = req.body;
 		
 		if (!_id) {
-			return sendErrorResponse(res, 400, "사용자 ID가 필요합니다.");
+			return sendErrorResponse(res, 400, "ID가 필요합니다.");
 		}
 
-		const user = await User.findById(_id);
-		if (!user) {
-			return sendErrorResponse(res, 404, "사용자를 찾을 수 없습니다.");
+		const doc = await Client.findById(_id);
+		if (!doc) {
+			return sendErrorResponse(res, 404, "대상을 찾을 수 없습니다.");
 		}
 
-		Object.assign(user, updateData);
-		const savedUser = await user.save();
+		Object.assign(doc, updateData);
+		const savedDoc = await doc.save();
 		
-		const userData = savedUser.toObject();
-		delete userData.password;
-
-		return sendSuccessResponse(res, { userInfo: userData }, "사용자 정보가 업데이트되었습니다.");
+		return sendSuccessResponse(res, { info: savedDoc }, "정보가 업데이트되었습니다.");
 	} catch(error) {
-		return sendErrorResponse(res, 500, "사용자 정보 수정 중 오류가 발생했습니다.", error.message);
+		return sendErrorResponse(res, 500, "정보 수정 중 오류가 발생했습니다.", error.message);
+	}
+};
+
+exports.info = async (req, res) => {
+	try {
+		const findInfo = await Client.findOne({ clientId: req.body.clientId }).exec();
+		if (!findInfo) {
+			return sendErrorResponse(res, 400, "없는 아이디입니다.");
+		}
+		return sendSuccessResponse(res, findInfo, "조회되었습니다.");
+
+	} catch(error) {
+		console.log(error);
+		return {clientId:{}};
 	}
 };
 

@@ -105,7 +105,7 @@ class NavBar extends AbstractComponent
                   <ul class="dropdown-menu dropdown-user animated fadeIn">
                     <div class="dropdown-user-scroll scrollbar-outer">
                       <li>
-                        <a class="dropdown-item command-show-password-form" href="#">Account Setting</a>
+                        <a class="dropdown-item command-show-password-form" href="#">Password Setting</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item command-user-logout" href="#">Logout</a>
                       </li>

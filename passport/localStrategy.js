@@ -12,12 +12,12 @@ module.exports = () => {
             //* req.body 객체인자 하고 키값이 일치해야 한다.
             usernameField: 'username', 
             passwordField: 'password', 
-
+            passReqToCallback: true 
          },
-         async (username, password, done) => {
+         async (req, username, password, done) => {
             try {
                // 가입된 회원인지 아닌지 확인
-               const exUser = await User.findOne({ username }).exec();
+               const exUser = await User.findOne({ username, clientId:req.body.clientId }).exec();
 
                if (exUser) {
                   // 해시비번을 비교

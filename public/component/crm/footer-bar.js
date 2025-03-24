@@ -49,7 +49,7 @@ class FooterBar extends AbstractComponent
             </div>
             <div>
               Distributed by
-              <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
+              <a target="_blank" href="/admin">ThemeWagon</a>.
             </div>
           </div>
         </footer>

@@ -11,7 +11,7 @@ const boardSchema = new mongooes.Schema({
 		product:{type: Array, required: false, default: []},
 		read:{type: Array, required: false, default: []},
 		used:{type: String, required: true, default: 'Y'},
-		duedate:{type: Date, required: false},
+		duedate:{type: Date, required: false, default: Date.now},
 		date:{type: Date, required: true, default: Date.now},
 });
 

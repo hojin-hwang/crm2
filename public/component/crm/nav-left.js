@@ -240,7 +240,7 @@ class NavLeft extends AbstractComponent
         <div class="sidebar" data-background-color="dark">
         <div class="sidebar-logo">
           <div class="logo-header" data-background-color="dark">
-            <a href="/crm/" class="logo">
+            <a href="/crm/${globalThis.client.clientId}" class="logo">
               <img
                 src="/assets/img/kaiadmin/logo_light.svg"
                 alt="navbar brand"
@@ -349,6 +349,7 @@ class NavLeft extends AbstractComponent
                     <p>게시판 관리</p>
                   </a>
                 </li>
+                
               </ul>
               
             </ul>

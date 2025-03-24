@@ -2,10 +2,11 @@ const mongooes = require('mongoose');
 
 const clientSchema = new mongooes.Schema({
 		clientId:{type: String, required: true, default: ""},
-		name: {type: String, required: true},
+		name: {type: String, required: false, default: ""},
 		address:{type: String, required: false, default: ""},
 		phone:{type: String, required: false, default: ""},
 		used:{type: String, required: true, default: 'Y'},
+		config:{type:Object, required: false, default: {}},
 		date:{type: Date, required: true, default: Date.now},
 });
 

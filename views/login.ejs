@@ -4,58 +4,73 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SOOY-K CRM</title>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">  
-  <link rel="stylesheet" href="/css/styles.css" />
+  <title>Simple CRM</title>
+  <link rel="icon" href="/assets/img/favicon-sc.svg" type="image/x-icon"/>
+    
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/assets/css/kaiadmin.min.css" />
+  <link rel="stylesheet" href="/assets/css/crm.css" />
 </head>
 <body>
   <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-    <div
-      class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
-      <div class="d-flex align-items-center justify-content-center w-100">
-        <div class="row justify-content-center w-100">
-          <div class="col-md-8 col-lg-6 col-xxl-3">
-            <div class="card mb-0">
-              <div class="card-body">
-                <div class="card-body">
-                  <a href="#" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                    <img src="/img/logos/dark-logo.png" width="180" alt="" />
-                  </a>
-                  <p class="text-center">CRM Manager Platform</p>
-                  <form>
-                    <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">ID</label>
-                      <input type="email" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                    </div>
-                    <div class="mb-4">
-                      <label for="exampleInputPassword1" class="form-label">Password</label>
-                      <input type="password" name="password" autocomplete="on" class="form-control" id="exampleInputPassword1">
-                    </div>
-                    
-                    <button class="command-pass-user btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</button>
-                  </form>
-                </div>
-                <div>
-                  <button class="command-google-login btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Google Login</button>
-                </div>
-                <div class="card-tail" style="text-align: right;">
-                  <button type="button" class="btn btn-link m-1 command-move-register">회원가입</button>
-                </div>
-                
-            </div>
+   
+
+    <div class="wrapper row center-div">
+      <div class="col-md-6 ms-auto me-auto page-inner">
+        <div class="card">
+          <div class="card-header form-header row-space-between">
+              <span class="fw-semibold client-title">로그인</span>
+          </div>
+          <div class="card-body">
+              <div class="card">
+                  <div class="card-body">
+                    <form>
+                      <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">ID</label>
+                        <input type="email" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      </div>
+                      <div class="mb-4">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input type="password" name="password" autocomplete="on" class="form-control" id="exampleInputPassword1">
+                      </div>
+                      <div style="text-align: right;">
+                        <button class="command-pass-user btn btn-primary">Sign In</button>
+                      </div>
+                    </form>
+                  </div>
+              </div>
+              <div class="divider">
+                <span>또는</span>
+              </div>
+              <button class="command-google-login btn btn-black">Google Login</button>
+          </div>
+          
+          <div class="card-tail" style="text-align: right;">
+            <button type="button" class="btn btn-link m-1 command-move-register">회원가입</button>
           </div>
         </div>
-      </div>
-    </div>
+      </div>  
+    </div>  
+
+
   </div>
+
 	<script src="/util/util.js"></script>
+  <script src="/util/initController.js"></script>
+  <script src="/component/crm/abs-component.js"></script>
+  <script src="/component/crm/info-message.js"></script>
 
 	<script>
     const clientId = JSON.parse(`<%= JSON.stringify(clientId) %>`.replaceAll('&#34;', '\"'));
 
 		document.addEventListener('DOMContentLoaded', function () {
+
+    new InitController(clientId)
+    document.querySelector('.client-title').innerText = `${clientId} CRM 로그인`;
+
 		document.addEventListener('click', handleClick);
 
 		function handleClick(e) {
@@ -67,6 +82,7 @@
 							{
 								const form = node.closest('form');
 								const formData = new FormData(form);
+                formData.append('clientId', clientId);
 								util.sendFormData("/auth/login", "POST", formData ).then((response) => {
 									if(response.success && response.data.loginSuccess) location.href = ("/crm/"+response.data.clientId);
                   else {
