@@ -38,7 +38,12 @@ exports.create = async (req, res) => {
 		const client = new Client(createData);
 		const savedClient = await client.save();
 
-		return sendSuccessResponse(res, savedClient, "정상등록되었습니다.");
+		const infoData = {
+			...savedClient._doc,
+			date: savedClient.date.toISOString().substring(0,10)
+		};
+
+		return sendSuccessResponse(res, infoData, "정상등록되었습니다.");
 	} catch(error) {
 		console.log(error);
 		return sendErrorResponse(res, 500, "Client 생성 중 오류가 발생했습니다.", error.message);
@@ -61,7 +66,33 @@ exports.addDoc = async(req, res) => {
 		return sendSuccessResponse(res, {info :infoData}, "정상등록되었습니다.");
 	}
 	catch(error) {
-		return sendErrorResponse(res, 500, "addUser 생성 중 오류가 발생했습니다."+error.message, error.message);
+		return sendErrorResponse(res, 500, "addDoc 생성 중 오류가 발생했습니다."+error.message, error.message);
+	}
+}; 
+
+exports.delete = async(req, res) => {
+	try {
+		const { _id, ...deleteData } = req.body;
+		const findInfo = await Client.findOne({ _id }).exec();
+		if (findInfo) {
+			await User.deleteMany({ clientId: deleteData.clientId});
+			await Company.deleteMany({ clientId: deleteData.clientId});
+			await Customer.deleteMany({ clientId: deleteData.clientId});
+			await Product.deleteMany({ clientId: deleteData.clientId});
+			await Sheet.deleteMany({ clientId: deleteData.clientId});
+			await Work.deleteMany({ clientId: deleteData.clientId});
+			await Board.deleteMany({ clientId: deleteData.clientId});
+			await BoardInfo.deleteMany({ clientId: deleteData.clientId});
+			await Client.deleteOne({ _id });
+		}
+		else
+		{
+			return sendErrorResponse(res, 400, "해당 크라이언트가 없습니다.");
+		}
+		return sendSuccessResponse(res, {info :findInfo}, "정상 삭제 되었습니다.");
+	}
+	catch(error) {
+		return sendErrorResponse(res, 500, "삭제 중 오류가 발생했습니다."+error.message, error.message);
 	}
 }; 
 
@@ -88,7 +119,6 @@ const getModel = (data) => {
 	}
 }
 
-
 exports.list = async (req, res) => {
 	try {
 		const clients = await Client.find({ used: { $ne: 'N' } })
@@ -97,7 +127,7 @@ exports.list = async (req, res) => {
 
 		const list = clients.map(client => ({
 			...client,
-			date: clients.date.toISOString().substring(0,10)
+			date: client.date.toISOString().substring(0,10)
 		}));
 
 		return sendSuccessResponse(res, {list: list});

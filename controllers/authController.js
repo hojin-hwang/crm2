@@ -59,11 +59,10 @@ exports.googleCallback = (req, res, next) => {
 			if (err) {
 				return next(err);
 			}
-			if(user.clientId !== 'client') {
-				return res.redirect('/crm/' + user.clientId);
-			} else {
-				return res.redirect('/client/register');
-			}
+			return res.redirect('/crm/' + user.clientId);
+			// if(user.clientId !== 'client') {
+			// 	
+			// } 
 		});
 	})(req, res, next);
 };

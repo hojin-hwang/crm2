@@ -1,12 +1,11 @@
 class NavLeft extends AbstractComponent
 {
-  constructor(info)
+  constructor()
   {
     super();
     this.messageListener = this.onMessage.bind(this)
     window.addEventListener("message", this.messageListener);
     this.addEventListener('click', this.handleClick);
-    if(info) Object.assign(this.info, info);
   }
 
   static get observedAttributes(){return [];}
@@ -23,30 +22,12 @@ class NavLeft extends AbstractComponent
         this.#changeTableContents(collection);
         return;
       }
-      if(node.className.match(/command-show-board/))
-      {
-        this.#showCustomBoard(node);
-        return;
-      }
       if(node.className.match(/command-show-component/))
       {
         if(!node.getAttribute('tag')) return;
         this.#showTagComponent(node);
         return;
       }
-      if(node.className.match(/command-show-sheet-list/))
-      {
-        if(!node.getAttribute('tag')) return;
-        this.#showSheetList(node);
-        return;
-      }
-      if(node.className.match(/command-close-nav-left/))
-      {
-        this.#hideThisBar();
-        node.classList.toggle('command-close-nav-left')
-        return;
-      }
-      
     });
   }
 
@@ -60,21 +41,6 @@ class NavLeft extends AbstractComponent
         {
           case "SELECT_TABLE_MENU":
             this.#changeTableContents(event.data.data);
-          break;
-          case "DO_SHOW_NAV_LEFT":
-            console.log("FDFDDFDS")
-            this.#showThisBar();
-            this.#appendCloseCommand();
-            //this.#selectContentsMenu(event.data.data)
-          break;
-          case "SELECT_BOARD_MENU":
-            //this.#selectBoardMenu(event.data.data)
-          break;
-          case "GET_DATA_LIST":
-            //this.#addCustomBoard(event.data.data)
-          break;
-          case "GET_USER_BOARD_LIST":
-            //this.#removeMenu(event.data.data)
           break;
           default:
           break;
@@ -98,93 +64,9 @@ class NavLeft extends AbstractComponent
   {
     const template = this.#getTemplate();
     if(template) this.appendChild(template.content.cloneNode(true));
-
-    this.#showBasicBoard();
-    this.#appendCustomerBoard();
-    if(!this.#isManager()) this.#removeManagerMenu()
     return;
   }
 
-  #showThisBar()
-  {
-    this.querySelector('.sidebar').classList.add('show')
-    this.querySelector('.sidebar-logo').classList.add('show')
-    this.querySelector('.nav-toggle').classList.add('show')
-  }
-
-  #hideThisBar()
-  {
-    this.querySelector('.sidebar').classList.remove('show')
-    this.querySelector('.sidebar-logo').classList.remove('show')
-    this.querySelector('.nav-toggle').classList.remove('show')
-  }
-
-  #appendCloseCommand()
-  {
-    this.querySelector('.nav-toggle').classList.toggle('command-close-nav-left')
-  }
-
-  #isManager()
-  {
-      if(globalThis.user.degree === '관리자') return true;
-      return false;
-  }
-
-  #hasUserInBoard(tag)
-  {
-    if(this.#isManager()) return true;
-    const result = globalThis.boardInfoList.filter(board=>{
-      if(board.tag === tag)
-      {
-        if(board.user && board.user.includes(globalThis.user._id)) return board;
-      }
-    })
-    
-    if(result && result.length) return true;
-    else return false;
-  }
-
-  
-
-  #makeMenu(board)
-  {
-    const li = document.createElement('li')
-    li.classList.add("nav-item");
-    li.innerHTML = `
-      <a href="#" class="command-show-board" data-tag="${board.tag}" 
-      data-name="${board.name}" data-id="${board._id}">
-        <i class="fas fa-clipboard"></i>
-        <p>${board.name}</p>
-      </a>
-    `
-    return li;
-  }
-
-  #showBasicBoard()
-  {
-    globalThis.boardInfoList.forEach(board => {
-      if(this.#hasUserInBoard(board.tag))
-      {
-        this.querySelector(`li.${board.tag}`)?.classList.remove('hidden')
-      }
-    });
-  }
-
-  #appendCustomerBoard()
-  {
-    globalThis.boardInfoList.forEach(board => {
-      if(board.type !== 'custom') return;
-      if(this.#isManager() || (board.user && board.user.includes(globalThis.user._id)))
-      {
-        this.querySelector('ul.custom-board').appendChild(this.#makeMenu(board))
-      }
-    });
-  }
-
-  #removeManagerMenu()
-  {
-    this.querySelector('ul.manage-menu')?.remove();
-  }
 
   #changeTableContents(collection)
   {
@@ -193,20 +75,6 @@ class NavLeft extends AbstractComponent
     document.querySelector('.page-inner').appendChild(_list);
   }
 
-  #showCustomBoard(node)
-  {
-    const info = (node.dataset.tag === 'notice')? globalThis.config["notice"] : globalThis.config["board"]
-    info.boardId = node.dataset.id;
-    info.title = node.dataset.name;
-    info.tag = node.dataset.tag;
-    const formData = new FormData();
-    formData.append("boardId", info.boardId);
-    info.formData = formData;
-    //const _list = new TableList(info);
-    document.querySelector('.page-inner').innerHTML = '';
-    //document.querySelector('.page-inner').appendChild(new CustomBoard(info));
-    document.querySelector('.page-inner').appendChild(new TableList(info));
-  }
 
   #showTagComponent(node)
   {
@@ -214,13 +82,6 @@ class NavLeft extends AbstractComponent
     const component = document.createElement(tagName);
     document.querySelector('.page-inner').innerHTML = '';
     document.querySelector('.page-inner').appendChild(component);
-  }
-
-  #showSheetList(node)
-  {
-    const _list = new SheetList(globalThis.config[node.getAttribute('tag')]);
-    document.querySelector('.page-inner').innerHTML = '';
-    document.querySelector('.page-inner').appendChild(_list);
   }
 
   #getTemplate()
@@ -240,7 +101,7 @@ class NavLeft extends AbstractComponent
         <div class="sidebar" data-background-color="dark">
         <div class="sidebar-logo">
           <div class="logo-header" data-background-color="dark">
-            <a href="/crm/${globalThis.client.clientId}" class="logo">
+            <a href="/admin" class="logo">
               <img
                 src="/assets/img/kaiadmin/logo_light.svg"
                 alt="navbar brand"
@@ -256,9 +117,6 @@ class NavLeft extends AbstractComponent
                 <i class="fas fa-times"></i>
               </button>
             </div>
-            <!--<button class="topbar-toggler more">
-              <i class="gg-more-vertical-alt"></i>
-            </button>-->
           </div>
         </div>
         <div class="sidebar-wrapper scrollbar scrollbar-inner">
@@ -268,20 +126,20 @@ class NavLeft extends AbstractComponent
                   <span class="sidebar-mini-icon">
                     <i class="fa fa-ellipsis-h"></i>
                   </span>
-                  <h4 class="text-section">영업</h4>
+                  <h4 class="text-section">Client</h4>
                 </li>
 
-                <li class="nav-item hidden calendar">
-                  <a href="#" class="command-show-component" tag="calendar-board">
+                <li class="nav-item">
+                  <a href="#" class="command-show-component" tag="client-list">
                     <i class="fas fa-calendar-check"></i>
-                    <p>캘린더</p>
+                    <p>리스트</p>
                   </a>
                 </li>
 
-                <li class="nav-item hidden sheet">
-                  <a href="#" class="command-show-sheet-list" tag="sheet">
+                <li class="nav-item">
+                  <a href="#" class="command-show-component" tag="make-client">
                     <i class="fas fa-briefcase"></i>
-                    <p>영업기회</p>
+                    <p>만들기</p>
                   </a>
                 </li>
                 <li class="nav-item hidden work">

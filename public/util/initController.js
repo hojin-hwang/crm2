@@ -8,17 +8,20 @@ class InitController
 
   async #init()
   {
+    if(this.clientId  === 'client')
+    {
+      this.#appendInfoMessage();
+      return;
+    }
+    
     const formData = new FormData();
     formData.append("clientId", this.clientId);
-    const response = await util.sendFormData("/client/get", "POST", formData);
+    const response = await util.sendFormData("/client/info", "POST", formData);
     if (response.code === 400) {
       this.#appendInfoMessage()
     }
   }
 
-  #getClient(clientInfo){
-     store.get('client',false, "GET_ClientInfo", null);
-  }
 
 
   #appendInfoMessage()
@@ -35,9 +38,6 @@ class InitController
     document.querySelector('.page-inner').innerHTML = '';
     document.querySelector('.page-inner').appendChild(new InfoMessage(defaultMessage));
   }
-
-  
-
 }
 
 

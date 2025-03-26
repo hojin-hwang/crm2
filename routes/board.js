@@ -15,4 +15,6 @@ router.post('/update', LoginRequired.messageIfNotLogin, boardController.update);
 router.post('/update/read', LoginRequired.messageIfNotLogin, boardController.updateRead);
 
 router.post('/delete', LoginRequired.messageIfNotLogin, boardController.delete);
+
+router.post('/count', LoginRequired.messageIfNotLogin, boardController.count)
 module.exports = router; 

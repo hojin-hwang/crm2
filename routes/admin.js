@@ -4,7 +4,11 @@ var router = express.Router();
 const clientController = require('../controllers/clientController');
 
 router.get('/',  async(request,response)=>{
-    response.render('admin.ejs', {"userInfo":{}});
+    if(!request.user || request.user.clientId !== 'client'){
+        response.redirect('/');
+        return;
+    }
+    response.render('admin.ejs', {"userInfo":request.user});
 });
 
 

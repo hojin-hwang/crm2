@@ -34,6 +34,7 @@ class UserForm extends AbsForm
         {
             Object.assign(this.data, store.getInfo('user','_id', data._id));
             this.data["isNew"] = false;
+            FORM_CONFIG.degrees = ['대기', '일반','관리자']
         }
         else
         {
@@ -49,6 +50,7 @@ class UserForm extends AbsForm
                 isNew: "save"
             };
             Object.assign(this.data, defaultData);
+            FORM_CONFIG.degrees = ['대기', '일반']
         }
     }
 

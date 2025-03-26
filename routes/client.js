@@ -8,5 +8,7 @@ const clientController = require('../controllers/clientController');
 	//router.post('/add', LoginRequired.messageIfNotLogin, clientController.create);
 	router.post('/add', clientController.create);
 	router.post('/addDoc', clientController.addDoc);
-	router.post('/get', clientController.info);
+	router.post('/info', clientController.info);
+	router.post('/list', clientController.list);
+	router.post('/delete', clientController.delete);
 module.exports = router; 

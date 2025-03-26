@@ -210,6 +210,14 @@ exports.delete = async (req, res) => {
 	}
 };
 
+exports.count = async (req, res) => {
+	try {
+		const count = await Board.countDocuments({ clientId: req.user.clientId });
+		return sendSuccessResponse(res, { count }, "게시판 정보 개수를 조회했습니다.");
+	} catch(error) {
+		return sendErrorResponse(res, 500, "게시판 정보 개수 조회 중 오류가 발생했습니다.", error.message);
+	}
+}
 
 // 게시판 상세 정보 조회 추가	
 exports.get = async (req, res) => {

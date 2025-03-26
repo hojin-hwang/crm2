@@ -20,6 +20,13 @@ class MainController
     // checkPassClientId
     if(clientInfo.clientId !== userInfo.clientId){
       window.location.href = "/";
+      return
+    }
+
+    // client User
+    if(clientInfo.clientId === 'client' && 'client'== userInfo.clientId){
+      window.location.href = "/admin";
+      return
     }
 
     globalThis.config = {};

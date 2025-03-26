@@ -15,7 +15,12 @@
     <!-- CSS Files -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/assets/css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="/assets/css/crm.css" />
 		<style>
+      .hidden
+      {
+        display:none;
+      }
 			.card-round{
 				height: calc(100vh - 48px);
 				margin-bottom: unset;
@@ -93,7 +98,7 @@
             <div class="row">
               <div class="col-md-4">
 								<div class="card card-secondary bg-secondary-gradient link-header">
-									<button class="btn btn-link">
+									<button class="btn btn-link command-use-demo">
 										<span class="btn-label">
 											Simple CRM 데모 이용하기
 										</span>
@@ -109,7 +114,7 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <a href="/auth/google" class="btn-google">
+                    <a href="/auth/google" class="btn-google command-google-login">
 											<img src="https://www.google.com/favicon.ico" alt="Google" class="google-icon">
 											Google로 로그인
 										</a>
@@ -128,10 +133,10 @@
 												<label for="password">Password</label>
 												<input type="password" class="form-control" id="password" name="password" autocomplete="current-password" placeholder="Password">
 											</div>
-                      <div class="form-group">
+                      <!-- <div class="form-group">
 												<label for="clientId">ClientId</label>
 												<input type="text" class="form-control" id="clientId" name="clientId" autocomplete="current-clientId" placeholder="ClientId">
-											</div>
+											</div> -->
 											<div class="form-group">
 												<button type="button" class="command-pass-user btn btn-primary">email로 로그인</button>
 											</div>
@@ -163,6 +168,15 @@
 												Simple CRM 데모 이용하기
 											</span>
 										</button>
+                    <div class="divider">
+											<span>또는</span>
+										</div>
+                    <button class="btn btn-link command-show-apply-form">
+											<span class="btn-label">
+												Simple CRM 무료사용 신청하기
+											</span>
+										</button>
+
                   </div>
                 </div>
               </div>
@@ -205,6 +219,12 @@
 									});
 									return;
 								}
+                if(node.className.match(/command-google-login/))
+								{
+									location.href = '/auth/google'
+									return;
+								}
+                
                 if(node.className.match(/command-use-demo/))
 								{
 									const formData = new FormData();
@@ -219,6 +239,10 @@
 									});
 									return;
 								}
+               if(node.className.match(/command-show-apply-form/))
+							 {
+								  console.log("show apply form")
+							 } 
 							 if(node.className.match(/command-move-register/))
 							 {
 								location.href = '/user/register'
@@ -258,6 +282,7 @@
       return true;
     }
     const checkClientId = (form)=>{
+      return true;
       if(form.clientId.value.length < 3) {
         alert('client는 3자 이상이어야 합니다');
         return false;

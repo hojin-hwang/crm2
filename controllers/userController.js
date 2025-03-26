@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
 		delete req.body._id;
 		
 		const {...createData } = req.body;
-		
+		createData.degree = "대기";
 		const user = new User(createData);
 		const savedUser = await user.save();
 

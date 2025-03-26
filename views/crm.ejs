@@ -90,6 +90,7 @@
     <script src="/component/crm/file-upload.js"></script>
     <script src="/component/crm/info-message.js"></script>
     <script src="/component/crm/waiting-user-info.js"></script>
+    <script src="/component/crm/use-record.js"></script>
     <!-- Fonts and icons -->
     <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -112,38 +113,10 @@
     <script>
       const _userInfo_s = `<%= JSON.stringify(userInfo) %>`;
       const _clientInfo_s = `<%= JSON.stringify(clientInfo) %>`;
-
       document.addEventListener('DOMContentLoaded', function () {
-        //Get config 
-        
-
         const mainController = new MainController(_userInfo_s, _clientInfo_s);
         mainController.init();
-        //mainController.loadingData();
-        //document.querySelector('nav-left').setAttribute('degree', globalThis.user.degree);
-        
-
-
       });
-
-      
-      // mainController.loadingData();
-      // mainController.layoutUIComponents();
-
-      // $(document).ready(function() {
-      //   //Notify
-      //     icon: 'icon-bell',
-      //     title: 'Kaiadmin',
-      //     message: 'Premium Bootstrap 5 Admin Dashboard',
-      //   },{
-      //     type: 'secondary',
-      //     placement: {
-      //       from: "bottom",
-      //       align: "right"
-      //     },
-      //     time: 1000,
-      //   });
-      // });
     </script>
   </body>
 </html>

@@ -202,6 +202,24 @@ exports.deleteFile = async (req, res) => {
 	}
 };
 
+exports.totalSize = async (req, res) => {
+	try {
+		const result = await File.aggregate([
+			// { $match: { clientId: req.user.clientId } }, 
+			{ 
+				$group: { 
+					_id: null, 
+					totalSize: { $sum: "$size" } 
+				} 
+			}
+		]);
+		const size = result[0]?.totalSize || 0
+		return sendSuccessResponse(res, { size }, "File Total Size 조회했습니다.");
+	} catch(error) {
+		return sendErrorResponse(res, 500, "File Total Size 조회 중 오류가 발생했습니다.", error.message);
+	}
+};
+
 function resizeImage(req) {
 	return new Promise((resolve, reject) => {
 		try {

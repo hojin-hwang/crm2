@@ -9,7 +9,6 @@ router.get('/:clientId',  async(request,response)=>{
 		return;
 	}
 	clientController.get(request).then(data=>{
-		console.log(data)
 		response.render('crm.ejs', {"userInfo":request.user, "clientInfo":data});
 	})
 });
