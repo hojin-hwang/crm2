@@ -1,4 +1,6 @@
 const Sheet = require('../models/sheet');
+const Work = require('../models/work');
+const Memo = require('../models/memo');
 const { ObjectId } = require('mongoose').Types;
 const FileDelete = require('../utils/fileDelete');
 
@@ -175,7 +177,6 @@ exports.update = async (req, res) => {
 	}
 };
 
-
 exports.delete = async (req, res) => {
 	try {
 		const { _id, ...updateData } = req.body;
@@ -184,39 +185,25 @@ exports.delete = async (req, res) => {
 			return sendErrorResponse(res, 400, "일지 ID가 필요합니다.");
 		}
 
-
-
-		const sheet = await Sheet.findById({_id, clientId: req.user.clientId});
-		if (!sheet) {
-			return sendErrorResponse(res, 404, "일지 정보를 찾을 수 없습니다.");
-		}
-
-		// 변경된 필드만 업데이트
-		const updatedFields = {};
-		for (const [key, value] of Object.entries(updateData)) {
-			if (sheet[key] !== value) {
-				updatedFields[key] = value;
-			}
-		}
-
-		if (Object.keys(updatedFields).length === 0) {
-			return sendSuccessResponse(res, { info: sheet }, "변경된 내용이 없습니다.");
-		}
-
-		Object.assign(sheet, updatedFields);
-		const savedSheet = await sheet.save();
-		const sheetData = {
-			...savedSheet._doc,
-		};
-
+		//memo delete
+		await Memo.deleteMany({sheet:_id, clientId: req.user.clientId});
+		//work delete
+		const works = await Work.find({sheet:_id, clientId: req.user.clientId}).exec();
+		works.forEach(async work => {
+			await FileDelete.removeFile(req, work._id);
+		 })
+		 
+		await Work.deleteMany({sheet:_id, clientId: req.user.clientId});
+		//sheet
+		await Sheet.deleteOne({_id, clientId: req.user.clientId});
+		
 		await FileDelete.removeFile(req, _id);
 
-		return sendSuccessResponse(res, { info: sheetData }, "일지 정보가 삭제 되었습니다.");
+		return sendSuccessResponse(res, { info: updateData }, "일지 정보가 삭제 되었습니다.");
 	} catch(error) {
 		return sendErrorResponse(res, 500, "일지 정보 삭제 중 오류가 발생했습니다.", error.message);
 	}
 };
-
 
 // 일지 상세 정보 조회 추가	
 exports.get = async (req, res) => {

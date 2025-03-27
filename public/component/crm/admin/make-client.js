@@ -7,9 +7,9 @@ class MakeClient extends AbstractComponent
     window.addEventListener("message", this.messageListener);
 
     this.addEventListener('click', this.handleClick);
-    this.clientId = '';
     this.userInfo = {};
     this.boardInfoList = [];
+    this.info = {};
   }
 
   static get observedAttributes(){return [];}
@@ -28,10 +28,9 @@ class MakeClient extends AbstractComponent
               if(response.code === 100)
               { 
                 //Button Abled Super Admin User
-                this.clientId = response.data.clientId;
+                this.info.clientId = response.data.clientId;
                 this.enableButton(document.getElementById('user_table'));
-                const message =  {msg:"COMMAND_ADD_DATA", data:response.data} 
-                window.postMessage(message, location.href);
+                this.#deleteApply()
               }
               else
               {
@@ -42,7 +41,9 @@ class MakeClient extends AbstractComponent
         }
         if(node.className.match(/command-create-user/))
         {
-            const result = this.makeUserTable()
+          const form = this.querySelector('form');
+          this.info.email = form.email.value;
+          const result = this.makeUserTable()
             return;
         }
         if(node.className.match(/command-create-company/))
@@ -115,18 +116,57 @@ class MakeClient extends AbstractComponent
     return;
   }
 
-  setData(){}
+  setData(info){
+    if(info)
+    {
+      Object.assign(this.info, info)
+      console.log(this.info)
+    }
+    else
+    {
+      this.info.clientId = "";
+      this.info.name = "";
+      this.info.email = "";
+      this.info.tel = "";
+      this.info.site = "";
+    }
+  }
+
+  async #deleteApply()
+  {
+    if(!this.info._id) return;  
+    try{
+          const formData = new FormData();
+          formData.append("_id", this.info._id)
+          const response = await util.sendFormData(`/apply/delete`, "POST", formData);
+          if(response.code === 100)
+          {
+
+              const message2 =  {msg:"COMMAND_CHANGE_DATA", data:response.data.info} 
+              window.postMessage(message2, location.href);
+          }
+          else
+          {
+              console.log(response.message);
+          }
+      }
+      catch (error) {
+          console.error('오류:', error);
+          alert('실패했습니다.');
+      }
+      return;
+  }
 
   makeUserTable = async () => {
     const formData = new FormData();
     formData.append('model', 'User');
-    formData.append('username', `admin__${this.clientId}`);
-    formData.append('password', 'admin@9876');
+    formData.append('username', `admin__${this.info.clientId}`);
+    formData.append('email', this.info.email);
     formData.append('name', '관리자');
     formData.append('degree', '관리자')
     formData.append('department', '기타')
     formData.append('position', '사원')
-    formData.append('clientId', this.clientId)
+    formData.append('clientId', this.info.clientId)
     const result = this.addDoc(formData, "COMMAND-");
     result.then((response) => {
       if(response.code === 100)
@@ -147,7 +187,7 @@ class MakeClient extends AbstractComponent
     formData.append('memo', 'Sample Company Memo')
     formData.append('tel', '02-1234-5678')
     formData.append('fax', '02-1234-9999')
-    formData.append('clientId', this.clientId)
+    formData.append('clientId', this.info.clientId)
     const result = this.addDoc(formData, "COMMAND-");
     result.then((response) => {
       if(response.code === 100)
@@ -171,7 +211,7 @@ class MakeClient extends AbstractComponent
     formData.append('email', 'hong@test.com')
     formData.append('tel', '02-1234-5678')
     formData.append('hp', '010-1234-9999')
-    formData.append('clientId', this.clientId)
+    formData.append('clientId', this.info.clientId)
     formData.append('company', this.companyInfo._id)
     const result = this.addDoc(formData, "COMMAND-");
     result.then((response) => {
@@ -192,7 +232,7 @@ class MakeClient extends AbstractComponent
     formData.append('code', '제품')
     formData.append('brand', '자체생산')
     formData.append('memo', '2025년까지 판매 예정')
-    formData.append('clientId', this.clientId)
+    formData.append('clientId', this.info.clientId)
     const result = this.addDoc(formData, "COMMAND-");
     result.then((response) => {
       if(response.code === 100)
@@ -218,7 +258,7 @@ class MakeClient extends AbstractComponent
     formData.append('memo', 'Sample 영업기회 Memo')
     formData.append('product', JSON.stringify(productInfo))
     formData.append('step', '제안')
-    formData.append('clientId', this.clientId)
+    formData.append('clientId', this.info.clientId)
     formData.append('company', this.companyInfo._id)
     formData.append('user', this.userInfo._id);
     formData.append('customer', this.customerInfo._id);
@@ -241,7 +281,7 @@ class MakeClient extends AbstractComponent
     formData.append('remark', 'Sample 영업일지 고려사항')
     formData.append('status', '타겟제품정보')
     formData.append('sheet', this.sheetInfo._id)
-    formData.append('clientId', this.clientId)
+    formData.append('clientId', this.info.clientId)
     formData.append('company', this.companyInfo._id)
     formData.append('user', this.userInfo._id);
     formData.append('customer', this.customerInfo._id);
@@ -301,7 +341,7 @@ class MakeClient extends AbstractComponent
       formData.append('name', table.name);
       formData.append('type', table.type)
       formData.append('tag', table.tag)
-      formData.append('clientId', this.clientId)
+      formData.append('clientId', this.info.clientId)
       formData.append('user', this.userInfo._id);
       const result = this.addDoc(formData, "COMMAND-");
       result.then((response) => {
@@ -319,10 +359,10 @@ class MakeClient extends AbstractComponent
     let boardInfo = this.boardInfoList.find((info) => info.tag === 'notice');
     const formData = new FormData();
     formData.append('model', 'Board');
-    formData.append('title', 'Simple CRM 공지사항');
-    formData.append('contents', 'Simple CRM 공지사항 내용')
+    formData.append('title', 'SS CRM 공지사항');
+    formData.append('contents', 'SS CRM 공지사항 내용')
     formData.append('boardId', boardInfo._id)
-    formData.append('clientId', this.clientId)
+    formData.append('clientId', this.info.clientId)
     formData.append('user', this.userInfo._id);
     const result = this.addDoc(formData, "COMMAND-");
     result.then((response) => {
@@ -399,7 +439,27 @@ class MakeClient extends AbstractComponent
             <form>
               <div class="form-group">
                 <label for="clientId">Client Id</label>
-                <input type="text" id="clientId" value="" name="clientId" placeholder="client name" class="form-control" style="width: auto;">
+                <input type="text" id="clientId" value="${this.info.clientId}" name="clientId" placeholder="client name" class="form-control" style="width: auto;">
+              </div>
+              <div class="row-space-between">
+                <div class="form-group">
+                  <label for="clientId">name</label>
+                  <input type="text" id="name" value="${this.info.name}" name="name" class="form-control" style="width: auto;">
+                </div>
+                <div class="form-group">
+                  <label for="clientId">email</label>
+                  <input type="text" id="email" value="${this.info.email}" name="email" class="form-control" style="width: auto;">
+                </div>
+              </div>
+              <div class="row-space-between">
+                <div class="form-group">
+                  <label for="clientId">site</label>
+                  <input type="text" id="site" value="${this.info.site}" name="site" class="form-control" style="width: auto;">
+                </div>
+                <div class="form-group">
+                  <label for="clientId">tel</label>
+                  <input type="text" id="tel" value="${this.info.tel}" name="tel" class="form-control" style="width: auto;">
+                </div>
               </div>
               <button type="button" class="btn btn-primary form-control command-create-client">Make Client</button>
             </form>

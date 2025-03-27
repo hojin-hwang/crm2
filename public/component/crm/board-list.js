@@ -39,9 +39,7 @@ class BoardList extends AbstractComponent
         {
           const formData = new FormData();
           formData.append('_id', node.dataset.id)
-          formData.append('name', node.closest('tr').querySelector('input[name=name]').value)
-          formData.append('used', 'N')
-          store.updateInfo(formData, 'boardInfo', "COMMAND_CHANGE_DATA")
+          store.deleteInfo(formData, 'boardInfo', "COMMAND_CHANGE_DATA")
         }
       }
       

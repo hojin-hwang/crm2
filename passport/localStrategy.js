@@ -17,7 +17,6 @@ module.exports = () => {
             try {
                // 가입된 회원인지 아닌지 확인
                const exUser = await User.findOne({ username}).exec();
-
                if (exUser) {
                   // 해시비번을 비교
                   const result = await bcrypt.compare(password, exUser.password);

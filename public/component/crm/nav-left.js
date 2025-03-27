@@ -67,8 +67,8 @@ class NavLeft extends AbstractComponent
             this.#appendCloseCommand();
             //this.#selectContentsMenu(event.data.data)
           break;
-          case "SELECT_BOARD_MENU":
-            //this.#selectBoardMenu(event.data.data)
+          case "COMMAND_CHANGE_DATA":
+            this.#appendCustomerBoard();
           break;
           case "GET_DATA_LIST":
             //this.#addCustomBoard(event.data.data)
@@ -172,6 +172,7 @@ class NavLeft extends AbstractComponent
 
   #appendCustomerBoard()
   {
+    this.querySelector('ul.custom-board').innerHTML = '';
     globalThis.boardInfoList.forEach(board => {
       if(board.type !== 'custom') return;
       if(this.#isManager() || (board.user && board.user.includes(globalThis.user._id)))

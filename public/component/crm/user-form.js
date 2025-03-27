@@ -1,5 +1,5 @@
 // 상수 정의 ClientInfo로 빼자..
-const DEFAULT_PASSWORD = 'simple_crm@9999';
+const DEFAULT_PASSWORD = 'ss_crm@9999';
 const FORM_CONFIG = {
     departments: ['경영진', '생산부', '관리부', '영업부', '기타'],
     positions: ['사원', '주임', '대리', '과장', '차장', '부장', '이사', '대표'],

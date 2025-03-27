@@ -1,5 +1,5 @@
 
-class ClientList extends AbstractComponent
+class ApplyList extends AbstractComponent
 {
   
   constructor()
@@ -10,13 +10,14 @@ class ClientList extends AbstractComponent
 
     this.addEventListener('click', this.handleClick);
     this.info = {
-      "title":"Client 리스트",
+      "title":"Apply 리스트",
       "formName":"make-client",
       "order":[[3, 'desc']],
       "columns":[
         { "data": "_id", "title":"id"},
         { "data": "clientId", "title":"Client ID"},
-        { "data": "name", "title":"Client Name"},
+        { "data": "name", "title":"신청자"},
+        { "data": "email", "title":"email"},
         { "data": "date", "title":"등록일" },
         {
           "className":"options",
@@ -43,7 +44,11 @@ class ClientList extends AbstractComponent
     e.composedPath().find((node)=>{
       if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
       if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
-      
+      if(node.className.match(/command-show-form/))
+      {
+        const _tempInfo = {"tagName":'make-client', "info":null}
+        this.sendPostMessage({msg:"DO_SHOW_MODAL", data:_tempInfo});
+      }
     });
   }
 
@@ -68,13 +73,6 @@ class ClientList extends AbstractComponent
               this.#appendTable();
             }, 100);
 
-          break;
-          case "COMMAND_ADD_DATA":
-            setTimeout(() => {
-              this.#addData(event.data.data);
-              this.#unSelectAllRows()
-            }, 100);
-            
           break;
           
           default:
@@ -105,7 +103,7 @@ class ClientList extends AbstractComponent
 	{
 		try{
       const formData = new FormData();
-			const response = await util.sendFormData(`/client/list`, "POST", formData);
+			const response = await util.sendFormData(`/apply/list`, "POST", formData);
       if(response.code === 100)
       {
         const message =  {msg:"GET_DATA_LIST", data:response.data.list} 
@@ -131,17 +129,17 @@ class ClientList extends AbstractComponent
     }
   }
 
-  #updateData(data)
+  #addNewButton()
   {
-    this.list = this.list.filter(client => client._id !== data._id);
-    
-    this.table.clear();
-    this.table.rows.add( this.list ).draw(false);
+    const addButton = document.createElement('div');
+    addButton.innerHTML = `<button class="btn btn-primary command-show-form" type="button">New Client 만들기</button>`;
+    this.querySelector('.dt-layout-row')?.appendChild(addButton);
   }
 
-  #addData(data)
+  #updateData(data)
   {
-    this.list.push(data);
+    this.list = this.list.filter(apply => apply._id !== data._id);
+    
     this.table.clear();
     this.table.rows.add( this.list ).draw(false);
   }
@@ -200,6 +198,8 @@ class ClientList extends AbstractComponent
 
     if(!table) return;
 
+    this.#addNewButton();
+
     table.on( 'click', 'td', function () {
   
       const cellData = {};
@@ -208,18 +208,17 @@ class ClientList extends AbstractComponent
       cellData.column = table.cell( this )[0][0]["column"];
   
       let this_row = table.rows(this).data();
-      if(cellData.column === 4) //수정버튼
+      if(cellData.column === 5) //Client 만들기
       {
-        console.log("View Client Info")
-        //const _tempInfo = {"tagName":formName, "info":this_row[0]}
-        //const _message = {msg:"DO_SHOW_MODAL", data:_tempInfo}
-        //window.postMessage(_message, location.href);
-        return;
-      }  
-      if(cellData.column === 5){
-        const _tempInfo = {"tagName":'client-delete-form', "info":this_row[0]}
+        const _tempInfo = {"tagName":'make-client', "info":this_row[0]}
         const _message = {msg:"DO_SHOW_MODAL", data:_tempInfo}
         window.postMessage(_message, location.href);
+        return;
+      }  
+      if(cellData.column === 6){
+        // const _tempInfo = {"tagName":'client-delete-form', "info":this_row[0]}
+        // const _message = {msg:"DO_SHOW_MODAL", data:_tempInfo}
+        // window.postMessage(_message, location.href);
       }
         
     } );
@@ -243,7 +242,7 @@ class ClientList extends AbstractComponent
       const tempalate = document.createElement('template');
       tempalate.innerHTML = `
       <div class="page-header">
-        <h3 class="fw-bold mb-3">Client List</h3>
+        <h3 class="fw-bold mb-3">Apply List</h3>
       </div>
         
       <div class="card">
@@ -256,5 +255,5 @@ class ClientList extends AbstractComponent
       return tempalate;
   }
 }
-customElements.define("client-list", ClientList);
+customElements.define("apply-list", ApplyList);
 

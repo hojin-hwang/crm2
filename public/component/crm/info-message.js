@@ -55,7 +55,9 @@ class InfoMessage extends AbstractComponent
 
   #showButton()
   {
+    const closebutton = this.querySelector('.command-close-modal');
     const button = this.querySelector('.command-go-link');
+    if(this.info.close) closebutton.classList.remove('hidden');
     if(this.info.button.visible) button.classList.remove('hidden');
   }
 
@@ -66,6 +68,8 @@ class InfoMessage extends AbstractComponent
         <div class="card">
           <div class="card-header form-header row-space-between">
             <span class="fw-semibold">${this.info.title}</span>
+            <button type="button" class="btn btn-icon btn-black command-close-modal hidden">
+                <i class="fas fa-times"></i></button>
           </div>
           <div class="card-body">
             <p>${this.info.message}</p>

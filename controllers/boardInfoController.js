@@ -1,6 +1,8 @@
 const BoardInfo = require('../models/boardInfo');
+const Board = require('../models/board');
 const { ObjectId } = require('mongoose').Types;
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
+const FileDelete = require('../utils/fileDelete');
 
 // 회사 데이터 유효성 검사
 const validateData = (data) => {
@@ -156,32 +158,60 @@ exports.delete = async (req, res) => {
 			return sendErrorResponse(res, 400, "게시판 ID가 필요합니다.");
 		}
 
-		const boardInfo = await BoardInfo.findById({_id, clientId: req.user.clientId});
-		if (!boardInfo) {
-			return sendErrorResponse(res, 404, "게시판 정보를 찾을 수 없습니다.");
-		}
+		//관련 게시물의 파일을 지우고
+		//관련 게시물을 지우고
+		//해당 게시판 정보를 지운다
+		const contents = await Board.find({boardId:_id, clientId: req.user.clientId}).exec();
+		contents.forEach(async content => {
+			await FileDelete.removeFile(req, content._id);
+		 })
+		 
+		await Board.deleteMany({boardId:_id, clientId: req.user.clientId});
+		//sheet
+		await BoardInfo.deleteOne({_id, clientId: req.user.clientId});
+			
 
-		// 변경된 필드만 업데이트
-		const updatedFields = {};
-		for (const [key, value] of Object.entries(updateData)) {
-			if (boardInfo[key] !== value) {
-				updatedFields[key] = value;
-			}
-		}
-
-		Object.assign(boardInfo, updatedFields);
-		const savedBoardInfo = await boardInfo.save();
-		
-		const boardInfoData = {
-			...savedBoardInfo._doc,
-		};		
-
-		return sendSuccessResponse(res, { info: boardInfoData }, "게시판 정보가 삭제되었습니다.");
+		return sendSuccessResponse(res, { info: updateData }, "게시판 정보가 삭제되었습니다.");
 	} catch(error) {
 		console.log(error)
 		return sendErrorResponse(res, 500, "게시판 정보 삭제 중 오류가 발생했습니다.", error.message);
 	}
 };
+
+// exports.delete = async (req, res) => {
+// 	try {
+// 		const { _id, ...updateData } = req.body;
+
+// 		if (!_id) {
+// 			return sendErrorResponse(res, 400, "게시판 ID가 필요합니다.");
+// 		}
+
+// 		const boardInfo = await BoardInfo.findById({_id, clientId: req.user.clientId});
+// 		if (!boardInfo) {
+// 			return sendErrorResponse(res, 404, "게시판 정보를 찾을 수 없습니다.");
+// 		}
+
+// 		// 변경된 필드만 업데이트
+// 		const updatedFields = {};
+// 		for (const [key, value] of Object.entries(updateData)) {
+// 			if (boardInfo[key] !== value) {
+// 				updatedFields[key] = value;
+// 			}
+// 		}
+
+// 		Object.assign(boardInfo, updatedFields);
+// 		const savedBoardInfo = await boardInfo.save();
+		
+// 		const boardInfoData = {
+// 			...savedBoardInfo._doc,
+// 		};		
+
+// 		return sendSuccessResponse(res, { info: boardInfoData }, "게시판 정보가 삭제되었습니다.");
+// 	} catch(error) {
+// 		console.log(error)
+// 		return sendErrorResponse(res, 500, "게시판 정보 삭제 중 오류가 발생했습니다.", error.message);
+// 	}
+// };
 
 // 게시판 상세 정보 조회 추가
 exports.get = async (req, res) => {

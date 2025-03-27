@@ -172,7 +172,7 @@ class MainController
   {
     this.accessMenu = [];
     globalThis.boardInfoList.forEach(board=>{
-      board.user.includes(globalThis.user._id) ? this.accessMenu.push(board) : null
+      (board.user.includes(globalThis.user._id) || globalThis.user.degree === '관리자') ? this.accessMenu.push(board) : null
     });
   }
 

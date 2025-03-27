@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Simple CRM</title>
+    <title>SS CRM</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -80,7 +80,10 @@
 		}
 
 		.link-header{display: none;}
-
+    .btn-link:hover{
+      background-color: #ffad46!important;;
+      color: white!important;;
+    }
 		@media screen and (max-width: 700px) {
 			.card-round:first-child{display: none;}
 			.link-header{display: block;}
@@ -96,21 +99,21 @@
         <div class="">
           <div class="page-inner">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-4 form-zone">
 								<div class="card card-secondary bg-secondary-gradient link-header">
 									<button class="btn btn-link command-use-demo">
 										<span class="btn-label">
-											Simple CRM 데모 이용하기
+											SS CRM 데모 이용하기
 										</span>
 									</button>
 								</div>
 
-                <div class="card card-round">
+                <div class="card card-round form-login">
 									
                   <div class="card-header">
 										
                     <div class="card-head-row">
-                      <h4 class="card-title">Simple CRM 로그인</h4>
+                      <h4 class="card-title">SS CRM 로그인</h4>
                     </div>
                   </div>
                   <div class="card-body">
@@ -133,10 +136,6 @@
 												<label for="password">Password</label>
 												<input type="password" class="form-control" id="password" name="password" autocomplete="current-password" placeholder="Password">
 											</div>
-                      <!-- <div class="form-group">
-												<label for="clientId">ClientId</label>
-												<input type="text" class="form-control" id="clientId" name="clientId" autocomplete="current-clientId" placeholder="ClientId">
-											</div> -->
 											<div class="form-group">
 												<button type="button" class="command-pass-user btn btn-primary">email로 로그인</button>
 											</div>
@@ -147,15 +146,15 @@
               </div>
 
 
-							<div class="col-md-8">
-                <div class="card card-round">
+							<div class="col-md-8 form-info">
+                <div class="card card-round index-info">
                   <div class="card-header">
                     <div class="card-head-row card-tools-still-right">
-                      <h1 class="card-title">Simple 하지만 강력한 CRM Solution</h1>
+                      <h1 class="card-title">간단하지만 강력한 CRM Solution</h1>
                       
                     </div>
                     <p class="card-category">
-											고객 관리의 새로운 기준, Simple CRM과 함께 비즈니스를 성장시키세요. <br>
+											고객 관리의 새로운 기준, SS CRM과 함께 비즈니스를 성장시키세요. <br>
 											간편한 사용성과 강력한 기능으로 당신의 비즈니스를 한 단계 더 발전시킬 수 있습니다.
                     </p>
 										<p class="card-category">
@@ -165,7 +164,7 @@
                   <div class="card-body">
 										<button class="btn btn-link command-use-demo">
 											<span class="btn-label">
-												Simple CRM 데모 이용하기
+												SS CRM 데모 이용하기
 											</span>
 										</button>
                     <div class="divider">
@@ -173,7 +172,7 @@
 										</div>
                     <button class="btn btn-link command-show-apply-form">
 											<span class="btn-label">
-												Simple CRM 무료사용 신청하기
+												SS CRM 무료사용 신청하기
 											</span>
 										</button>
 
@@ -186,28 +185,52 @@
         </div>
 
       </div>
-
     </div>
+    <modal-page></modal-page>
     <!--   Core JS Files   -->
     <script src="/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="/assets/js/core/popper.min.js"></script>
     <script src="/assets/js/core/bootstrap.min.js"></script>
 		<script src="/util/util.js"></script>
-
+    <script src="/component/crm/abs-component.js"></script>
+    <script src="/component/crm/modal-page.js"></script>
+    <script src="/component/crm/apply-form.js"></script>
+    <script src="/component/crm/apply-condition.js"></script>
+    <script src="/component/crm/info-message.js"></script>
     <!-- Kaiadmin JS -->
     <!-- <script src="/assets/js/kaiadmin.min.js"></script> -->
+
+    <!-- Fonts and icons -->
+    <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["/assets/css/fonts.min.css"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
 			document.addEventListener('click', handleClick);
 	
 			function handleClick(e) {
-					 e.preventDefault();
+					 //e.preventDefault();
 					 e.composedPath().find((node)=>{
 							 if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
 							 if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
 							 if(node.className.match(/command-pass-user/))
 								{
-									const form = node.closest('form');
+                  const form = node.closest('form');
 									if(!userLoginCondition(form)) return;
 									
 									const formData = new FormData(form);
@@ -241,7 +264,10 @@
 								}
                if(node.className.match(/command-show-apply-form/))
 							 {
-								  console.log("show apply form")
+                  document.querySelector('.form-login').classList.add('hidden')
+                  document.querySelector('.index-info').classList.add('hidden')
+                  document.querySelector('.form-zone').appendChild(new ApplyForm())
+                  document.querySelector('.form-info').appendChild(new ApplyCondition())
 							 } 
 							 if(node.className.match(/command-move-register/))
 							 {
@@ -260,18 +286,18 @@
     }
     
     const checkEmail = (form)=>{
-      if(form.username.value.length < 1) {
+      if(form.username.value.length < 4) {
         alert('이메일은 필수입력사항입니다');
         return false;
       }
-      else
-      {
-        const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
-        if(!regEmail.test(form.username.value)) {
-            alert('이메일 형식에 따라 정확히 입력해주세요');
-            return false;
-        }
-      }
+      // else
+      // {
+      //   const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+      //   if(!regEmail.test(form.username.value)) {
+      //       alert('이메일 형식에 따라 정확히 입력해주세요');
+      //       return false;
+      //   }
+      // }
       return true;
     }
     const checkPassword = (form)=>{

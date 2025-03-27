@@ -64,6 +64,13 @@ class ModalPage extends AbstractComponent
         _component.setData(info.info);
         this.querySelector('.modal-body').appendChild(_component);
     }
+
+    appendComponent(component)
+    {
+        this.querySelector('.modal-body').innerHTML = '';
+        this.querySelector('.modal-body').appendChild(component);
+        this.#showModal();
+    }
     
     #setStyle()
     {

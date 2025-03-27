@@ -3,6 +3,9 @@ class BoardInfoForm extends AbsForm
     constructor()
     {
         super();  
+        this.data = {};
+        this.data.isNew = true;
+        this.data.collection = 'boardInfo'
     }
 
     static get observedAttributes() {return; }

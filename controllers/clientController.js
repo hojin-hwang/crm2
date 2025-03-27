@@ -7,6 +7,9 @@ const Sheet = require('../models/sheet');
 const Work = require('../models/work');
 const BoardInfo = require('../models/boardInfo');
 const Board = require('../models/board');
+const generator = require("password-generator");
+
+const sendEmail = require('../utils/sendMail');
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
 //데이터 유효성 검사
@@ -53,6 +56,11 @@ exports.create = async (req, res) => {
 exports.addDoc = async(req, res) => {
 	try {
 		const {...createData } = req.body;
+		if(createData.model === "User")
+		{
+			createData.password =  generator(12, false);
+		}
+
 		const collection = getModel(createData)
 		const savedDoc = await collection.save();
 
@@ -61,7 +69,54 @@ exports.addDoc = async(req, res) => {
 			date: savedDoc.date.toISOString().substring(0,10)
 		};
 
-		if(createData.model === "User") delete infoData.password;
+		if(createData.model === "User") {
+			delete infoData.password;
+			if(createData.email)
+			{
+				const subject = `${createData.name}님! SS CRM 신청이 정상처리되었습니다.`
+				const html = 
+				`
+				<div style="max-width:100%;">
+					<div style="border-radius: 10px;
+					background-color: #fff;
+					border: 0;
+					width:90%;
+					margin:auto;
+					border-radius: 15px;
+					border: 1px solid #eee;
+					margin-bottom: 36px;
+					margin-top: 36px; 
+					">
+						<div style="
+						border-top-left-radius: 15px;
+						border-top-right-radius: 15px;
+						background: #1a2035 !important;
+						color: white;
+						padding: 12px 24px;
+						">
+							<span style="font-size: 14px; font-weight: bold;">SS CRM 가입완료</span>
+						</div>
+						<div style="padding: 12px 24px; color: #212529bf !important; font-size:14px;">
+							<p>
+								SS CRM 서비스 신청이 수락되었습니다. 아래 URL 주소로 서비스를 이용하실 수 있습니다.
+							</p>
+							<ul>
+								<li> 관리자 아이디 : ${infoData.username}</li>
+								<li> 관리자 비밀번호 : ${createData.password}</li>
+							</ul>
+							<a href="https://www.sscrm.com/crm/${infoData.clientId}" target="_blank">https://www.sscrm.com/crm/${infoData.clientId}</a>
+							<p style="text-align: right;">간단하면서 강력한 CRM - SS CRM </p>
+						</div>
+					</div>
+				</div>
+				`
+				await sendEmail({
+					to: createData.email,
+					subject: subject,
+					html: html,
+				});
+			}
+		}
 
 		return sendSuccessResponse(res, {info :infoData}, "정상등록되었습니다.");
 	}
@@ -69,6 +124,21 @@ exports.addDoc = async(req, res) => {
 		return sendErrorResponse(res, 500, "addDoc 생성 중 오류가 발생했습니다."+error.message, error.message);
 	}
 }; 
+
+exports.sendMail = async(req, res) => {
+	try{
+		const {...mailInfo } = req.body;
+		await sendEmail({
+			to: mailInfo.to,
+			subject: mailInfo.subject,
+			html: mailInfo.content,
+		});
+		return sendSuccessResponse(res, {mailInfo}, "정상적으로 보내졌습니다.");
+	}
+	catch(e){
+		return sendErrorResponse(res, 500, "Message발송 중 오류가 발생했습니다."+error.message, error.message);
+	}
+}
 
 exports.delete = async(req, res) => {
 	try {

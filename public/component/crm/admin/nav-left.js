@@ -128,7 +128,12 @@ class NavLeft extends AbstractComponent
                   </span>
                   <h4 class="text-section">Client</h4>
                 </li>
-
+                <li class="nav-item">
+                  <a href="#" class="command-show-component" tag="apply-list">
+                    <i class="fas fa-calendar-check"></i>
+                    <p>신청서</p>
+                  </a>
+                </li>
                 <li class="nav-item">
                   <a href="#" class="command-show-component" tag="client-list">
                     <i class="fas fa-calendar-check"></i>
@@ -136,85 +141,14 @@ class NavLeft extends AbstractComponent
                   </a>
                 </li>
 
-                <li class="nav-item">
-                  <a href="#" class="command-show-component" tag="make-client">
-                    <i class="fas fa-briefcase"></i>
-                    <p>만들기</p>
-                  </a>
-                </li>
-                <li class="nav-item hidden work">
-                  <a href="#" class="command-show-table" tag="work">
-                    <i class="fas fa-book"></i>
-                    <p>영업일지</p>
-                  </a>
-                </li>
-
-                <li class="nav-item">
-                  <a data-bs-toggle="collapse" href="#base-info">
-                    <i class="fas fa-layer-group"></i>
-                    <p>정보관리</p>
-                    <span class="caret"></span>
-                  </a>
-                  <div class="collapse" id="base-info">
-                    <ul class="nav nav-collapse">
-                      <li class="hidden company">
-                        <a href="#" class="command-show-table" tag="company">
-                          <span class="sub-item">고객사</span>
-                        </a>
-                      </li>
-                      <li class="hidden customer">
-                        <a href="#" class="command-show-table" tag="customer">
-                          <span class="sub-item">고객</span>
-                        </a>
-                      </li>
-                      <li class="hidden product">
-                        <a href="#" class="command-show-table" tag="product">
-                          <span class="sub-item">품목</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
+                
 
               <li class="nav-section">
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>
                 </span>
-                <h4 class="text-section">게시판</h4>
+                <h4 class="text-section">Any thing</h4>
               </li>
-
-              <ul class="nav custom-board">
-              
-              </ul>
-
-              <ul class="nav nav-collapse manage-menu">
-                <li class="nav-section">
-                <span class="sidebar-mini-icon">
-                  <i class="fa fa-ellipsis-h"></i>
-                </span>
-                <h4 class="text-section">관리자</h4>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="command-show-table" tag="user">
-                    <i class="fas fa-user-plus"></i>
-                    <p>사용자</p>
-                    <span class="badge badge-secondary">1</span>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="command-show-component" tag="board-list">
-                    <i class="fas fa-cog"></i>
-                    <p>게시판 관리</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="#" class="command-show-component" tag="use-record">
-                    <i class="fas fa-chart-bar"></i>
-                    <p>기록</p>
-                  </a>
-                </li>
-              </ul>
-              
             </ul>
           </div>
         </div>
