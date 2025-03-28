@@ -84,7 +84,7 @@ app.use('/admin', adminRouter);
 app.use('/apply', applyRouter);
 // app.listen -> server.listen 으로 변경(소켓 사용을 위해)
 app.listen(process.env.PORT,()=>{
-	console.log("starting Server port 8080??!!")
+	console.log("starting Server port 3000!!")
 })
 
 app.get('/test/',  async(request,response)=>{
