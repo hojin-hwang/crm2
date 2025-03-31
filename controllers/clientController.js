@@ -104,7 +104,7 @@ exports.addDoc = async(req, res) => {
 								<li> 관리자 아이디 : ${infoData.username}</li>
 								<li> 관리자 비밀번호 : ${createData.password}</li>
 							</ul>
-							<a href="https://www.sscrm.com/crm/${infoData.clientId}" target="_blank">https://www.sscrm.com/crm/${infoData.clientId}</a>
+							<a href="https://crm.todayground.com/crm/${infoData.clientId}" target="_blank">https://crm.todayground.com/crm/${infoData.clientId}</a>
 							<p style="text-align: right;">간단하면서 강력한 CRM - SS CRM </p>
 						</div>
 					</div>
