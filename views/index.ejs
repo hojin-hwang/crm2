@@ -251,8 +251,8 @@
                 if(node.className.match(/command-use-demo/))
 								{
 									const formData = new FormData();
-                  formData.append('username', 'guest@test.com');
-                  formData.append('password', '22222');
+                  formData.append('username', 'admin__demo');
+                  formData.append('password', 'W2m5g19hWfWz');
                   formData.append('clientId', 'demo');
 									util.sendFormData("/auth/login", "POST", formData ).then((response) => {
 										if(response.success && response.data.loginSuccess) location.href = ("/crm/"+response.data.clientId);
