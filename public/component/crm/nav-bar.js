@@ -55,12 +55,7 @@ class NavBar extends AbstractComponent
             <!-- Logo Header -->
             <div class="logo-header" data-background-color="dark">
               <a href="/crm/${globalThis.user.clientId}" class="logo">
-                <img
-                  src="/assets/img/kaiadmin/logo_light.svg"
-                  alt="navbar brand"
-                  class="navbar-brand"
-                  height="20"
-                />
+                <span class="logo-title">Simple CRM</span>
               </a>
               <div class="nav-toggle command-show-nav-left">
                 <button class="btn btn-toggle toggle-sidebar">

@@ -236,18 +236,22 @@ class NavLeft extends AbstractComponent
             display:block;
           }
           .nav-toggle.show{right: 18px!important;justify-content: right;}
-
+          .logo-title{
+            font-size: 24px;
+            font-weight: bolder;  
+            color:white;
+          }
+            @media screen and (max-width: 991.5px) {
+              .logo-header .logo .logo-title {
+                  display:none;
+              }
+          }
         </style>
         <div class="sidebar" data-background-color="dark">
         <div class="sidebar-logo">
           <div class="logo-header" data-background-color="dark">
             <a href="/crm/${globalThis.client.clientId}" class="logo">
-              <img
-                src="/assets/img/kaiadmin/logo_light.svg"
-                alt="navbar brand"
-                class="navbar-brand"
-                height="20"
-              />
+              <span class="logo-title">Simple CRM</span>
             </a>
             <div class="nav-toggle">
               <button class="btn btn-toggle toggle-sidebar">
