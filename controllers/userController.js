@@ -3,14 +3,14 @@ const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHel
 
 exports.create = async (req, res) => {
 	try {
-		const userInfo = await User.findOne({ username: req.body.username, clientId }).exec();
+		const userInfo = await User.findOne({ username: req.body.username }).exec();
 		if (userInfo) {
 			return sendErrorResponse(res, 400, "중복된 아이디입니다.");
 		}
 		delete req.body._id;
 		
 		const {...createData } = req.body;
-		createData.degree = "대기";
+		createData.degree = (createData.degree)? createData.degree : "대기";
 		const user = new User(createData);
 		const savedUser = await user.save();
 
@@ -30,7 +30,7 @@ exports.create = async (req, res) => {
 
 exports.list = async (req, res) => {
 	try {
-		const users = await User.find({ used: { $ne: 'N' },  clientId: req.user.clientId })
+		const users = await User.find({ used: { $ne: 'N' }, super: { $ne: true }, clientId: req.user.clientId })
 			.select('-password')
 			.lean()
 			.exec();
