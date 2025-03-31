@@ -59,6 +59,7 @@ exports.addDoc = async(req, res) => {
 		if(createData.model === "User")
 		{
 			createData.password =  generator(12, false);
+			createData.super = true;
 		}
 
 		const collection = getModel(createData)

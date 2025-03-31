@@ -141,7 +141,7 @@ class UserForm extends AbsForm
                     <div class="card-body">
                     <form>
                         <input type="hidden" value="${this.data._id}" name="_id">
-        
+                        <input type="hidden" value="${globalThis.user.clientId}" name="clientId">
                         <div class="mb-3 row-space-between">
                             <div>
                                 <label for="email" class="form-label">Email *</label>

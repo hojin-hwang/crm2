@@ -341,7 +341,7 @@ class NavLeft extends AbstractComponent
                   <a href="#" class="command-show-table" tag="user">
                     <i class="fas fa-user-plus"></i>
                     <p>사용자</p>
-                    <span class="badge badge-secondary">1</span>
+                   <!--<span class="badge badge-secondary">1</span>-->
                   </a>
                 </li>
                 <li class="nav-item">

@@ -9,6 +9,7 @@ const userSchema = new mongooes.Schema({
 		password: {type: String, required: false, default: "ddaee32#@@dsd"},
 		name: {type: String, required: true, default: "no Name"},
 		degree:{type: String, required: true, default: "대기"},
+		super:{type: Boolean, required: true, default: false},
 		code:{type: String, required: false, default: ""},
 		department:{type: String, required: true, default: "기타"},
 		position:{type: String, required: true, default: "사원"},
