@@ -161,7 +161,7 @@
     }
     document.addEventListener('DOMContentLoaded', function () {
 
-        new InitController(clientIdParam)
+        new InitController(userInfo.clientId)
         document.querySelector('.client-title').innerText = `${userInfo.clientId} CRM 가입신청`;
       
         document.addEventListener('click', handleClick);
