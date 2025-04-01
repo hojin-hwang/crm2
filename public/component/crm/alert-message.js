@@ -38,6 +38,9 @@ class AlertMessage extends HTMLElement{
         break;
         case  'info':
           iconClass = 'fa fa-bell'
+        break;  
+        case  'warning':
+          iconClass = 'fas fa-bullhorn'
         default:
         break;
       }
