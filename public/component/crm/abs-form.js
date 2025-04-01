@@ -30,6 +30,7 @@ class AbsForm extends AbstractComponent
                 _form.append('_id', node.dataset.value)
                 store.deleteInfo(_form, this.data.collection, 'COMMAND_CHANGE_DATA');
                 this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
+                this.#showAlert({type:"danger",message:"삭제되었습니다."});
                 return;
             }
             if(node.className.match(/command-save-form/))
@@ -47,6 +48,7 @@ class AbsForm extends AbstractComponent
                 else store.addInfo(_form, this.data.collection, "COMMAND_CHANGE_DATA");
                 this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
                 this.sendPostMessage({msg:"HIDE_SEARCH_LIST", data:null});
+                this.#showAlert({message:"저장되었습니다."});
                 return;
             }  
             if(node.className.match(/command-show-search-list/))
@@ -90,6 +92,7 @@ class AbsForm extends AbstractComponent
                 store.addInfo(formData, 'board', "COMMAND_CHANGE_DATA");
                 this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
                 this.sendPostMessage({msg:"HIDE_SEARCH_LIST", data:null});
+                this.#showAlert({message:"저장되었습니다."});
                 return;
             }
             if(node.className.match(/command-update-quill/))
@@ -104,7 +107,7 @@ class AbsForm extends AbstractComponent
                 store.updateInfo(formData, 'board', "COMMAND_CHANGE_DATA");
                 this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
                 this.sendPostMessage({msg:"HIDE_SEARCH_LIST", data:null});
-                this.#showAlert("저장되었습니다.");
+                this.#showAlert({message:"수정되었습니다."});
                 return;
             }
             if(node.className.match(/command-delete-contents/))
@@ -115,7 +118,7 @@ class AbsForm extends AbstractComponent
                     const formData = new FormData(form);
                     store.deleteInfo(formData, 'board', 'COMMAND_CHANGE_DATA');
                     this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
-                    //this.deleteInfo(formData, node);
+                    this.#showAlert({type:"danger",message:"삭제되었습니다."});
                 }
                 
                 return;
@@ -136,13 +139,9 @@ class AbsForm extends AbstractComponent
 
                 let newText = `${productNames} <hr> ${address} <hr> ${customer.name}(${customer.position}) &nbsp;  hp : ${hp}`;
 
-                // this.querySelector('.meta-data-info').innerHTML = newText;
-                // this.querySelector('.meta-data-info').classList.remove('hidden');
                 node.classList.remove('command-show-meta-data');
-                // node.classList.add('command-toggle-meta-data');
                 this.querySelector('.accordion-body').innerHTML = newText;
                 return;
-                //get customer info
             }
             if(node.className.match(/command-toggle-meta-data/))
             {
@@ -189,7 +188,6 @@ class AbsForm extends AbstractComponent
     {
         const template = this.getTemplate();
         this.appendChild(template.content.cloneNode(true));
-
         this.showDelete();
         this.showSave();
         this.afterRender();
@@ -197,7 +195,6 @@ class AbsForm extends AbstractComponent
     
     afterRender()
     {
-        
     }
 
     showDelete()
@@ -283,24 +280,7 @@ class AbsForm extends AbstractComponent
     {
         if(this.tagName !== info.tagName.toUpperCase()) return;
 
-        if(info.field === 'product')
-        {
-            // if(this.hasProduct(info.info._id)) return;
-            // this.addProductButton(info.info, info.info.name);
-            // this.addProductData(info.info._id,"product");
-            // this.setProductInField();
-
-            return;
-        }
-        if(info.field === 'material')
-        {
-            // if(this.hasProduct(info.info._id)) return;
-            // this.addMaterialButton(info.info._id, info.info.name);
-            // this.addProductData(info.info._id,"material");
-            // this.setProductInField();
-            return;
-        }
-        else if(info.field === 'company')
+        if(info.field === 'company')
         {
             this.querySelector('input[name=company]').value = info.info._id;
             this.querySelector('input[name=companyName]').value = info.info.name;
@@ -336,13 +316,11 @@ class AbsForm extends AbstractComponent
             this.querySelector(`input[name=${info.field}]`).value = info.info._id;
             this.querySelector(`input[name=${info.field}Name]`).value = info.info.name;
         }
-        // const _infoFieldId = `${info.field}Name`;
-        // this.querySelector(`input[name=${_infoFieldId}]`).value = info.info.name;
     }
 
-    #showAlert(message)
+    #showAlert(data)
     {
-        new AlertMessage(message);
+        new AlertMessage(data);
     }    
   }
   

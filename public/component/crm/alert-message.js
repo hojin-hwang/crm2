@@ -1,9 +1,10 @@
 
 class AlertMessage extends HTMLElement{
-    constructor(message = "")
+    constructor(data)
     {
         super();   
-        this.message = message;
+        this.data = {};
+        Object.assign(this.data, data)
         this.#render();
      }
     static get observedAttributes() {return []; }
@@ -11,39 +12,20 @@ class AlertMessage extends HTMLElement{
 
     #render()
     {
-        const template = this.#getTemplate();
-        if(template) this.appendChild(template.content.cloneNode(true));
-        
-        document.querySelector('body').appendChild(this)
-        
-        setTimeout(() => {
-            this.remove();
-        }, 1500);
+        $.notify({
+            // options
+            icon: (this.data.icon)? this.data.icon : 'fa fa-bell',
+            title: this.data.title,
+            message: this.data.message
+          },{
+            // settings
+            type: (this.data.type)? this.data.type : 'info',
+            delay: 3000,
+            icon_type: 'class'
+            
+          });
+        return;
     }
-
-
-    #getTemplate()
-    {
-        const tempalate = document.createElement('template');
-        tempalate.innerHTML = `
-        <style>
-           alert-message .alert{
-                max-width: 90%;
-                position: absolute;
-                left: 50%;
-                top:50%;
-                transform: translate(-50%, -50%);
-                transform: translate(-50%, 0%);
-                z-index:1024;
-            }
-        </style>
-                <div class="alert alert-primary" role="alert">
-                    ${this.message}
-                </div>
-        `;  
-        return tempalate;
-    }
-
   }
   customElements.define('alert-message', AlertMessage);
   
