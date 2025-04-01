@@ -141,6 +141,7 @@ class BoardList extends AbstractComponent
     data.list.forEach(element => {
       if(element.type === 'custom')
       {
+        const disabled = (element.tag !== 'notice')? "":"disabled='disabled'"
         html += `
           <tr>
             <th scope="row">
@@ -151,7 +152,7 @@ class BoardList extends AbstractComponent
                 <button type="button" class="btn btn-warning command-board-modify" data-id="${element._id}">
                   수정
                 </button>
-                <button type="button" class="btn btn-danger command-board-delete" data-id="${element._id}">
+                <button type="button" class="btn btn-danger command-board-delete" data-id="${element._id}" ${disabled}>
                   삭제
               </button>
               <button type="button" data-id="${element._id}" class="btn btn-secondary command-show-board-user-form">
