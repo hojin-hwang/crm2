@@ -92,7 +92,6 @@ class CalendarBoard extends AbstractComponent
       editable:false,
       
        eventClick: (info)=>{
-        console.log(info);
         this.eventId = info.event.id.toString();
         console.log(info.event.extendedProps);
         this.#showForm(info.event.classNames[0], info.event.extendedProps.resourceId)
@@ -171,6 +170,8 @@ class CalendarBoard extends AbstractComponent
       const tempalate = document.createElement('template');
       tempalate.innerHTML = `
         <style>
+        .fc-event{border: unset; box-shadow: none;}
+        .fc-event-title{color: #1572e8!important;}
         .fc button.fc-button-primary {
             background-color: #1572e8!important;
             border-color: #1572e8!important;
