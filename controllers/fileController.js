@@ -57,21 +57,19 @@ const upload = multer({
 				FileValidator.validateFileName(file.originalname);
 				
 				const ext = path.extname(file.originalname);
-				const randomID = uuid4();
-				const filename = randomID + ext;
-				done(null, filename);
 
-				// if (fileConfig.image.allowedTypes.includes(req.file.mimetype))
-				// {
-				// 	const randomID = uuid4();
-				// 	const filename = randomID + ext;
-				// 	done(null, filename);
-				// }
-				// else
-				// {
-				// 	const filename = file.fieldname + '-' +  Date.now() + ext;
-				// 	done(null, filename);
-				// }
+				if (fileConfig.image.allowedTypes.includes(file.mimetype))
+				{
+					const randomID = uuid4();
+					const filename = randomID + ext;
+					done(null, filename);
+				}
+				else
+				{
+					file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8')
+					const filename = file.originalname + '-' +  Date.now() + ext;
+					done(null, filename);
+				}
 			} catch (error) {
 				console.log(error)
 				done(error, null);
