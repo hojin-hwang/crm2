@@ -170,7 +170,7 @@ class CalendarBoard extends AbstractComponent
       const tempalate = document.createElement('template');
       tempalate.innerHTML = `
         <style>
-        .fc-event{border: unset; box-shadow: none;}
+        .fc-event{border: unset; box-shadow: none; display:flex;}
         .fc-event-title{color: #1572e8!important;}
         .fc button.fc-button-primary {
             background-color: #1572e8!important;

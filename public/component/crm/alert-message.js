@@ -12,19 +12,36 @@ class AlertMessage extends HTMLElement{
 
     #render()
     {
+        
+      
         $.notify({
             // options
-            icon: (this.data.icon)? this.data.icon : 'fa fa-bell',
+            icon: this.#getIcon(),
             title: this.data.title,
             message: this.data.message
           },{
             // settings
             type: (this.data.type)? this.data.type : 'info',
-            delay: 3000,
+            delay: 2000,
             icon_type: 'class'
             
           });
         return;
+    }
+
+    #getIcon()
+    {
+      let iconClass = 'fa fa-bell'
+      switch (this.data.type) {
+        case  'danger':
+          iconClass = 'fas fa-exclamation'
+        break;
+        case  'info':
+          iconClass = 'fa fa-bell'
+        default:
+        break;
+      }
+      return iconClass;
     }
   }
   customElements.define('alert-message', AlertMessage);
