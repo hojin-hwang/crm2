@@ -23,8 +23,7 @@
     4. (완료)file delete when board, sheet delete(완료)
     5. adjust file name when etc file uploads
 		6. boardInfo : notice - 사용자 관리 안하기
-				1. 삭제, 살리기 토글
-				2. 삭제된 게시판만 - 내용지우기
+				(완료). 삭제된 게시판만 - 내용지우기
 		7. (완료)대기중 사용자 화면 
     8. (완료)공지사항, 컬럼 숨기기(고객, 제품)
     9. (완료) 레코드 현황판 - 관리자
