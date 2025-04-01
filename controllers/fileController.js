@@ -56,11 +56,24 @@ const upload = multer({
 				// 원본 파일명 유효성 검사
 				FileValidator.validateFileName(file.originalname);
 				
-				const randomID = uuid4();
 				const ext = path.extname(file.originalname);
+				const randomID = uuid4();
 				const filename = randomID + ext;
 				done(null, filename);
+
+				// if (fileConfig.image.allowedTypes.includes(req.file.mimetype))
+				// {
+				// 	const randomID = uuid4();
+				// 	const filename = randomID + ext;
+				// 	done(null, filename);
+				// }
+				// else
+				// {
+				// 	const filename = file.fieldname + '-' +  Date.now() + ext;
+				// 	done(null, filename);
+				// }
 			} catch (error) {
+				console.log(error)
 				done(error, null);
 			}
 		},
@@ -79,6 +92,7 @@ const upload = multer({
 			FileValidator.validateFileType(file.mimetype, file.originalname);
 			done(null, true);
 		} catch (error) {
+			console.log(error)
 			done(error, false);
 		}
 	}
@@ -88,7 +102,11 @@ const upload = multer({
 const uploadMiddlewarePromise = (req, res) => {
 	return new Promise((resolve, reject) => {
 		upload(req, res, (err) => {
-			if (err) reject(err);
+			if (err) 
+			{
+				console.log(err)
+				reject(err);
+			}
 			else resolve();
 		});
 	});
@@ -106,8 +124,6 @@ exports.uploadFile = async (req, res) => {
 			const metadata = await sharp(req.file.path).metadata();
 			FileValidator.validateImageDimensions(metadata.width, metadata.height);
 		}
-		
-		
 
 		await resizeImage(req);
 		
@@ -134,9 +150,7 @@ exports.uploadFile = async (req, res) => {
 			return sendSuccessResponse(res,responseData, "파일 정보가 등록되었습니다.");
 		} catch(error) {
 			return sendErrorResponse(res, 500, "파일 정보 생성 중 오류가 발생했습니다.", error.message);
-		}
-
-		
+		}		
 	} catch (error) {
 		// 업로드된 파일이 있다면 삭제
 		if (req.file && req.file.path) {
@@ -150,6 +164,7 @@ exports.uploadFile = async (req, res) => {
 		if (error instanceof multer.MulterError) {
 			return sendErrorResponse(res, 400, '파일 업로드 실패', error.message);
 		}
+		console.log(error.message)
 		return sendErrorResponse(res, 400, error.message);
 	}
 };
