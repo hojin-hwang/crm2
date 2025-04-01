@@ -5,7 +5,6 @@ class WorkForm extends AbsForm
         super();  
     }
 
-
     afterRender()
     {
         util.selectOption(this, '#sales_status', this.data["status"]);
@@ -189,11 +188,8 @@ class WorkForm extends AbsForm
                     </div>
                     <button type="button" class="btn btn-primary command-save-form">save</button> 
                 </div>
-                
                 <hr>
             </div>
-            
-
         </div>
         `;
         return inner_template;

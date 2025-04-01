@@ -9,13 +9,11 @@ class FooterBar extends AbstractComponent
   static get observedAttributes(){return [];}
 
   handleClick(e) {
-    //e.preventDefault();
     e.composedPath().find((node)=>{
       if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
       if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
       if(node.className.match(/command-show-table/))
       {
-        
         return;
       }
       
@@ -43,7 +41,6 @@ class FooterBar extends AbstractComponent
         <footer class="footer">
           <div class="container-fluid d-flex justify-content-between">
             <nav class="pull-left">
-              
             </nav>
             <div class="copyright">
             </div>

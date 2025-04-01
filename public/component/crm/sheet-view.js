@@ -179,7 +179,6 @@ class SheetView extends AbsForm
         const formData = new FormData();
         formData.append("_id",node.dataset.id);
         formData.append("sheet",this.data._id);
-        //store.removeSheetWorkMemo(formData);
         store.deleteInfo(formData, "memo", "DELETE_SHEET_WORK_MEMO")
         const _card = node.closest('memo');
         _card.remove();

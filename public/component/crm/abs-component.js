@@ -7,10 +7,8 @@ class AbstractComponent extends HTMLElement
     this.addEventListener('click', this.handleClick);
   }
 
-
   handleClick(e)
   {
-     //e.preventDefault();
      const node = e.target;
      if(node.nodeName === 'A')
      {
@@ -41,7 +39,6 @@ class AbstractComponent extends HTMLElement
   {
     window.postMessage(message, location.href);
   }
-  
   
 }
 customElements.define('abs-component', AbstractComponent);

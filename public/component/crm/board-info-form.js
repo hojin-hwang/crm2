@@ -20,7 +20,6 @@ class BoardInfoForm extends AbsForm
         this.appendChild(template.content.cloneNode(true));
     }
 
-
     getTemplate()
     {
         const inner_template = document.createElement('template');

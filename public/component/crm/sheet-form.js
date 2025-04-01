@@ -105,7 +105,6 @@ class SheetForm extends AbsForm
                         <div class="card-body">
                         <form>
                             <input type="hidden" name="_id" value="${this.data._id}" >
-                            <!--<input type="hidden" name="product"  value=""> -->
                             <input type="hidden" name="customer"  value="${this.data.customerId}"> 
                             <input type="hidden" name="company"  value="${this.data.companyId}">
                             <input type="hidden" name="user"  value="${this.data.userId}">  
@@ -150,25 +149,11 @@ class SheetForm extends AbsForm
                                     <input type="text" readonly class="form-control command-show-search-list" id="user" name="userName"  value="${this.data.userName}">
                                     <div class="form-text company-name">담당자를 선택해주세요</div>
                                 </div>  
-                                <!--<div>
-                                    <label for="sheet_status" class="form-label">상태</label>
-                                    <select name="status" id="sheet_status" class="form-select">
-                                        <option value="진행중">진행중</option>
-                                        <option value="보류">보류</option>
-                                        <option value="종료">종료</option>
-                                    </select>
-                                </div>--> 
+
                             </div>
                             <div class="mb-3 product-zone">
-                                <!--<div class="row-space-between" >
-                                    <label for="item" class="form-label">품목</label>
-                                     <button type="button" class="btn btn-sm btn-icon btn-round btn-primary command-show-search-list" id="product">
-                                         <i class="fas fa-plus"></i>
-                                    </button>
-                                </div>
-                                    <div class="product-group"></div>-->
-                            </div>
 
+                            </div>
 
                             <div class="mb-3">
                                 <label for="memo" class="form-label">Memo</label>

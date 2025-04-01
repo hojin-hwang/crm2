@@ -133,8 +133,6 @@ class BoardList extends AbstractComponent
     return;
   }
 
-  
-
   #makeList(data)
   {
     let html = '';

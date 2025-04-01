@@ -29,7 +29,6 @@ class PasswordForm extends AbsForm
             {
                 alert("비밀번호는 4자 이상입니다.")
             }
-            
             return;
           }
         });

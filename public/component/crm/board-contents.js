@@ -50,8 +50,6 @@ class BoardContents extends AbsForm
         this.#appendProductLoad(this.data.product, this.#isAuthorized())
         this.quill.clipboard.dangerouslyPasteHTML(0, this.data.contents);
         this.querySelector('board-check').setData(this.data);
-        //if(!this.editable && !this.data.product) this.querySelector('.product-zone').classList.add('hidden');
-        //if(!this.editable && (!this.data.customer || this.data.customer === 'undefined')) this.querySelector('.customer-company-zone').classList.add('hidden');
     }
 
     #changeButton()
@@ -78,7 +76,6 @@ class BoardContents extends AbsForm
         const template = this.getTemplate();
         this.appendChild(template.content.cloneNode(true));
         this.#setInit();
-        //this.#getData();
         
         if(this.data.isNew)
         {
@@ -121,7 +118,6 @@ class BoardContents extends AbsForm
 
     #unabledEditable()
     {
-        //this.querySelector('#product').remove();
         this.querySelector('input[name=customerName]').disabled = true;
         this.querySelector('input[name=companyName]').disabled = true;
         this.querySelector('input[name=duedate]').disabled = true;
@@ -146,9 +142,7 @@ class BoardContents extends AbsForm
             theme: 'snow',
             readOnly:false
         });
-
     }
-
 
     #appendProductLoad(list, editable)
     {

@@ -208,7 +208,6 @@ class Store{
 		return;
 	}
 	
-
 	#performanceMonitor = {
     startTime: null,
     

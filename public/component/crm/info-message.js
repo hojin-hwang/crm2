@@ -21,7 +21,6 @@ class InfoMessage extends AbstractComponent
       if(node.className.match(/command-go-link/))
       {
         location.href = this.info.button.link;
-        //location.href = '/user/login/'+globalThis.user.clientId;
         return;
       }
     });

@@ -155,7 +155,6 @@ class CalendarBoard extends AbstractComponent
     event["title"] = `${data["customerName"]} (${data["userName"]})`;
     event["start"] = `${data["duedate"]}T12:00:00`;
     event["resourceId"] = data["_id"];
-    
     return event ;
   }
 

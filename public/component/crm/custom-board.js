@@ -44,7 +44,6 @@ class CustomBoard extends AbstractComponent
           case "COMMAND_CHANGE_DATA":
             setTimeout(() => {
               this.#updateData(event.data.data);
-              //this.#unSelectAllRows()
             }, 100);
             
           break;
@@ -122,12 +121,6 @@ class CustomBoard extends AbstractComponent
     else this.table.row(this.tableRowIndex).data(data);
     return;
   }
-
-  #unSelectAllRows()
-  {
-    this.table.$('tr.selected').removeClass('selected');
-  }
-
 
   #setTable()
   {
