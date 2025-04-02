@@ -176,6 +176,14 @@
 											</span>
 										</button>
 
+                    <div class="divider">
+											<span>서비스 안내</span>
+										</div>
+
+                    <div class="demo-version">
+
+                    </div>
+    
                   </div>
                 </div>
               </div>
@@ -221,7 +229,14 @@
     </script>
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
-			document.addEventListener('click', handleClick);
+			
+      const infoMessage = new InfoMessage({
+        title:"데모 서비스 안내", 
+        message:"본 서비스는 데모버전입니다. <br> 정식 서비스 준비중입니다.<br> 곧 찾아뵙겠습니다."
+      })
+      document.querySelector('.demo-version').appendChild(infoMessage)
+
+      document.addEventListener('click', handleClick);
 	
 			function handleClick(e) {
 					 //e.preventDefault();
@@ -282,7 +297,7 @@
 			})
 
 		const userLoginCondition = (form)=>{
-		return ( checkEmail(form) && checkPassword(form) && checkClientId(form));
+		  return ( checkEmail(form) && checkPassword(form) && checkClientId(form));
     }
     
     const checkEmail = (form)=>{
