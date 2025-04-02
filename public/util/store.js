@@ -144,7 +144,6 @@ class Store{
 
 	}
 
-
 	selectStoreList(collection, command = null)
 	{
 		const storeList = {};

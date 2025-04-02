@@ -8,8 +8,12 @@ router.get('/:clientId',  async(request,response)=>{
       response.redirect('/user/login/'+request.params.clientId);
 		return;
 	}
-	clientController.get(request).then(data=>{
-		response.render('crm.ejs', {"userInfo":request.user, "clientInfo":data});
+	clientController.get(request, response).then(data=>{
+		if(data)
+		{
+			response.render('crm.ejs', {"userInfo":request.user, "clientInfo":data});
+		}
+		////response.render('crm.ejs', {"userInfo":request.user, "clientInfo":data});
 	})
 });
 

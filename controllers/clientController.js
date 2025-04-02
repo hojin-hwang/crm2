@@ -231,9 +231,11 @@ exports.update = async (req, res) => {
 
 exports.info = async (req, res) => {
 	try {
-		const findInfo = await Client.findOne({ clientId: req.body.clientId }).exec();
+		const clientId = (req.params.clientId)? req.params.clientId : req.body.clientId
+		
+		const findInfo = await Client.findOne({ clientId }).exec();
 		if (!findInfo) {
-			return sendErrorResponse(res, 400, "없는 아이디입니다.");
+			return sendErrorResponse(res, 400, "없는 클라이언트입니다.");
 		}
 		return sendSuccessResponse(res, findInfo, "조회되었습니다.");
 
@@ -245,6 +247,23 @@ exports.info = async (req, res) => {
 
 exports.get = async (req, res) => {
 	try {
+		const clientId = (req.params.clientId)? req.params.clientId : req.body.clientId
+		
+		const findInfo = await Client.findOne({ clientId }).exec();
+		if (!findInfo) {
+			return {clientId:{}}
+		}
+		return findInfo;
+
+	} catch(error) {
+		console.log(error);
+		return {clientId:{}};
+	}
+};
+
+exports.get2 = async (req, res) => {
+	try {
+		console.log("client get")
 		return {clientId:req.params.clientId};
 	} catch(error) {
 		console.log(error);

@@ -52,7 +52,7 @@ exports.googleCallback = (req, res, next) => {
 			return res.redirect(`/user/register?userInfo=${userInfo}`);
 		}
 		else if(user.isNewUser && !user.clientId) {// 
-			return res.redirect('/');//클라이언트가 없으며 새로운 사용자인경우로 안내페이지로 이동
+			return res.redirect('/user/login/client');//클라이언트가 없으며 새로운 사용자인경우로 안내 하기
 		}
 
 		req.logIn(user, (err) => {
