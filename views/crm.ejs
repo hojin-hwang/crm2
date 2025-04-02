@@ -116,9 +116,9 @@
     </script>
     <script>
       const _userInfo_s = `<%= JSON.stringify(userInfo) %>`;
-      const _clientInfo_s = `<%= JSON.stringify(clientInfo) %>`;
+      const _clientId_s = `<%= JSON.stringify(clientId) %>`;
       document.addEventListener('DOMContentLoaded', function () {
-        const mainController = new MainController(_userInfo_s, _clientInfo_s);
+        const mainController = new MainController(_userInfo_s, _clientId_s);
         mainController.init();
       });
     </script>

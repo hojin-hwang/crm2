@@ -250,7 +250,7 @@ class NavLeft extends AbstractComponent
         <div class="sidebar" data-background-color="dark">
         <div class="sidebar-logo">
           <div class="logo-header" data-background-color="dark">
-            <a href="/crm/${globalThis.client.clientId}" class="logo">
+            <a href="/crm/${globalThis.user.clientId}" class="logo">
               <span class="logo-title">Simple CRM</span>
             </a>
             <div class="nav-toggle">

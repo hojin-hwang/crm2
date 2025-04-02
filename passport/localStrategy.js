@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 
 const User = require('../models/user');
 
+
 module.exports = () => {
    //? auth 라우터에서 /login 요청이 오면 local설정대로 이쪽이 실행되게 된다.
    passport.use(
@@ -21,6 +22,7 @@ module.exports = () => {
                   // 해시비번을 비교
                   const result = await bcrypt.compare(password, exUser.password);
                   if (result) {
+                     
                      done(null, exUser); //? 성공이면 done()의 2번째 인수에 선언
                   } else {
                      done(null, false, { message: '비밀번호가 일치하지 않습니다.' }); //? 실패면 done()의 2번째 인수는 false로 주고 3번째 인수에 선언

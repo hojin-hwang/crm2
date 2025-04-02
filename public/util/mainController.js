@@ -1,9 +1,9 @@
 class MainController
 {
-  constructor(userString, clientString)
+  constructor(userString, clientIdString)
   {
     this.userString = userString;
-    this.clientString = clientString;
+    this.clientIdString = clientIdString;
     this.messageListener = this.onMessage.bind(this)
     window.addEventListener("message", this.messageListener);
   }
@@ -11,29 +11,24 @@ class MainController
   init()
   {
     const _userInfo_r = this.userString.replaceAll('&#34;', '\"');
+    this.clientId = JSON.parse(this.clientIdString.replaceAll('&#34;', '\"'));
     const userInfo = JSON.parse(_userInfo_r)
 
-    const _clientInfo_r = this.clientString.replaceAll('&#34;', '\"');
-    const clientInfo = JSON.parse(_clientInfo_r)
-
-
     // checkPassClientId
-    if(clientInfo.clientId !== userInfo.clientId){
-      window.location.href = "/";
+    if(this.clientId !== userInfo.clientId){
+      window.location.href = "/user/login/"+this.clientId;
       return
     }
 
     // client User
-    if(clientInfo.clientId === 'client' && 'client'== userInfo.clientId){
+    if(this.clientId === 'client' && 'client'== userInfo.clientId){
       window.location.href = "/admin";
       return
     }
 
     globalThis.config = {};
     globalThis.user = {};
-    globalThis.client = {};
     Object.assign(globalThis.user, userInfo);
-    Object.assign(globalThis.client, clientInfo);
     Object.assign(globalThis.config, store.setInitConfig());
 
     this.dataList = [

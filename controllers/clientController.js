@@ -244,29 +244,3 @@ exports.info = async (req, res) => {
 		return {clientId:{}};
 	}
 };
-
-exports.get = async (req, res) => {
-	try {
-		const clientId = (req.params.clientId)? req.params.clientId : req.body.clientId
-		
-		const findInfo = await Client.findOne({ clientId }).exec();
-		if (!findInfo) {
-			return {clientId:{}}
-		}
-		return findInfo;
-
-	} catch(error) {
-		console.log(error);
-		return {clientId:{}};
-	}
-};
-
-exports.get2 = async (req, res) => {
-	try {
-		console.log("client get")
-		return {clientId:req.params.clientId};
-	} catch(error) {
-		console.log(error);
-		return {clientId:{}};
-	}
-};
