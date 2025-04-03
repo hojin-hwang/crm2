@@ -1,4 +1,5 @@
 const Sheet = require('../models/sheet');
+const Client = require('../models/client');
 const Work = require('../models/work');
 const Memo = require('../models/memo');
 const { ObjectId } = require('mongoose').Types;
@@ -58,7 +59,7 @@ exports.create = async (req, res, next) => {
 			date: savedSheet.date.toISOString().substring(0,10),
 			duedate: savedSheet.duedate.toISOString().substring(0,10)
 		};
-
+		await Client.findOneAndUpdate({clientId:req.user.clientId}, { $inc: { "limit.sheet": 1 } })
 		return sendSuccessResponse(res, { info: sheetData }, "일지 정보가 등록되었습니다.");
 	} catch(error) {
 		return sendErrorResponse(res, 500, "일지 정보 생성 중 오류가 발생했습니다.", error.message);
@@ -202,7 +203,7 @@ exports.delete = async (req, res) => {
 		await Sheet.deleteOne({_id, clientId: req.user.clientId});
 		
 		await FileDelete.removeFile(req, _id);
-
+		await Client.findOneAndUpdate({clientId:req.user.clientId}, { $inc: { "limit.sheet": -1 } }) 
 		return sendSuccessResponse(res, { info: updateData }, "일지 정보가 삭제 되었습니다.");
 	} catch(error) {
 		return sendErrorResponse(res, 500, "일지 정보 삭제 중 오류가 발생했습니다.", error.message);

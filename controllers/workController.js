@@ -1,5 +1,6 @@
 const Work = require('../models/work');
 const File = require('../models/file');
+const Client = require('../models/client');
 const fs = require('fs');
 const { ObjectId } = require('mongoose').Types;
 const FileDelete = require('../utils/fileDelete');
@@ -63,7 +64,7 @@ exports.create = async (req, res, next) => {
 			date: savedWork.date.toISOString().substring(0,10),
 			duedate: savedWork.duedate.toISOString().substring(0,10)
 		};
-
+		await Client.findOneAndUpdate({clientId:req.user.clientId}, { $inc: { "limit.work": 1 } })
 		return sendSuccessResponse(res, { info: workData }, "일지 정보가 등록되었습니다.");
 	} catch(error) {
 		return sendErrorResponse(res, 500, "일지 정보 생성 중 오류가 발생했습니다.", error.message);
@@ -198,31 +199,32 @@ exports.delete = async (req, res) => {
 		const { _id} = req.body;
 		await Work.deleteOne({_id, clientId: req.user.clientId});
 		await FileDelete.removeFile(req, _id);
+		await Client.findOneAndUpdate({clientId:req.user.clientId}, { $inc: { "limit.work": -1 } })
 		return sendSuccessResponse(res, { info: null }, " 정보가 삭제 되었습니다.");
 	} catch(error) {
 		return sendErrorResponse(res, 500, " 정보 삭제 중 오류가 발생했습니다.", error.message);
 	}
 };
 
-async function deleteFile(req, contentsId)
-{
-	try {
-				const fileList = await File.find({contentsId, clientId: req.user.clientId}).exec();
-				fileList.forEach(async (file) => {
-					await File.deleteOne({contentsId : file.contentsId, clientId: req.user.clientId});
-					fs.stat(file.path, (err, stats) => {
-						if (err) {
-							console.error('파일을 찾을 수 없습니다.', err);
-							return;
-						}
-					});
-					await fs.promises.unlink(file.path);
-				});
-			}
-			catch(error) {
-				console.log(error)
-			}
-}
+// async function deleteFile(req, contentsId)
+// {
+// 	try {
+// 				const fileList = await File.find({contentsId, clientId: req.user.clientId}).exec();
+// 				fileList.forEach(async (file) => {
+// 					await File.deleteOne({contentsId : file.contentsId, clientId: req.user.clientId});
+// 					fs.stat(file.path, (err, stats) => {
+// 						if (err) {
+// 							console.error('파일을 찾을 수 없습니다.', err);
+// 							return;
+// 						}
+// 					});
+// 					await fs.promises.unlink(file.path);
+// 				});
+// 			}
+// 			catch(error) {
+// 				console.log(error)
+// 			}
+// }
 
 // exports.delete = async (req, res) => {
 // 	try {

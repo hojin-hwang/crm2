@@ -22,8 +22,8 @@
     3. (완료)client/login(완료)
     4. (완료)file delete when board, sheet delete(완료)
     5. (완료)adjust file name when etc file uploads
-		6. boardInfo : notice - 사용자 관리 안하기
-				(완료). 삭제된 게시판만 - 내용지우기
+		6. (완료)boardInfo : notice - 사용자 관리 안하기
+			  (완료). 삭제된 게시판만 - 내용지우기
 		7. (완료)대기중 사용자 화면 
     8. (완료)공지사항, 컬럼 숨기기(고객, 제품)
     9. (완료) 레코드 현황판 - 관리자

@@ -1,4 +1,5 @@
 const File = require('../models/file');
+const Client = require('../models/client');
 const multer = require('multer');
 const uuid4 = require('uuid4');
 const path = require("path");
@@ -137,6 +138,14 @@ exports.uploadFile = async (req, res) => {
 			path: req.file.path,
 		};
 
+		fs.stat(req.file.path, (err, stats) => {
+			if (err) {
+				console.error('파일을 찾을 수 없습니다.', err);
+				return;
+			}
+			fileData.size = stats.size;
+		});
+
 		try {
 			const {...createData } = fileData;
 	
@@ -149,7 +158,9 @@ exports.uploadFile = async (req, res) => {
 			const responseData = {
 				...savedData._doc,
 			};
-	
+			
+			await Client.findOneAndUpdate({clientId:req.user.clientId}, { $inc: { "limit.file": fileData.size } })
+
 			return sendSuccessResponse(res,responseData, "파일 정보가 등록되었습니다.");
 		} catch(error) {
 			return sendErrorResponse(res, 500, "파일 정보 생성 중 오류가 발생했습니다.", error.message);
@@ -205,7 +216,7 @@ exports.deleteFile = async (req, res) => {
 				responseData.mimetype = mime.lookup(filePath);
 			});
 			await fs.promises.unlink(filePath);
-
+			await Client.findOneAndUpdate({clientId:req.user.clientId}, { $inc: { "limit.file": -responseData.size } })
 			return sendSuccessResponse(res, responseData, "파일 정보가 삭제 되었습니다.");
 		} catch(error) {
 			return sendErrorResponse(res, 500, "파일 정보 삭제 중 오류가 발생했습니다.", error.message);

@@ -10,6 +10,7 @@ const clientSchema = new mongooes.Schema({
 		used:{type: String, required: true, default: 'Y'},
 		price:{type: String, required: true, default: 'basic'},
 		config:{type:Object, required: false, default: {}},
+		limit:{type:Object, required: false, default: {board:0,sheet:0,work:0,product:0,file:0}},
 		date:{type: Date, required: true, default: Date.now},
 });
 

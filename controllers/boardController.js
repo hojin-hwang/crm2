@@ -1,4 +1,5 @@
 const Board = require('../models/board');
+const Client = require('../models/client');
 
 const { ObjectId } = require('mongoose').Types;
 const FileDelete = require('../utils/fileDelete');
@@ -50,6 +51,7 @@ exports.create = async (req, res, next) => {
 			duedate: savedData.duedate.toISOString().substring(0,10)
 		};
 
+		await Client.findOneAndUpdate({clientId:req.user.clientId}, { $inc: { "limit.board": 1 } })
 		return sendSuccessResponse(res, { info: responseData }, "게시판 정보가 등록되었습니다.");
 	} catch(error) {
 		return sendErrorResponse(res, 500, "게시판 정보 생성 중 오류가 발생했습니다.", error.message);
@@ -204,7 +206,7 @@ exports.updateRead = async (req, res) => {
 exports.delete = async (req, res) => {
 	try {
 		const { _id , boardId} = req.body;
-		
+		await Client.findOneAndUpdate({clientId:req.user.clientId}, { $inc: { "limit.board": -1 } })
 		await Board.deleteOne({_id, clientId: req.user.clientId, boardId});
 		await FileDelete.removeFile(req, _id);
 		return sendSuccessResponse(res, { info: null }, "게시판 정보가 삭제 되었습니다.");

@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const Client = require('../models/client');
 const { ObjectId } = require('mongoose').Types;
 const RecordLimitValidator = require('../utils/recordLimitValidator');
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
@@ -38,7 +39,7 @@ exports.create = async (req, res, next) => {
 			...savedProduct._doc,
 			date: savedProduct.date.toISOString().substring(0,10)
 		};
-
+		await Client.findOneAndUpdate({clientId:req.user.clientId}, { $inc: { "limit.product": 1 } })
 		return sendSuccessResponse(res, { info: productData }, "제품 정보가 등록되었습니다.");
 	} catch(error) {
 		return sendErrorResponse(res, 500, "제품 정보 생성 중 오류가 발생했습니다.", error.message);
@@ -174,6 +175,7 @@ exports.delete = async (req, res) => {
 			...savedProduct._doc,
 		};
 
+		await Client.findOneAndUpdate({clientId:req.user.clientId}, { $inc: { "limit.product": -1 } })
 		return sendSuccessResponse(res, { info: productData }, "제품 정보가 삭제되었습니다.");
 	} catch(error) {
 		console.log(error)
