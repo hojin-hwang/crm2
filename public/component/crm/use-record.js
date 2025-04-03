@@ -36,8 +36,7 @@ class UseRecord extends AbstractComponent
     this.#appendWork();
     this.#appendProduct();
     this.#appendBoardInfo();
-    this.#appendBoard();
-    this.#appendFile();
+    this.#appendBoardFile();
     return;
   }
 
@@ -126,52 +125,42 @@ class UseRecord extends AbstractComponent
     this.querySelector('.row.record-body').appendChild(card);
   }
 
-  async #appendBoard()
+  async #appendBoardFile()
   {
     try {
       const formData = new FormData();
-      const response = await util.sendFormData("/board/count", "POST", formData);
+      formData.append('clientId', globalThis.user.clientId)
+      const response = await util.sendFormData("/client/info", "POST", formData);
       if (response.code === 100)
       {
         const data = {
           title: "게시물",
           subTitle: "CRM에 등록된 게시물",
-          amount: response.data.count,
+          amount: response.data.limit.board,
           color: "bg-secondary",
-          percent: parseInt((response.data.count/ AMOUNT_LIMIT.board) * 100),
+          percent: parseInt((response.data.limit.board/ AMOUNT_LIMIT.board) * 100),
           ment: "Limit: " + AMOUNT_LIMIT.board
         };
         const card = this.#makeCard(data);
         this.querySelector('.row.record-body').appendChild(card);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-    
 
-  async #appendFile()
-  {
-    try {
-      const formData = new FormData();
-      const response = await util.sendFormData("/upload/size", "POST", formData);
-      if (response.code === 100)
-      {
-        const data = {
+        const data2 = {
           title: "파일",
           subTitle: "CRM에 업로드된 파일 크기",
-          amount: this.#covertByteToMega(response.data.size),
+          amount: this.#covertByteToMega(response.data.limit.file),
           color: "bg-black",
-          percent: parseInt((response.data.size / this.#changeByteScale(AMOUNT_LIMIT.file)) * 100),
+          percent: parseInt((response.data.limit.file / this.#changeByteScale(AMOUNT_LIMIT.file)) * 100),
           ment: "Limit: " + AMOUNT_LIMIT.file
         };
-        const card = this.#makeCard(data);
-        this.querySelector('.row.record-body').appendChild(card);
+        const card2 = this.#makeCard(data2);
+        this.querySelector('.row.record-body').appendChild(card2);
+
       }
     } catch (error) {
       console.error(error);
     }
   }
+
 
   #covertByteToMega(byte)
   {

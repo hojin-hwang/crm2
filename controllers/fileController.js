@@ -114,7 +114,7 @@ const uploadMiddlewarePromise = (req, res) => {
 
 exports.uploadFile = async (req, res) => {
 	try {
-		const result = await RecordLimitValidator.validateCollectAmount(req, file);
+		const result = await RecordLimitValidator.validateCollectAmount(req, "file");
 		if(!result) return sendErrorResponse(res, 400, '용량을 초과했습니다.', '용량을 초과했습니다.')
 
 		await uploadMiddlewarePromise(req, res);

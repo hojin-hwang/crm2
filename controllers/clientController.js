@@ -231,7 +231,6 @@ exports.update = async (req, res) => {
 exports.info = async (req, res) => {
 	try {
 		const clientId = (req.params.clientId)? req.params.clientId : req.body.clientId
-		
 		const findInfo = await Client.findOne({ clientId }).exec();
 		if (!findInfo) {
 			return sendErrorResponse(res, 400, "없는 클라이언트입니다.");
