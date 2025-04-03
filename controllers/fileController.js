@@ -7,6 +7,7 @@ const fs = require('fs');
 const mime = require('mime-types');
 const fileConfig = require('../config/fileConfig');
 const FileValidator = require('../utils/fileValidator');
+const RecordLimitValidator = require('../utils/recordLimitValidator');
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
 exports.list = async (req, res) => {
@@ -112,6 +113,11 @@ const uploadMiddlewarePromise = (req, res) => {
 
 exports.uploadFile = async (req, res) => {
 	try {
+
+		const result = await RecordLimitValidator.validateFileSize(req);
+		if(!result) return sendErrorResponse(res, 400, '용량을 초과했습니다.', '용량을 초과했습니다.')
+		console.log(result)	
+
 		await uploadMiddlewarePromise(req, res);
 		
 		// 파일 크기 재검증
@@ -218,7 +224,7 @@ exports.deleteFile = async (req, res) => {
 exports.totalSize = async (req, res) => {
 	try {
 		const result = await File.aggregate([
-			// { $match: { clientId: req.user.clientId } }, 
+			{ $match: { clientId: req.user.clientId } }, 
 			{ 
 				$group: { 
 					_id: null, 

@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const { ObjectId } = require('mongoose').Types;
+const RecordLimitValidator = require('../utils/recordLimitValidator');
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
 // 제품 데이터 유효성 검사
@@ -17,6 +18,9 @@ exports.create = async (req, res, next) => {
 	
 	try {
 		const {...createData } = req.body;
+
+		const result = await RecordLimitValidator.validateCollectAmount(req, 'product');
+		if(!result) return sendErrorResponse(res, 400, '용량을 초과했습니다.', '용량을 초과했습니다.')
 
 		const validationErrors = validateCompanyData(createData);
 		if (validationErrors.length > 0) {

@@ -1,8 +1,8 @@
 const Board = require('../models/board');
-const File = require('../models/file');
 
 const { ObjectId } = require('mongoose').Types;
 const FileDelete = require('../utils/fileDelete');
+const RecordLimitValidator = require('../utils/recordLimitValidator');
 
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
@@ -22,11 +22,14 @@ exports.create = async (req, res, next) => {
 	try {
 		const {...createData } = req.body;
 
+		const result = await RecordLimitValidator.validateCollectAmount(req, 'board');
+		if(!result) return sendErrorResponse(res, 400, '용량을 초과했습니다.', '용량을 초과했습니다.')
+
 		const validationErrors = validateData(createData);
 		if (validationErrors.length > 0) {
 			return sendErrorResponse(res, 400, '입력값이 유효하지 않습니다.', validationErrors);
 		}
-		//delete createData._id;
+
 		createData["_id"] = ObjectId.createFromHexString(createData._id);
 		createData["clientId"] = req.user.clientId;
 		createData["user"] = ObjectId.createFromHexString(createData.user);

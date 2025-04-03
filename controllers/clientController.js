@@ -33,7 +33,6 @@ exports.create = async (req, res) => {
 
 		createData["clientId"] = (createData.clientId).toLowerCase();
 		createData["config"] = (createData.config)? JSON.parse(createData.config) : {color:"white"};
-
 		const findInfo = await Client.findOne({ clientId: createData.clientId }).exec();
 		if (findInfo) {
 			return sendErrorResponse(res, 400, "중복된 아이디입니다.");
@@ -192,7 +191,7 @@ const getModel = (data) => {
 
 exports.list = async (req, res) => {
 	try {
-		const clients = await Client.find({ used: { $ne: 'N' } })
+		const clients = await Client.find({ used: { $ne: 'N' }, clientId: { $ne: 'client' } })
 			.lean()
 			.exec();
 

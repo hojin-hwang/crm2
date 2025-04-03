@@ -184,7 +184,6 @@ class FileUpload extends HTMLElement{
                         this.box.file.push(item.name);
                         this.box.etc++;
                     }
-                    
                 });
                 
                 this.#boxSetStatus();
@@ -192,8 +191,7 @@ class FileUpload extends HTMLElement{
                 this.#handleError(response);
             }
         } catch (error) {
-            console.error('이미지 삭제 중 오류:', error);
-            alert('이미지 삭제에 실패했습니다.');
+            console.error('이미지 리스트 처리중 오류:', error);
         }
     }
 
@@ -208,7 +206,7 @@ class FileUpload extends HTMLElement{
             if (response.code === 100) {
                 this.#handleSuccessfulUpload(response.data, id);
                 this.#boxSetStatus();
-
+                
             } else {
                 this.#handleError(response);
             }
@@ -233,7 +231,6 @@ class FileUpload extends HTMLElement{
             }
         } catch (error) {
             console.error('이미지 삭제 중 오류:', error);
-            alert('이미지 삭제에 실패했습니다.');
         }
     }
 
@@ -269,7 +266,8 @@ class FileUpload extends HTMLElement{
 
     #handleError(response) {
         if (response.message) {
-            alert(response.message);
+            new AlertMessage({type:"warning",message:response.message});
+            //alert(response.message);
         } else {
             console.error('오류 발생:', response);
         }

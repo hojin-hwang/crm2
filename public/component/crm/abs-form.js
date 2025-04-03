@@ -30,7 +30,7 @@ class AbsForm extends AbstractComponent
                 _form.append('_id', node.dataset.value)
                 store.deleteInfo(_form, this.data.collection, 'COMMAND_CHANGE_DATA');
                 this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
-                this.#showAlert({type:"danger",message:"삭제되었습니다."});
+                
                 return;
             }
             if(node.className.match(/command-save-form/))
@@ -48,7 +48,6 @@ class AbsForm extends AbstractComponent
                 else store.addInfo(_form, this.data.collection, "COMMAND_CHANGE_DATA");
                 this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
                 this.sendPostMessage({msg:"HIDE_SEARCH_LIST", data:null});
-                this.#showAlert({message:"저장되었습니다."});
                 return;
             }  
             if(node.className.match(/command-show-search-list/))
@@ -92,7 +91,6 @@ class AbsForm extends AbstractComponent
                 store.addInfo(formData, 'board', "COMMAND_CHANGE_DATA");
                 this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
                 this.sendPostMessage({msg:"HIDE_SEARCH_LIST", data:null});
-                this.#showAlert({message:"저장되었습니다."});
                 return;
             }
             if(node.className.match(/command-update-quill/))
@@ -107,7 +105,6 @@ class AbsForm extends AbstractComponent
                 store.updateInfo(formData, 'board', "COMMAND_CHANGE_DATA");
                 this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
                 this.sendPostMessage({msg:"HIDE_SEARCH_LIST", data:null});
-                this.#showAlert({message:"수정되었습니다."});
                 return;
             }
             if(node.className.match(/command-delete-contents/))
@@ -118,7 +115,6 @@ class AbsForm extends AbstractComponent
                     const formData = new FormData(form);
                     store.deleteInfo(formData, 'board', 'COMMAND_CHANGE_DATA');
                     this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
-                    this.#showAlert({type:"danger",message:"삭제되었습니다."});
                 }
                 
                 return;
@@ -318,10 +314,7 @@ class AbsForm extends AbstractComponent
         }
     }
 
-    #showAlert(data)
-    {
-        new AlertMessage(data);
-    }    
+        
   }
   
   

@@ -3,6 +3,7 @@ const File = require('../models/file');
 const fs = require('fs');
 const { ObjectId } = require('mongoose').Types;
 const FileDelete = require('../utils/fileDelete');
+const RecordLimitValidator = require('../utils/recordLimitValidator');
 
 const { sendErrorResponse, sendSuccessResponse } = require('../utils/responseHelper');
 
@@ -29,6 +30,9 @@ exports.create = async (req, res, next) => {
 	
 	try {
 		const {...createData } = req.body;
+
+		const result = await RecordLimitValidator.validateCollectAmount(req, 'work');
+		if(!result) return sendErrorResponse(res, 400, '용량을 초과했습니다.', '용량을 초과했습니다.')
 
 		const validationErrors = validateCustomerData(createData);
 		if (validationErrors.length > 0) {

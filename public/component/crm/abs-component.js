@@ -40,5 +40,9 @@ class AbstractComponent extends HTMLElement
     window.postMessage(message, location.href);
   }
   
+  showAlert(data)
+	{
+		new AlertMessage(data);
+	}
 }
 customElements.define('abs-component', AbstractComponent);

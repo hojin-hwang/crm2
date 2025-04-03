@@ -43,12 +43,14 @@ class Store{
 
 					const message = {msg:command, data:_listInfo}
 					window.postMessage(message, location.href);
+					this.#showAlert({type:"info",message:"저장되었습니다."});
 					return;
 				}
 				else
 				{
-						if (response.message) alert(response.message, true);
+						if (response.message) this.#showAlert({type:"warning",message:response.message});
 						else console.dir(response); 
+						
 				}       
 		});
 
@@ -77,11 +79,13 @@ class Store{
 					_listInfo.collection = collection;
 					const message = {msg:command, data:_listInfo}
 					window.postMessage(message, location.href);
+					this.#showAlert({type:"danger",message:"삭제되었습니다."});
 				}
 				else
 				{
-						if (response.message) alert(response.message, true);
+						if (response.message) this.#showAlert({type:"danger",message:response.message});
 						else console.dir(response); 
+						
 				}       
 		});
 	}
@@ -99,6 +103,7 @@ class Store{
 				{
 					const message = {msg:command, data:null}
 					window.postMessage(message, location.href);
+					this.#showAlert({type:"danger",message:"삭제되었습니다."});
 				}
 				else
 				{
@@ -132,13 +137,14 @@ class Store{
 
 					const message = {msg:command, data:_listInfo}
 					window.postMessage(message, location.href);
-
+					this.#showAlert({type:"info",message:"수정되었습니다."});
 					return;
 				}
 				else
 				{
-						if (response.message) alert(response.message, true);
-						else console.dir(response); 
+						if (response.message) this.#showAlert({type:"warning",message:response.message});
+						else console.dir(response);
+						 
 				} 
 		});
 
@@ -172,13 +178,12 @@ class Store{
 							window.location.href = '/user/login';
 							return;
 						}
-						if (response.message) alert(response.message, true);
+						if (response.message) this.#showAlert({type:"warning",message:response.message});
 						else console.dir(response); 
 				} 
 		});
 		this.#performanceMonitor.end('데이터 목록 로딩');
 	}
-
 
 	getListApiUrl(collectionName, code = null)
 	{
@@ -205,6 +210,11 @@ class Store{
 		const listName = `${collectionName}List`;
 		globalThis[listName] = list;
 		return;
+	}
+
+	#showAlert(data)
+	{
+			new AlertMessage(data);
 	}
 	
 	#performanceMonitor = {
