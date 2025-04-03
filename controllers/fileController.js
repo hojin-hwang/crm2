@@ -116,7 +116,6 @@ exports.uploadFile = async (req, res) => {
 
 		const result = await RecordLimitValidator.validateFileSize(req);
 		if(!result) return sendErrorResponse(res, 400, '용량을 초과했습니다.', '용량을 초과했습니다.')
-		console.log(result)	
 
 		await uploadMiddlewarePromise(req, res);
 		
