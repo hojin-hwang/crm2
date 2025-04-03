@@ -55,7 +55,6 @@ class BoardList extends AbstractComponent
         switch(event.data.msg)
         {
           case "COMMAND_CHANGE_DATA":
-            alert("정보가 수정되었습니다.");
             store.getDataList('boardInfo');
           break;
           case "GET_DATA_LIST":
@@ -139,7 +138,8 @@ class BoardList extends AbstractComponent
     data.list.forEach(element => {
       if(element.type === 'custom')
       {
-        const disabled = (element.tag !== 'notice')? "":"disabled='disabled'"
+        const hiddenClass = (element.tag !== 'notice')? "":"hidden"
+        
         html += `
           <tr>
             <th scope="row">
@@ -150,10 +150,10 @@ class BoardList extends AbstractComponent
                 <button type="button" class="btn btn-warning command-board-modify" data-id="${element._id}">
                   수정
                 </button>
-                <button type="button" class="btn btn-danger command-board-delete" data-id="${element._id}" ${disabled}>
+                <button type="button" class="btn btn-danger command-board-delete ${hiddenClass}" data-id="${element._id}">
                   삭제
               </button>
-              <button type="button" data-id="${element._id}" class="btn btn-secondary command-show-board-user-form">
+              <button type="button" data-id="${element._id}" class="btn btn-secondary command-show-board-user-form  ${hiddenClass}">
                   사용자 관리
               </button>
             </div>

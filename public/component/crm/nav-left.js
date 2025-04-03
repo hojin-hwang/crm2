@@ -175,7 +175,7 @@ class NavLeft extends AbstractComponent
     this.querySelector('ul.custom-board').innerHTML = '';
     globalThis.boardInfoList.forEach(board => {
       if(board.type !== 'custom') return;
-      if(this.#isManager() || (board.user && board.user.includes(globalThis.user._id)))
+      if(board.tag === 'notice' || this.#isManager() || (board.user && board.user.includes(globalThis.user._id)))
       {
         this.querySelector('ul.custom-board').appendChild(this.#makeMenu(board))
       }
