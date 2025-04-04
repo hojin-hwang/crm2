@@ -103,7 +103,7 @@ class ApplyList extends AbstractComponent
 	{
 		try{
       const formData = new FormData();
-			const response = await util.sendFormData(`/apply/list`, "POST", formData);
+			const response = await util.sendFormData(`/client/applylist`, "POST", formData);
       if(response.code === 100)
       {
         const message =  {msg:"GET_DATA_LIST", data:response.data.list} 

@@ -23,14 +23,14 @@ const validateData = (data) => {
 	return errors;
 };
 
-exports.create = async (req, res) => {
+exports.apply = async (req, res) => {
 	try {
 		const {...createData } = req.body;
 		const validationErrors = validateData(createData);
 		if (validationErrors.length > 0) {
 			return sendErrorResponse(res, 400, '입력값이 유효하지 않습니다.', validationErrors);
 		}
-
+		createData["authCode"] = generator(12, false);
 		createData["clientId"] = (createData.clientId).toLowerCase();
 		createData["config"] = (createData.config)? JSON.parse(createData.config) : {color:"white"};
 		const findInfo = await Client.findOne({ clientId: createData.clientId }).exec();
@@ -48,7 +48,35 @@ exports.create = async (req, res) => {
 		return sendSuccessResponse(res, infoData, "정상등록되었습니다.");
 	} catch(error) {
 		console.log(error);
-		return sendErrorResponse(res, 500, "Client 생성 중 오류가 발생했습니다.", error.message);
+		return sendErrorResponse(res, 500, "Client 신청중 오류가 발생했습니다.", error.message);
+	}
+};
+
+exports.create = async (req, res) => {
+	try {
+		const {  ...updateData } = req.body;
+		console.log(updateData);
+		updateData.used = "Y";
+		
+		if (!updateData.clientId) {
+			return sendErrorResponse(res, 400, "ID가 필요합니다.");
+		}
+
+		const doc = await Client.findOne({clientId:updateData.clientId});
+		if (!doc) {
+			return sendErrorResponse(res, 404, "대상을 찾을 수 없습니다.");
+		}
+
+		if(doc.authCode !== updateData.authCode) {
+			return sendErrorResponse(res, 400, "인증코드가 일치하지 않습니다.");	
+		}
+
+		Object.assign(doc, updateData);
+		const savedDoc = await doc.save();
+		
+		return sendSuccessResponse(res, { info: savedDoc }, "클라이언트가 생성되었습니다.");
+	} catch(error) {
+		return sendErrorResponse(res, 500, "클라이언트가 생성 중 오류가 발생했습니다.", error.message);
 	}
 };
 
@@ -205,6 +233,23 @@ exports.list = async (req, res) => {
 		return sendErrorResponse(res, 500, "사용자 목록 조회 중 오류가 발생했습니다.", error.message);
 	}
 };
+
+exports.applylist = async (req, res) => {
+	try {
+		const clients = await Client.find({ used: 'N', clientId: { $ne: 'client' } })
+			.lean()
+			.exec();
+
+		const list = clients.map(client => ({
+			...client,
+			date: client.date.toISOString().substring(0,10)
+		}));
+
+		return sendSuccessResponse(res, {list: list});
+	} catch(error) {
+		return sendErrorResponse(res, 500, "사용자 목록 조회 중 오류가 발생했습니다.", error.message);
+	}
+}
 
 exports.update = async (req, res) => {
 	try {

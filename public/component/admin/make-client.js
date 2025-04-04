@@ -30,7 +30,6 @@ class MakeClient extends AbstractComponent
                 //Button Abled Super Admin User
                 this.info.clientId = response.data.clientId;
                 this.enableButton(document.getElementById('user_table'));
-                this.#deleteApply()
               }
               else
               {
@@ -447,18 +446,22 @@ class MakeClient extends AbstractComponent
                   <input type="text" id="name" value="${this.info.name}" name="name" class="form-control" style="width: auto;">
                 </div>
                 <div class="form-group">
-                  <label for="clientId">email</label>
+                  <label for="email">email</label>
                   <input type="text" id="email" value="${this.info.email}" name="email" class="form-control" style="width: auto;">
                 </div>
               </div>
               <div class="row-space-between">
                 <div class="form-group">
-                  <label for="clientId">site</label>
-                  <input type="text" id="site" value="${this.info.site}" name="site" class="form-control" style="width: auto;">
+                  <label for="site" class="hidden">site</label>
+                  <input type="hidden" id="site" value="${this.info.site}" name="site" class="form-control" style="width: auto;">
                 </div>
                 <div class="form-group">
-                  <label for="clientId">tel</label>
+                  <label for="tel">tel</label>
                   <input type="text" id="tel" value="${this.info.tel}" name="tel" class="form-control" style="width: auto;">
+                </div>
+                <div class="form-group">
+                  <label for="authCode">authCode</label>
+                  <input type="text" id="authCode" value="${this.info.authCode}" name="authCode" class="form-control" style="width: auto;">
                 </div>
               </div>
               <button type="button" class="btn btn-primary form-control command-create-client">Make Client</button>

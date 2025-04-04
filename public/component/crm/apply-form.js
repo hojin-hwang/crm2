@@ -87,13 +87,16 @@ class ApplyForm extends HTMLElement
         try{
             const form = this.querySelector('form');
             const formData = new FormData(form);
-            const response = await util.sendFormData(`/apply/add`, "POST", formData);
+            //const response = await util.sendFormData(`/apply/add`, "POST", formData);
+            const response = await util.sendFormData(`/client/apply`, "POST", formData);
             if(response.code === 100)
             {
                 const modalPage = document.querySelector('modal-page');
                 const info = {
                     title:"신청서 제출", 
-                    message:"<p>신청서가 제출되었습니다.</p><p>영업일 기준으로 24시간내에 처리됩니다.</p> <br> 승인후 정보는 메일로 보내집니다.</p>", 
+                    message:`<p>신청서가 제출되었습니다.</p>
+                    <p>입력하신 이메일로 신청 승인메세지가 전달됩니다. 전달된 메일내용의 링크를 클릭하여 진행하시기 바랍니다.</p> 
+                    <br> 메일 전송은 몇분이 소요될 수 있습니다.</p>`, 
                     close:true
                 }
                 const component = new InfoMessage(info)

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Simple CRM Apply</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link rel="icon" href="/assets/img/favicon-sc.svg" type="image/x-icon"/>
+    
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="/assets/css/fonts.min.css" media="all">
+    <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/crm.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="main-panel">
+          <div class="container">
+            <div class="page-inner">
+                작업업
+            </div>
+          </div>
+      </div>
+
+      <modal-page></modal-page>
+    </div>
+    
+    <!--   Core JS Files   -->
+    <script src="/assets/js/core/jquery-3.7.1.min.js"></script>
+    >
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="/util/util.js"></script>
+    <script src="/util/store.js"></script>
+    <!-- 컴포넌트 -->
+    <script src="/component/crm/abs-component.js"></script>
+    <script src="/component/crm/modal-page.js"></script>
+   
+    <!-- Fonts and icons -->
+    <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["/assets/css/fonts.min.css"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+    <script>
+      const _authCode_s = `<%= JSON.stringify(authCode) %>`;
+      const _clientId_s = `<%= JSON.stringify(clientId) %>`;
+      document.addEventListener('DOMContentLoaded', function () {
+        console.log(_authCode_s)
+        console.log(_clientId_s)
+      });
+    </script>
+  </body>
+</html>
