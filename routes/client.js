@@ -3,6 +3,7 @@ var router = express.Router();
 
 const clientController = require('../controllers/clientController');
 const LoginRequired = require('../utils/loginRequired');
+const clientApplyValidator = require('../utils/clientApplyValidator');
 
 	router.post('/apply', clientController.apply);
 	router.post('/add', clientController.create);
@@ -13,7 +14,7 @@ const LoginRequired = require('../utils/loginRequired');
 	router.post('/delete', LoginRequired.messageIfNotLogin, clientController.delete);
 	router.post('/mail', LoginRequired.messageIfNotLogin, clientController.sendMail);
 
-	router.get('/client-apply/:clientId/:authCode',  async(request,response)=>{
-		 response.render('client-apply.ejs', {"clientId":request.params.clientId, "authCode":request.params.authCode});
+	router.get('/client-apply/:clientId/:authCode',  clientApplyValidator.checkExistAndAuth, async(request,response)=>{
+		response.render('client-apply.ejs', {"client":request.body.client});
 	 });
 	module.exports = router; 

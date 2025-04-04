@@ -22,7 +22,37 @@
       <div class="main-panel">
           <div class="container">
             <div class="page-inner">
-                작업업
+              <form>
+                <div class="form-group">
+                  <label for="clientId">Client Id</label>
+                  <input type="text" id="clientId" value="${clientInfo.clientId}" name="clientId" placeholder="client name" class="form-control" style="width: auto;">
+                </div>
+                <div class="row-space-between">
+                  <div class="form-group">
+                    <label for="clientId">name</label>
+                    <input type="text" id="name" value="${clientInfo.name}" name="name" class="form-control" style="width: auto;">
+                  </div>
+                  <div class="form-group">
+                    <label for="email">email</label>
+                    <input type="text" id="email" value="${clientInfo.email}" name="email" class="form-control" style="width: auto;">
+                  </div>
+                </div>
+                <div class="row-space-between">
+                  <div class="form-group">
+                    <label for="site" class="hidden">site</label>
+                    <input type="hidden" id="site" value="${clientInfo.site}" name="site" class="form-control" style="width: auto;">
+                  </div>
+                  <div class="form-group">
+                    <label for="tel">tel</label>
+                    <input type="text" id="tel" value="${clientInfo.tel}" name="tel" class="form-control" style="width: auto;">
+                  </div>
+                  <div class="form-group">
+                    <label for="authCode">authCode</label>
+                    <input type="text" id="authCode" value="${clientInfo.authCode}" name="authCode" class="form-control" style="width: auto;">
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary form-control command-create-client">Make Client</button>
+              </form>
             </div>
           </div>
       </div>
@@ -60,12 +90,274 @@
       });
     </script>
     <script>
-      const _authCode_s = `<%= JSON.stringify(authCode) %>`;
-      const _clientId_s = `<%= JSON.stringify(clientId) %>`;
+      const _client = `<%= JSON.stringify(client) %>`;
+      const clientInfo = JSON.parse(_client.replaceAll('&#34;', '\"'));
+      const userInfo = {};
+      const companyInfo = {};
+      const customerInfo = {};
+      const productInfo = {};
+      const sheetInfo = {};
+      const workInfo = {};
+      
+      const boardInfoList = [];
+      
       document.addEventListener('DOMContentLoaded', function () {
-        console.log(_authCode_s)
-        console.log(_clientId_s)
+        document.addEventListener('click', handleClick);
+        
+        function handleClick(e) {
+          //e.preventDefault();
+          e.composedPath().find((node)=>{
+            if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
+            if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
+            if(node.className.match(/command-create-client/))
+              {
+                 addInfo();
+                 disableButton(node);
+              }
+          });
+        }
       });
+
+  async function addInfo()
+	{
+    
+    const formData = new FormData();
+    formData.append('_id', clientInfo._id);
+    formData.append('authCode', clientInfo.authCode);
+    try{
+			await util.sendFormData(`/client/add`, "POST", formData);
+      await makeUserTable();
+      
+      
+		}
+		catch (error) {
+            console.error('오류:', error);
+            alert('실패했습니다.');
+        }
+		return;
+	}
+
+  async function addDoc(formData, command)
+	{
+		try{
+			return await util.sendFormData(`/client/addDoc`, "POST", formData);
+		}
+		catch (error) {
+            console.error('오류:', error);
+            alert('실패했습니다.');
+        }
+		return;
+	}
+
+  disableButton = (button) => {
+    button.setAttribute('disabled','disabled');
+    button.classList.remove('command-create-client');
+  }
+
+
+  makeUserTable = async () => {
+    const formData = new FormData();
+    formData.append('model', 'User');
+    formData.append('username', `admin__${clientInfo.clientId}`);
+    formData.append('email', clientInfo.email);
+    formData.append('name', '관리자');
+    formData.append('degree', '관리자')
+    formData.append('department', '기타')
+    formData.append('position', '사원')
+    formData.append('clientId', clientInfo.clientId)
+    const result = addDoc(formData, "COMMAND-");
+    result.then(async (response) => {
+      if(response.code === 100)
+      { 
+        Object.assign(userInfo, response.data.info);
+        await makeCompanyTable();
+        await makeBoardInfoTable();
+      }
+    });
+  }
+
+  makeCompanyTable = async () => {
+    const formData = new FormData();
+    formData.append('model', 'Company');
+    formData.append('name', 'Sample Company');
+    formData.append('user', userInfo._id);
+    formData.append('address', '가산시 가상동 123-456');
+    formData.append('memo', 'Sample Company Memo')
+    formData.append('tel', '02-1234-5678')
+    formData.append('fax', '02-1234-9999')
+    formData.append('clientId', clientInfo.clientId)
+    const result = addDoc(formData, "COMMAND-");
+    result.then(async (response) => {
+      if(response.code === 100)
+      { 
+        Object.assign(companyInfo, response.data.info);
+        await makeCustomerTable();
+      
+      }
+    });
+    
+  }
+    
+  makeCustomerTable = async () => {
+    const formData = new FormData();
+    formData.append('model', 'Customer');
+    formData.append('name', '홍길동');
+    formData.append('user', userInfo._id);
+    formData.append('address', '가산시 가상동 123-456 2층');
+    formData.append('memo', 'Sample Customer Memo')
+    formData.append('position', 'Manager')
+    formData.append('email', 'hong@test.com')
+    formData.append('tel', '02-1234-5678')
+    formData.append('hp', '010-1234-9999')
+    formData.append('clientId', clientInfo.clientId)
+    formData.append('company', companyInfo._id)
+    const result = addDoc(formData, "COMMAND-");
+    result.then(async (response) => {
+      if(response.code === 100)
+      { 
+        Object.assign(customerInfo, response.data.info);
+        await makeProductTable();
+      }
+    });
+  }
+
+  makeProductTable = async () => {
+    const formData = new FormData();
+    formData.append('model', 'Product');
+    formData.append('name', '아이템 A212-3(샘플)');
+    formData.append('code', '제품')
+    formData.append('brand', '자체생산')
+    formData.append('memo', '2025년까지 판매 예정')
+    formData.append('clientId', clientInfo.clientId)
+    const result = addDoc(formData, "COMMAND-");
+    result.then(async (response) => {
+      if(response.code === 100)
+      { 
+        Object.assign(productInfo, response.data.info);
+        await makeSheetTable();
+      
+      }
+    });
+  }
+
+  makeSheetTable = async () => {
+
+    const _productInfo = {
+      id: productInfo._id,
+      code: productInfo.code,
+    }
+    const formData = new FormData();
+    formData.append('model', 'Sheet');
+    formData.append('name', '글로벌 컴퍼니 영업기회(샘플)');
+    formData.append('memo', 'Sample 영업기회 Memo')
+    formData.append('product', JSON.stringify(_productInfo))
+    formData.append('step', '제안')
+    formData.append('clientId', clientInfo.clientId)
+    formData.append('company', companyInfo._id)
+    formData.append('user', userInfo._id);
+    formData.append('customer', customerInfo._id);
+    const result = addDoc(formData, "COMMAND-");
+    result.then(async (response) => {
+      if(response.code === 100)
+      { 
+        Object.assign(sheetInfo, response.data.info);
+        await makeWorkTable();
+      }
+    });
+  }
+
+  makeWorkTable = async () => {
+    const formData = new FormData();
+    formData.append('model', 'Work');
+    formData.append('name', '담당자 첫미팅(샘플)');
+    formData.append('memo', 'Sample 영업일지 Memo')
+    formData.append('remark', 'Sample 영업일지 고려사항')
+    formData.append('status', '타겟제품정보')
+    formData.append('sheet', sheetInfo._id)
+    formData.append('clientId', clientInfo.clientId)
+    formData.append('company', companyInfo._id)
+    formData.append('user', userInfo._id);
+    formData.append('customer', customerInfo._id);
+    const result = addDoc(formData, "COMMAND-");
+    result.then((response) => {
+      if(response.code === 100)
+      { 
+        Object.assign(workInfo, response.data.info);
+      }
+    });
+  }
+
+
+  makeBoardInfoTable = async () => {
+    const tableList = [
+      {
+        name:"고객사",
+        type:"default",
+        tag:"company",
+      },
+      {
+        name:"고객",
+        type:"default",
+        tag:"customer",
+      },
+      {
+        name:"품목",
+        type:"default",
+        tag:"product",
+      },
+      {
+        name:"캘린더",
+        type:"default",
+        tag:"calendar",
+      },
+      {
+        name:"영업기회",
+        type:"default",
+        tag:"sheet",
+      },
+      {
+        name:"영업일지",
+        type:"default",
+        tag:"work",
+      },
+      {
+        name:"공지사항",
+        type:"custom",
+        tag:"notice",
+      }
+    ];
+    tableList.forEach((table) => {
+      const formData = new FormData();
+      formData.append('model', 'BoardInfo');
+      formData.append('name', table.name);
+      formData.append('type', table.type)
+      formData.append('tag', table.tag)
+      formData.append('clientId', clientInfo.clientId)
+      formData.append('user', userInfo._id);
+      const result = addDoc(formData, "COMMAND-");
+      result.then((response) => {
+        if(response.code === 100)
+        { 
+          boardInfoList.push(response.data.info);
+          makeNoticeTable();
+        }
+      });
+    });
+  }
+
+  makeNoticeTable = async () => {
+    let boardInfo = boardInfoList.find((info) => info.tag === 'notice');
+    if(!boardInfo) return;
+    const formData = new FormData();
+    formData.append('model', 'Board');
+    formData.append('title', 'SS CRM 공지사항');
+    formData.append('contents', 'SS CRM 공지사항 내용')
+    formData.append('boardId', boardInfo._id)
+    formData.append('clientId', clientInfo.clientId)
+    formData.append('user', userInfo._id);
+    const result = addDoc(formData, "COMMAND-");
+  }
+
     </script>
   </body>
 </html>

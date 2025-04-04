@@ -174,7 +174,6 @@ class MakeClient extends AbstractComponent
         this.enableButton(document.getElementById('company_table'));
       }
     });
-    
   }
 
   makeCompanyTable = async () => {

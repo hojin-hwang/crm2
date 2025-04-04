@@ -54,15 +54,14 @@ exports.apply = async (req, res) => {
 
 exports.create = async (req, res) => {
 	try {
-		const {  ...updateData } = req.body;
-		console.log(updateData);
+		const { _id, ...updateData } = req.body;
 		updateData.used = "Y";
 		
-		if (!updateData.clientId) {
+		if (!_id) {
 			return sendErrorResponse(res, 400, "ID가 필요합니다.");
 		}
 
-		const doc = await Client.findOne({clientId:updateData.clientId});
+		const doc = await Client.findOne({_id, used:'N'}).exec();
 		if (!doc) {
 			return sendErrorResponse(res, 404, "대상을 찾을 수 없습니다.");
 		}
