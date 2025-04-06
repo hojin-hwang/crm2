@@ -216,9 +216,9 @@ class ApplyList extends AbstractComponent
         return;
       }  
       if(cellData.column === 6){
-        // const _tempInfo = {"tagName":'client-delete-form', "info":this_row[0]}
-        // const _message = {msg:"DO_SHOW_MODAL", data:_tempInfo}
-        // window.postMessage(_message, location.href);
+        const _tempInfo = {"tagName":'apply-delete-form', "info":this_row[0]}
+        const _message = {msg:"DO_SHOW_MODAL", data:_tempInfo}
+        window.postMessage(_message, location.href);
       }
         
     } );

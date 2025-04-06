@@ -171,7 +171,7 @@ util.getCurrentTime = function(){
 
 util.dateDotFormat = function(dateString)
 {
-  dateString = dateString.replace(/\s+/g, '').substring(0,8);
+  dateString = dateString.replace(/\s+/g, '').substring(0,10);
   let _dateString = '';
   try{
     _dateString = dateString.replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3');
@@ -185,7 +185,7 @@ util.dateDotFormat = function(dateString)
 
 util.dateDashFormat = function(dateString)
 {
-  dateString = dateString.replace(/\s+/g, '').substring(0,8);;
+  dateString = dateString.replace(/\s+/g, '').substring(0,10);;
   let _dateString = '';
   try{
     _dateString = dateString.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');

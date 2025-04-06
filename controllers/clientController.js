@@ -37,6 +37,12 @@ exports.apply = async (req, res) => {
 		if (findInfo) {
 			return sendErrorResponse(res, 400, "중복된 아이디입니다.");
 		}
+
+		const findUser = await Client.findOne({ email: createData.email }).exec();
+		if (findUser) {
+			return sendErrorResponse(res, 400, "이미 신청한 사용자 입니다.");
+		}
+
 		const client = new Client(createData);
 		const savedClient = await client.save();
 
@@ -44,7 +50,11 @@ exports.apply = async (req, res) => {
 			...savedClient._doc,
 			date: savedClient.date.toISOString().substring(0,10)
 		};
-
+		
+		//send email
+		sendEmailApplyUser(infoData)
+			
+		delete infoData.authCode;
 		return sendSuccessResponse(res, infoData, "정상등록되었습니다.");
 	} catch(error) {
 		console.log(error);
@@ -72,8 +82,7 @@ exports.create = async (req, res) => {
 
 		Object.assign(doc, updateData);
 		const savedDoc = await doc.save();
-		
-		return sendSuccessResponse(res, { info: savedDoc }, "클라이언트가 생성되었습니다.");
+		return sendSuccessResponse(res, { info: null }, "클라이언트가 생성되었습니다.");
 	} catch(error) {
 		return sendErrorResponse(res, 500, "클라이언트가 생성 중 오류가 발생했습니다.", error.message);
 	}
@@ -97,52 +106,13 @@ exports.addDoc = async(req, res) => {
 		};
 
 		if(createData.model === "User") {
-			delete infoData.password;
+			
 			if(createData.email)
 			{
-				const subject = `${createData.name}님! SS CRM 신청이 정상처리되었습니다.`
-				const html = 
-				`
-				<div style="max-width:100%;">
-					<div style="border-radius: 10px;
-					background-color: #fff;
-					border: 0;
-					width:90%;
-					margin:auto;
-					border-radius: 15px;
-					border: 1px solid #eee;
-					margin-bottom: 36px;
-					margin-top: 36px; 
-					">
-						<div style="
-						border-top-left-radius: 15px;
-						border-top-right-radius: 15px;
-						background: #1a2035 !important;
-						color: white;
-						padding: 12px 24px;
-						">
-							<span style="font-size: 14px; font-weight: bold;">SS CRM 가입완료</span>
-						</div>
-						<div style="padding: 12px 24px; color: #212529bf !important; font-size:14px;">
-							<p>
-								SS CRM 서비스 신청이 수락되었습니다. 아래 URL 주소로 서비스를 이용하실 수 있습니다.
-							</p>
-							<ul>
-								<li> 관리자 아이디 : ${infoData.username}</li>
-								<li> 관리자 비밀번호 : ${createData.password}</li>
-							</ul>
-							<a href="https://crm.todayground.com/crm/${infoData.clientId}" target="_blank">https://crm.todayground.com/crm/${infoData.clientId}</a>
-							<p style="text-align: right;">간단하면서 강력한 CRM - SS CRM </p>
-						</div>
-					</div>
-				</div>
-				`
-				await sendEmail({
-					to: createData.email,
-					subject: subject,
-					html: html,
-				});
+				sendEmailClientUser(createData)
+				delete infoData.password;
 			}
+			
 		}
 
 		return sendSuccessResponse(res, {info :infoData}, "정상등록되었습니다.");
@@ -180,6 +150,25 @@ exports.delete = async(req, res) => {
 			await Work.deleteMany({ clientId: deleteData.clientId});
 			await Board.deleteMany({ clientId: deleteData.clientId});
 			await BoardInfo.deleteMany({ clientId: deleteData.clientId});
+			await Client.deleteOne({ _id });
+		}
+		else
+		{
+			return sendErrorResponse(res, 400, "해당 크라이언트가 없습니다.");
+		}
+		return sendSuccessResponse(res, {info :findInfo}, "정상 삭제 되었습니다.");
+	}
+	catch(error) {
+		return sendErrorResponse(res, 500, "삭제 중 오류가 발생했습니다."+error.message, error.message);
+	}
+}; 
+
+exports.cancle = async(req, res) => {
+	try {
+		const { _id, ...deleteData } = req.body;
+
+		const findInfo = await Client.findOne({_id, used:'N', authCode:deleteData.authCode}).exec();
+		if (findInfo) {
 			await Client.deleteOne({ _id });
 		}
 		else
@@ -286,3 +275,92 @@ exports.info = async (req, res) => {
 		return {clientId:{}};
 	}
 };
+
+const sendEmailApplyUser = async (info) => {
+	const subject = `${info.name}님! SS CRM 신청접수가 정상처리되었습니다.`
+	const html = 
+		`<div style="max-width:100%;">
+			<div style="border-radius: 10px;
+			background-color: #fff;
+			margin-bottom: 30px;
+			border: 0;
+			width:90%;
+			margin:auto;
+			border-radius: 15px;
+			border: 1px solid #eee;
+			margin-top: 24px; 
+			">
+				<div style="
+				border-top-left-radius: 15px;
+				border-top-right-radius: 15px;
+				background: #1a2035 !important;
+				color: white;
+				padding: 12px 24px;
+				">
+					<span style="font-size: 14px; font-weight: bold;">SS CRM 신청접수 완료</span>
+				</div>
+				<div style="padding: 12px 24px; color: #212529bf !important;">
+					<p>
+						SS CRM 서비스 신청이 접수되었습니다. 아래 URL 주소로 서비스 신청을 완료해주세요.
+					</p>
+					<p style="padding: 12px 0;">
+						<a href="https://crm.todayground.com/client/client-apply/${info.clientId}/${info.authCode}" target="_blank">SS CRM 서비스 선청 완료 진행</a>
+					</p>
+					<span>*2주 내에 신청을 완료하지 않으면 서비스 신청이 취소됩니다.</span>
+					<p style="text-align: right;">간단하면서 강력한 CRM - SS CRM </p>
+				</div>
+			</div>
+		</div>
+		
+		`
+	await sendEmail({
+		to: info.email,
+		subject: subject,
+		html: html,
+	});
+}
+
+const sendEmailClientUser = async (info) => {
+	const subject = `${info.name}님! SS CRM 신청이 정상처리되었습니다.`
+	const html = 
+	`
+	<div style="max-width:100%;">
+		<div style="border-radius: 10px;
+		background-color: #fff;
+		border: 0;
+		width:90%;
+		margin:auto;
+		border-radius: 15px;
+		border: 1px solid #eee;
+		margin-bottom: 36px;
+		margin-top: 36px; 
+		">
+			<div style="
+			border-top-left-radius: 15px;
+			border-top-right-radius: 15px;
+			background: #1a2035 !important;
+			color: white;
+			padding: 12px 24px;
+			">
+				<span style="font-size: 14px; font-weight: bold;">SS CRM 가입완료</span>
+			</div>
+			<div style="padding: 12px 24px; color: #212529bf !important; font-size:14px;">
+				<p>
+					SS CRM 서비스 신청이 수락되었습니다. 아래 URL 주소로 서비스를 이용하실 수 있습니다.
+				</p>
+				<ul>
+					<li> 관리자 아이디 : ${info.username}</li>
+					<li> 관리자 비밀번호 : ${info.password}</li>
+				</ul>
+				<a href="https://crm.todayground.com/crm/${info.clientId}" target="_blank">https://crm.todayground.com/crm/${info.clientId}</a>
+				<p style="text-align: right;">간단하면서 강력한 CRM - SS CRM </p>
+			</div>
+		</div>
+	</div>
+	`
+	await sendEmail({
+		to: info.email,
+		subject: subject,
+		html: html,
+	});
+}

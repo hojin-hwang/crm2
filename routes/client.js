@@ -6,6 +6,7 @@ const LoginRequired = require('../utils/loginRequired');
 const clientApplyValidator = require('../utils/clientApplyValidator');
 
 	router.post('/apply', clientController.apply);
+	router.post('/cancle', clientController.cancle);
 	router.post('/add', clientController.create);
 	router.post('/addDoc', clientController.addDoc);
 	router.post('/info',  clientController.info);

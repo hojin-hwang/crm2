@@ -40,7 +40,7 @@ class ApplyDeleteForm extends AbstractComponent{
         try{
             const form = this.querySelector('form');
             const formData = new FormData(form);
-            const response = await util.sendFormData(`/apply/delete`, "POST", formData);
+            const response = await util.sendFormData(`/client/cancle`, "POST", formData);
             if(response.code === 100)
             {
                 const message =  {msg:"DO_HIDE_MODAL", data:null} 
@@ -81,6 +81,7 @@ class ApplyDeleteForm extends AbstractComponent{
                 <div class="card-body">
                     <form>
                         <input type="hidden" name="_id" value="${this.info._id}">
+                        <input type="hidden" name="authCode" value="${this.info.authCode}">
                         <div class="form-group">
                             <label for="clientId">Client Id</label>
                             <input type="text" id="clientId" readonly value="${this.info.clientId}" name="clientId" placeholder="client name" class="form-control" style="width: auto;">

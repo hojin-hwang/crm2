@@ -16,49 +16,83 @@
     <link rel="stylesheet" href="/assets/css/fonts.min.css" media="all">
     <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
     <link rel="stylesheet" href="/assets/css/crm.css" />
+    <style>
+      .page-inner > .card{background: unset;}
+      .page-inner > .card-header{background: white!important;}
+    </style>
   </head>
   <body>
     <div class="wrapper">
-      <div class="main-panel">
-          <div class="container">
-            <div class="page-inner">
-              <form>
-                <div class="form-group">
-                  <label for="clientId">Client Id</label>
-                  <input type="text" id="clientId" value="${clientInfo.clientId}" name="clientId" placeholder="client name" class="form-control" style="width: auto;">
-                </div>
-                <div class="row-space-between">
-                  <div class="form-group">
-                    <label for="clientId">name</label>
-                    <input type="text" id="name" value="${clientInfo.name}" name="name" class="form-control" style="width: auto;">
-                  </div>
-                  <div class="form-group">
-                    <label for="email">email</label>
-                    <input type="text" id="email" value="${clientInfo.email}" name="email" class="form-control" style="width: auto;">
-                  </div>
-                </div>
-                <div class="row-space-between">
-                  <div class="form-group">
-                    <label for="site" class="hidden">site</label>
-                    <input type="hidden" id="site" value="${clientInfo.site}" name="site" class="form-control" style="width: auto;">
-                  </div>
-                  <div class="form-group">
-                    <label for="tel">tel</label>
-                    <input type="text" id="tel" value="${clientInfo.tel}" name="tel" class="form-control" style="width: auto;">
-                  </div>
-                  <div class="form-group">
-                    <label for="authCode">authCode</label>
-                    <input type="text" id="authCode" value="${clientInfo.authCode}" name="authCode" class="form-control" style="width: auto;">
-                  </div>
-                </div>
-                <button type="button" class="btn btn-primary form-control command-create-client">Make Client</button>
-              </form>
+        <div class="container">
+          <div class="page-inner">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="fw-bold mb-3">SS CRM 서비스 신청</h3>
+                <p class="card-category">SS CRM 서비스 신청을 환영합니다.</p>
+              </div>
+              <div class="card-body">
+                <ul class="timeline">
+                  <li>
+                    <div class="timeline-badge"><i class="far fa-paper-plane"></i></div>
+                    <div class="timeline-panel">
+                      <div class="timeline-heading">
+                        <h4 class="timeline-title">서비스 신청 접수</h4>
+                        <p>
+                          <small class="text-muted"><i class="far fa-paper-plane"></i><span class="client-date">dddd</span> via SS CRM</small>
+                        </p>
+                      </div>
+                      <div class="timeline-body">
+                        <p>
+                          <span>Client ID : </span> <span class="client-id"></span><br>
+                          <span>Email : </span> <span class="client-email"></span><br>
+                          <span>Phone : </span> <span class="client-tel"></span><br>
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="timeline-inverted">
+                    <div class="timeline-badge primary"><i class="far fa-bell"></i></div>
+                    <div class="timeline-panel">
+                      <div class="timeline-heading">
+                        <h4 class="timeline-title">서비스 개설 안내</h4>
+                      </div>
+                      <div class="timeline-body">
+                        <p>
+                          위에 신청한대로 서비스가 개설됩니다. <br>
+                          신청한 정보를 확인하시고 맞으면 아래의 "서비스 신청 완료"버튼을 클릭해주세요. <br>
+                        </p>
+                        <hr>
+                        <button type="button" class="btn btn-primary form-control command-create-client">서비스 신청 완료</button>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="timeline-badge danger"><i class="icon-close"></i></div>
+                    <div class="timeline-panel">
+                      <div class="timeline-heading">
+                        <h4 class="timeline-title">서비스 개설 취소 안내</h4>
+                      </div>
+                      <div class="timeline-body">
+                        <p>
+                          본 서비스를 개설을 취소하시려면 아래의 "서비스 신청 취소"버튼을 클릭해주세요. <br>
+                          신청후 2주내 완료하지 않으면 서비스 신청이 취소됩니다. <br>
+                        </p>
+                        <hr>
+                        <button type="button" style="max-width: 150px;" class="btn btn-danger form-control command-delete-client">서비스 신청 취소</button>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>  
             </div>
+            
+            
           </div>
-      </div>
+        </div>
+    </div>
 
       <modal-page></modal-page>
-    </div>
+
     
     <!--   Core JS Files   -->
     <script src="/assets/js/core/jquery-3.7.1.min.js"></script>
@@ -69,7 +103,7 @@
     <!-- 컴포넌트 -->
     <script src="/component/crm/abs-component.js"></script>
     <script src="/component/crm/modal-page.js"></script>
-   
+    <script src="/component/crm/info-message.js"></script>
     <!-- Fonts and icons -->
     <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -102,6 +136,9 @@
       const boardInfoList = [];
       
       document.addEventListener('DOMContentLoaded', function () {
+
+        setDocument();
+
         document.addEventListener('click', handleClick);
         
         function handleClick(e) {
@@ -110,25 +147,43 @@
             if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
             if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
             if(node.className.match(/command-create-client/))
-              {
-                 addInfo();
-                 disableButton(node);
-              }
+            {
+              disableButton();  
+              addInfo();
+              return;
+            }
+            if(node.className.match(/command-delete-client/))
+            {
+              disableButton();
+              deleteInfo();
+              return;
+            }  
           });
         }
       });
 
+  function setDocument()
+  {
+    const clientId = document.querySelector('.client-id');
+    const clientEmail = document.querySelector('.client-email');
+    const clientTel = document.querySelector('.client-tel');
+    const clientDate = document.querySelector('.client-date');
+
+    clientId.innerText = clientInfo.clientId;
+    clientEmail.innerText = clientInfo.email;
+    clientTel.innerText = clientInfo.tel;
+    clientDate.innerText = util.dateDotFormat(clientInfo.date);
+  }    
+
   async function addInfo()
 	{
-    
     const formData = new FormData();
     formData.append('_id', clientInfo._id);
     formData.append('authCode', clientInfo.authCode);
     try{
 			await util.sendFormData(`/client/add`, "POST", formData);
       await makeUserTable();
-      
-      
+      showAddModal()
 		}
 		catch (error) {
             console.error('오류:', error);
@@ -136,6 +191,56 @@
         }
 		return;
 	}
+
+  async function deleteInfo()
+	{
+    const formData = new FormData();
+    formData.append('_id', clientInfo._id);
+    formData.append('authCode', clientInfo.authCode);
+    try{
+			await util.sendFormData(`/client/cancle`, "POST", formData);
+      showDeleteModal()
+		}
+		catch (error) {
+            console.error('오류:', error);
+            alert('실패했습니다.');
+        }
+		return;
+	}
+
+  function showAddModal()
+  {
+    const modal = document.querySelector('modal-page');
+    const defaultMessage = {
+      title:"서비스 신청완료",
+      message:"신청이 완료되었습니다. <br> 이메일로 서비스 계정정보가 발송되었습니다. <br> 서비스 계정정보를 확인하시고 로그인해주세요.",
+      close:false,
+      button:{
+        text:"Main으로 돌아가기",
+        link:"/"
+      }
+    };
+    const infoMessage = new InfoMessage(defaultMessage);
+    
+    modal.appendComponent(infoMessage);
+  }
+
+  function showDeleteModal()
+  {
+    const modal = document.querySelector('modal-page');
+    const defaultMessage = {
+      title:"서비스 신청 취소",
+      message:"신청이 취소 되었습니다. ",
+      close:false,
+      button:{
+        text:"Main으로 돌아가기",
+        link:"/"
+      }
+    };
+    const infoMessage = new InfoMessage(defaultMessage);
+    
+    modal.appendComponent(infoMessage);
+  }
 
   async function addDoc(formData, command)
 	{
@@ -149,9 +254,11 @@
 		return;
 	}
 
-  disableButton = (button) => {
-    button.setAttribute('disabled','disabled');
-    button.classList.remove('command-create-client');
+  disableButton = () => {
+    document.querySelectorAll('button').forEach(button=>{
+      button.setAttribute('disabled','disabled');
+      button.classList.remove('command-create-client','command-delete-client')
+    })
   }
 
 

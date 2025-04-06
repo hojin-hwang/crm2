@@ -22,7 +22,6 @@ const boardInfoRouter = require('./routes/boardInfo');
 const boardRouter = require('./routes/board');
 const replyRouter = require('./routes/reply');
 const adminRouter = require('./routes/admin');
-const applyRouter = require('./routes/apply');
 const MongoStore = require('connect-mongo')
 const mongoose = require('mongoose');
 
@@ -81,7 +80,6 @@ app.use('/boardInfo', boardInfoRouter);
 app.use('/board', boardRouter);
 app.use('/reply', replyRouter);
 app.use('/admin', adminRouter);
-app.use('/apply', applyRouter);
 // app.listen -> server.listen 으로 변경(소켓 사용을 위해)
 app.listen(process.env.PORT,()=>{
 	console.log("starting Server port 3000!!")
