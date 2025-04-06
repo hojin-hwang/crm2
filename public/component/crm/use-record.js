@@ -1,20 +1,25 @@
-// 상수 정의 ClientInfo로 빼자..
-const AMOUNT_LIMIT = {
-    product: 1000,
-    company: 200,
-    customer: 400,
-    sheet:1000,
-    work:5000,
-    boardInfo:10,
-    board:3000,
-    file:1000
-};
 
 class UseRecord extends AbstractComponent
 {
   constructor()
   {
     super();
+    this.AMOUNT_LIMIT = (globalThis.user.clientInfo.price === 'basic')? { ...globalThis.user.recordConfig,
+      company: 200,
+      customer: 400,
+      boardInfo:10,
+      price:'basic',
+      } : {
+        "sheet": "무제한",
+        "work": "무제한",
+        "product": "무제한",
+        "board": "무제한",
+        "file": "무제한",
+        "company": "무제한",
+        "customer": "무제한",
+        "boardInfo": "무제한",
+        "price":'professional',
+    };
   }
 
   static get observedAttributes(){return [];}
@@ -47,8 +52,8 @@ class UseRecord extends AbstractComponent
       subTitle: "CRM에 등록된 고객사",
       amount: globalThis.companyList.length,
       color: "bg-success",
-      percent: parseInt((globalThis.companyList.length / AMOUNT_LIMIT.company) * 100),
-      ment: "Limit: " + AMOUNT_LIMIT.company
+      percent: (this.AMOUNT_LIMIT.price === 'professional')? 1:parseInt((globalThis.companyList.length / this.AMOUNT_LIMIT.company) * 100),
+      ment: "Limit: " + this.AMOUNT_LIMIT.company
     };
     const card = this.#makeCard(data);
     this.querySelector('.row.record-body').appendChild(card);
@@ -61,8 +66,8 @@ class UseRecord extends AbstractComponent
       subTitle: "CRM에 등록된 고객",
       amount: globalThis.sheetList.length,
       color: "bg-danger",
-      percent: parseInt((globalThis.customerList.length / AMOUNT_LIMIT.customer) * 100),
-      ment: "Limit: " + AMOUNT_LIMIT.customer
+      percent: (this.AMOUNT_LIMIT.price === 'professional')? 1:parseInt((globalThis.customerList.length / this.AMOUNT_LIMIT.customer) * 100),
+      ment: "Limit: " + this.AMOUNT_LIMIT.customer
     };
     const card = this.#makeCard(data);
     this.querySelector('.row.record-body').appendChild(card);
@@ -75,8 +80,8 @@ class UseRecord extends AbstractComponent
       subTitle: "CRM에 등록된 영업기회",
       amount: globalThis.sheetList.length,
       color: "bg-secondary",
-      percent: parseInt((globalThis.sheetList.length / AMOUNT_LIMIT.sheet) * 100),
-      ment: "Limit: " + AMOUNT_LIMIT.sheet
+      percent: (this.AMOUNT_LIMIT.price === 'professional')? 1:parseInt((globalThis.sheetList.length / this.AMOUNT_LIMIT.sheet) * 100),
+      ment: "Limit: " + this.AMOUNT_LIMIT.sheet
     };
     const card = this.#makeCard(data);
     this.querySelector('.row.record-body').appendChild(card);
@@ -89,8 +94,8 @@ class UseRecord extends AbstractComponent
       subTitle: "CRM에 등록된 영업일지",
       amount: globalThis.workList.length,
       color: "bg-warning",
-      percent: parseInt((globalThis.workList.length / AMOUNT_LIMIT.work) * 100),
-      ment: "Limit: " + AMOUNT_LIMIT.work
+      percent: (this.AMOUNT_LIMIT.price === 'professional')? 1:parseInt((globalThis.workList.length / this.AMOUNT_LIMIT.work) * 100),
+      ment: "Limit: " + this.AMOUNT_LIMIT.work
     };
     const card = this.#makeCard(data);
     this.querySelector('.row.record-body').appendChild(card);
@@ -103,8 +108,8 @@ class UseRecord extends AbstractComponent
       subTitle: "CRM에 등록된 원재료, 제품, 상품",
       amount: globalThis.productList.length,
       color: "bg-info",
-      percent: parseInt((globalThis.productList.length / AMOUNT_LIMIT.product) * 100),
-      ment: "Limit: " + AMOUNT_LIMIT.product
+      percent: (this.AMOUNT_LIMIT.price === 'professional')? 1:parseInt((globalThis.productList.length / this.AMOUNT_LIMIT.product) * 100),
+      ment: "Limit: " + this.AMOUNT_LIMIT.product
     };
     const card = this.#makeCard(data);
     this.querySelector('.row.record-body').appendChild(card);
@@ -118,8 +123,8 @@ class UseRecord extends AbstractComponent
       subTitle: "CRM에 등록된 게시판",
       amount: _count,
       color: "bg-success",
-      percent: parseInt((_count / AMOUNT_LIMIT.boardInfo) * 100),
-      ment: "Limit: " + AMOUNT_LIMIT.boardInfo
+      percent: (this.AMOUNT_LIMIT.price === 'professional')? 1:parseInt((_count / this.AMOUNT_LIMIT.boardInfo) * 100),
+      ment: "Limit: " + this.AMOUNT_LIMIT.boardInfo
     };
     const card = this.#makeCard(data);
     this.querySelector('.row.record-body').appendChild(card);
@@ -138,8 +143,8 @@ class UseRecord extends AbstractComponent
           subTitle: "CRM에 등록된 게시물",
           amount: response.data.limit.board,
           color: "bg-secondary",
-          percent: parseInt((response.data.limit.board/ AMOUNT_LIMIT.board) * 100),
-          ment: "Limit: " + AMOUNT_LIMIT.board
+          percent: (this.AMOUNT_LIMIT.price === 'professional')? 1:parseInt((response.data.limit.board/ this.AMOUNT_LIMIT.board) * 100),
+          ment: "Limit: " + this.AMOUNT_LIMIT.board
         };
         const card = this.#makeCard(data);
         this.querySelector('.row.record-body').appendChild(card);
@@ -149,8 +154,8 @@ class UseRecord extends AbstractComponent
           subTitle: "CRM에 업로드된 파일 크기",
           amount: this.#covertByteToMega(response.data.limit.file),
           color: "bg-black",
-          percent: parseInt((response.data.limit.file / this.#changeByteScale(AMOUNT_LIMIT.file)) * 100),
-          ment: "Limit: " + AMOUNT_LIMIT.file
+          percent: (this.AMOUNT_LIMIT.price === 'professional')? 1:parseInt((response.data.limit.file / this.AMOUNT_LIMIT.file) * 100),
+          ment: "Limit: " + (this.AMOUNT_LIMIT.price === 'professional')? this.AMOUNT_LIMIT.file:this.#covertByteToMega(this.AMOUNT_LIMIT.file)
         };
         const card2 = this.#makeCard(data2);
         this.querySelector('.row.record-body').appendChild(card2);
@@ -161,10 +166,13 @@ class UseRecord extends AbstractComponent
     }
   }
 
-
   #covertByteToMega(byte)
   {
-    if(byte > 1000000) 
+    if(byte >= 1000000000) 
+    {
+      return (byte / 1000 /1000 /1000).toFixed(1) + "G";
+    }
+    else if(byte >= 1000000) 
     {
       return (byte / 1000 /1000).toFixed(2) + "M";
     }
@@ -175,10 +183,6 @@ class UseRecord extends AbstractComponent
     
   }
 
-  #changeByteScale(mega)
-  {
-    return mega * 1000 *1000;
-  }
 
   #makeCard(data)
   {

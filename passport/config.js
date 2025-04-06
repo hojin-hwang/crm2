@@ -3,6 +3,7 @@ const local = require('./localStrategy'); // 로컬서버로 로그인할때
 const google = require('./googleStrategy'); // 구글서버로 로그인할때
 const User = require('../models/user');
 const Client = require('../models/client');
+const recordConfig = require('../config/recordConfig');
 
 module.exports = () => {
    
@@ -20,6 +21,7 @@ module.exports = () => {
 			{
 				const clientInfo = await Client.findOne({ clientId : userInfo.clientId}).exec();
 				userInfo["clientInfo"] = clientInfo;
+				userInfo["recordConfig"] = (recordConfig[clientInfo.price])
 			}
 
 			process.nextTick(() => done(null, userInfo));
