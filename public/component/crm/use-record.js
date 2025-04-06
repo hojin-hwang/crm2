@@ -149,13 +149,15 @@ class UseRecord extends AbstractComponent
         const card = this.#makeCard(data);
         this.querySelector('.row.record-body').appendChild(card);
 
+        const limitFileSize = (this.AMOUNT_LIMIT.price === 'professional')? this.AMOUNT_LIMIT.file:this.#covertByteToMega(this.AMOUNT_LIMIT.file)
+
         const data2 = {
           title: "파일",
           subTitle: "CRM에 업로드된 파일 크기",
           amount: this.#covertByteToMega(response.data.limit.file),
           color: "bg-black",
           percent: (this.AMOUNT_LIMIT.price === 'professional')? 1:parseInt((response.data.limit.file / this.AMOUNT_LIMIT.file) * 100),
-          ment: "Limit: " + (this.AMOUNT_LIMIT.price === 'professional')? this.AMOUNT_LIMIT.file:this.#covertByteToMega(this.AMOUNT_LIMIT.file)
+          ment: "Limit: " + limitFileSize,
         };
         const card2 = this.#makeCard(data2);
         this.querySelector('.row.record-body').appendChild(card2);
@@ -168,6 +170,7 @@ class UseRecord extends AbstractComponent
 
   #covertByteToMega(byte)
   {
+    
     if(byte >= 1000000000) 
     {
       return (byte / 1000 /1000 /1000).toFixed(1) + "G";
