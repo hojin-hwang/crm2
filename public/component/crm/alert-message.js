@@ -12,8 +12,6 @@ class AlertMessage extends HTMLElement{
 
     #render()
     {
-        
-      
         $.notify({
             // options
             icon: this.#getIcon(),

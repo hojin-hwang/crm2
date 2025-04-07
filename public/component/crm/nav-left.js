@@ -21,23 +21,28 @@ class NavLeft extends AbstractComponent
         if(!node.getAttribute('tag')) return;
         const collection = node.getAttribute('tag');
         this.#changeTableContents(collection);
+        this.#foldMenuIsMobile()
+        
         return;
       }
       if(node.className.match(/command-show-board/))
       {
         this.#showCustomBoard(node);
+        this.#foldMenuIsMobile()
         return;
       }
       if(node.className.match(/command-show-component/))
       {
         if(!node.getAttribute('tag')) return;
         this.#showTagComponent(node);
+        this.#foldMenuIsMobile()
         return;
       }
       if(node.className.match(/command-show-sheet-list/))
       {
         if(!node.getAttribute('tag')) return;
         this.#showSheetList(node);
+        this.#foldMenuIsMobile()
         return;
       }
       if(node.className.match(/command-close-nav-left/))
@@ -62,7 +67,6 @@ class NavLeft extends AbstractComponent
             this.#changeTableContents(event.data.data);
           break;
           case "DO_SHOW_NAV_LEFT":
-            console.log("FDFDDFDS")
             this.#showThisBar();
             this.#appendCloseCommand();
             //this.#selectContentsMenu(event.data.data)
@@ -103,6 +107,14 @@ class NavLeft extends AbstractComponent
     this.#appendCustomerBoard();
     if(!this.#isManager()) this.#removeManagerMenu()
     return;
+  }
+
+  #foldMenuIsMobile()
+  {
+    if (window.screen.width < 1024) {
+      this.#hideThisBar();
+      this.querySelector('.nav-toggle').classList.toggle('command-close-nav-left')
+    }
   }
 
   #showThisBar()

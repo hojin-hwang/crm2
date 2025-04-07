@@ -35,7 +35,14 @@ class FileUpload extends HTMLElement{
                 {
                     this.#deleteInfo(node);
                     node.closest('div.download-box').remove();
+                    return;
                 }
+                if(node.className.match(/command-zoom-image-file/))
+                {
+                    const zoomImage = new ImageZoom(node.dataset.name);
+                    this.appendChild(zoomImage);
+                }
+                
         });
     }
 
@@ -121,7 +128,9 @@ class FileUpload extends HTMLElement{
         if(this.#isImageFile(data))
         {
             this.#setSwiperImage(data, id);
-            this.#addAttachFileButton(data, id);
+            this.#addAttachZoomButton(data, id);
+            this.#addAttachDeleteButton(data, id);
+            
             this.box.image++;
         }
         else
@@ -143,7 +152,7 @@ class FileUpload extends HTMLElement{
         this.swiper.appendSlide(preview_element);
     }
 
-    #addAttachFileButton(info, id)
+    #addAttachDeleteButton(info, id)
 	{
         if(!this.#isAuthorized()  || !this.editable) return;
         const button = document.createElement("button")
@@ -155,7 +164,20 @@ class FileUpload extends HTMLElement{
 		button.dataset.folder = info.folder;
         button.dataset.id = id;
 		document.getElementById(id).appendChild(button);
-	}	
+	}
+    
+    #addAttachZoomButton(info, id)
+	{
+        const button = document.createElement("button")
+		button.setAttribute('type', "button");
+        button.classList.add("btn", "btn-icon")
+		button.innerHTML = '<i class="fas fa-expand"></i>';
+		button.classList.add("command-zoom-image-file");
+		button.dataset.name = info.name;
+		button.dataset.folder = info.folder;
+        button.dataset.id = id;
+		document.getElementById(id).appendChild(button);
+	}
 
     #isImageFile(data)
     {
@@ -174,7 +196,8 @@ class FileUpload extends HTMLElement{
                     if(this.#isImageFile(item))
                     {
                         this.#setSwiperImage(item, id);
-                        this.#addAttachFileButton(item, id);
+                        this.#addAttachZoomButton(item, id);
+                        this.#addAttachDeleteButton(item, id);
                         this.box.file.push(item.name);
                         this.box.image++;
                     }
@@ -333,7 +356,8 @@ class FileUpload extends HTMLElement{
             max-width:230px;
             background-repeat: no-repeat;
             background-size: contain;
-            text-align: right;
+            display: flex;
+            justify-content: space-between;
             padding: 4px;
             }
 

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="/assets/css/kaiadmin.min.css" />
     <link rel="stylesheet" href="/assets/css/fonts.min.css" media="all">
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/panzoom/panzoom.css" />
     <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
   </head>
   <body>
@@ -86,11 +87,30 @@
         </div>
       </div>
     </div>
+
+    <style>
+      .image-zoom {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1024;
+     }
+      img{width: 600px;}
+    </style>
+    
+      <section class="image-zoom">
+      <div class="f-panzoom" id="myPanzoom">
+        <div class="f-panzoom__viewport">
+          <img class="f-panzoom__content" src="https://lipsum.app/id/1/1200x1500" />
+        </div>
+      </div>
+      </section>
+
     <script src="/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="/assets/js/core/popper.min.js"></script>
     <script src="/assets/js/core/bootstrap.min.js"></script>
     <script src="/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/panzoom/panzoom.umd.js"></script>
     <script>
       $.notify({
   // options
@@ -141,6 +161,24 @@
   // icon_type: 'class',
   
 });
+    </script>
+    <script>
+
+const container = document.getElementById("myPanzoom");
+    const options = { click: "toggleCover" };
+    new Panzoom(document.getElementById("myPanzoom"), {
+        on: {
+          click: (panzoom, event) => {
+            event.preventDefault();
+
+            if (panzoom.targetScale > 1) {
+              panzoom.zoomTo(1);
+            } else {
+              panzoom.zoomTo(2, { event });
+            }
+          },
+        },
+      });
     </script>
   </body>
 </html>
