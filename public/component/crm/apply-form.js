@@ -87,7 +87,6 @@ class ApplyForm extends HTMLElement
         try{
             const form = this.querySelector('form');
             const formData = new FormData(form);
-            //const response = await util.sendFormData(`/apply/add`, "POST", formData);
             const response = await util.sendFormData(`/client/apply`, "POST", formData);
             if(response.code === 100)
             {

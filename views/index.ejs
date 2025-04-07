@@ -183,7 +183,13 @@
                     <div class="demo-version">
 
                     </div>
-    
+                    
+                    <button class="btn btn-link command-show-contact-form">
+											<span class="btn-label">
+												운영자에게 문의하기
+											</span>
+										
+                    </button>
                   </div>
                 </div>
               </div>
@@ -205,6 +211,7 @@
     <script src="/component/crm/apply-form.js"></script>
     <script src="/component/crm/apply-condition.js"></script>
     <script src="/component/crm/info-message.js"></script>
+    <script src="/component/crm/contact-form.js"></script>
     <!-- Kaiadmin JS -->
     <!-- <script src="/assets/js/kaiadmin.min.js"></script> -->
 
@@ -284,6 +291,12 @@
                   document.querySelector('.form-zone').appendChild(new ApplyForm())
                   document.querySelector('.form-info').appendChild(new ApplyCondition())
 							 } 
+               if(node.className.match(/command-show-contact-form/))
+							 {
+                  const modal = document.querySelector('modal-page');
+                  modal.appendComponent(new ContactForm())
+							 }
+               
 							 if(node.className.match(/command-move-register/))
 							 {
 								location.href = '/user/register'

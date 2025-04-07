@@ -149,6 +149,12 @@ class NavLeft extends AbstractComponent
                 </span>
                 <h4 class="text-section">Any thing</h4>
               </li>
+              <li class="nav-item">
+                <a href="#" class="command-show-component" tag="contact-list">
+                  <i class="fas fa-calendar-check"></i>
+                  <p>문의사항</p>
+                </a>
+              </li>
             </ul>
           </div>
         </div>
