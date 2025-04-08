@@ -159,7 +159,7 @@ class MakeClient extends AbstractComponent
   makeUserTable = async () => {
     const formData = new FormData();
     formData.append('model', 'User');
-    formData.append('username', `admin__${this.info.clientId}`);
+    formData.append('username', `admin@${this.info.clientId}.crm`);
     formData.append('email', this.info.email);
     formData.append('name', '관리자');
     formData.append('degree', '관리자')

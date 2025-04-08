@@ -324,12 +324,21 @@
     }
     
     const checkEmail = (form)=>{
-      if(form.username.value.length < 4) {
+      if(form.username.value.length < 1) {
         alert('이메일은 필수입력사항입니다');
         return false;
       }
+      else
+      {
+        const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+        if(!regEmail.test(form.username.value)) {
+            alert('이메일 형식에 따라 정확히 입력해주세요');
+            return false;
+        }
+      }
       return true;
     }
+    
     const checkPassword = (form)=>{
       if(form.password.value.length < 4) {
         alert('비밀번호는 4자 이상이어야 합니다');
