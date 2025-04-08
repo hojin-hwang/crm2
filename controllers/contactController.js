@@ -25,8 +25,8 @@ exports.create = async (req, res, next) => {
 		}
 
 		delete createData._id;
-		
-		createData["clientId"] = (req.user.clientId)?(req.user.clientId): null;
+		console.log(req.user);
+		createData["clientId"] = (req.user && req.user.clientId)?(req.user.clientId): null;
 		createData["user"] = (createData.user)? ObjectId.createFromHexString(createData.user) : null;
 
 		const contact = new Contact(createData);
