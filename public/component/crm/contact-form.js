@@ -41,11 +41,12 @@ class ContactForm extends AbstractComponent
     {
         if(globalThis.user)
         {
-            console.log(globalThis.user)
             Object.assign(this.data, globalThis.user);
             this.data["memo"] = "";
             this.data["email"] = (this.data["email"])? this.data["email"] : this.data["username"]
             this.data["isNew"] = true;
+            this.data["emailField"] = "hidden";
+            this.data["nameField"] = "hidden";
         }
         else
         {
@@ -55,6 +56,8 @@ class ContactForm extends AbstractComponent
             _data["email"] = "";
             _data["memo"] = ""
             _data["isNew"] = true;
+            this.data["emailField"] = "";
+            this.data["nameField"] = "";
             Object.assign(this.data, _data);
         }
     }
@@ -69,16 +72,8 @@ class ContactForm extends AbstractComponent
             if(response.code === 100)
             {
                 this.remove();
-                const modalPage = document.querySelector('modal-page');
-                const info = {
-                    title:"문의사항 제출", 
-                    message:`<p>문의내용이 제출되었습니다.</p>
-                    <p>입력하신 이메일로 답변이 전달될 예정입니다.</p> 
-                    <br>답변은 일주일내에 작성됩니다.</p>`, 
-                    close:true
-                }
-                const component = new InfoMessage(info)
-                modalPage.appendComponent(component)
+                this.#showInfoMessage();
+                this.sendPostMessage({msg:"COMMAND_ADD_DATA", data:null});
                 return;
             }
             else
@@ -92,6 +87,26 @@ class ContactForm extends AbstractComponent
             alert('실패했습니다.');
         }
         return;
+    }
+
+    #showInfoMessage(){
+
+        const info = (globalThis.user) ? {
+            title:"문의사항 제출", 
+            message:`<p>문의내용이 제출되었습니다.</p>
+            <p>답변은 문의하기 게시판에서 확인하세요.</p> 
+            <br>빠른 시일내에 답변드리겠습니다.</p>`, 
+            close:true
+        } : {
+            title:"문의사항 제출", 
+            message:`<p>문의내용이 제출되었습니다.</p>
+            <p>입력하신 이메일로 답변이 전달될 예정입니다.</p> 
+            <br>빠른 시일내에 답변드리겠습니다</p>`, 
+            close:true
+        }
+        const component = new InfoMessage(info)
+        const modalPage = document.querySelector('modal-page');
+        modalPage.appendComponent(component)
     }
 
   #saveCondition = (form)=>{
@@ -143,12 +158,12 @@ class ContactForm extends AbstractComponent
                 <div class="card">
                     <div class="card-body">
                     <form>
-                        <input type="hidden" class="form-control" name="_id" value="${this.data._id}">
-                        <div class="mb-3">
+                        <input type="hidden" class="form-control" name="user" value="${this.data._id}">
+                        <div class="mb-3 ${this.data.nameField}">
                             <label for="name" class="form-label">이름</label>
                             <input type="text" class="form-control" id="name" name="name" value="${this.data.name}">
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 ${this.data.emailField}">
                             <div>
                             <label for="email" class="form-label">이메일</label>
                             <input type="text" class="form-control" id="email" name="email" value="${this.data.email}">
@@ -157,7 +172,7 @@ class ContactForm extends AbstractComponent
                         <div class="mb-3">
                             <div>
                                 <label for="memo" class="form-label">내용</label>
-                                <textarea rows="2" class="form-control" id="memo" name="memo"></textarea>
+                                <textarea rows="4" class="form-control" id="memo" name="memo"></textarea>
                             </div>
                         </div>
                     </form>

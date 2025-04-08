@@ -2,21 +2,19 @@
 class ContactList extends AbstractComponent
 {
   
-  constructor(type  = "new")
+  constructor()
   {
     super();
     this.messageListener = this.onMessage.bind(this)
     window.addEventListener("message", this.messageListener);
+    this.addEventListener('click', this.handleClick);
 
     this.info = {
-      "type": type,
       "title":"문의사항 리스트",
-      "order":[[4, 'desc']],
+      "order":[[2, 'desc']],
       "columns":[
         { "data": "_id", "title":"id"},
-        { "data": "clientId", "title":"Client ID"},
-        { "data": "name", "title":"신청자"},
-        { "data": "email", "title":"email"},
+        { "data": "memo", "title":"memo"},
         { "data": "date", "title":"등록일" },
         {
           "className":"options",
@@ -24,37 +22,27 @@ class ContactList extends AbstractComponent
           "title" : "보기",
           "render": ()=>'<button class="btn btn-sm btn-primary pull-right">보기</button>'
         },
-        {
-          "className":"options",
-          "data": null,
-          "title" : "삭제",
-          "render": ()=>'<button class="btn btn-sm btn-danger pull-right"> 삭제</button>'
-        }
+        
       ]
     }
     
     this.#initSetting();
   }
 
-  static get observedAttributes(){return ['type'];}
+  static get observedAttributes(){return [];}
 
-  attributeChangedCallback(name, oldValue, newValue)
-  {
-    this[name] = newValue;
-    
+  handleClick(e) {
+    //e.preventDefault();
+    e.composedPath().find((node)=>{
+      if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
+      if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
+      if(node.className.match(/command-show-form/))
+      {
+        const _tempInfo = {"tagName":'contact-form', "info":null}
+        this.sendPostMessage({msg:"DO_SHOW_MODAL", data:_tempInfo});
+      }
+    });
   }
-  // handleClick(e) {
-  //   //e.preventDefault();
-  //   e.composedPath().find((node)=>{
-  //     if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
-  //     if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
-  //     if(node.className.match(/command-show-form/))
-  //     {
-  //       const _tempInfo = {"tagName":'make-reply', "info":null}
-  //       this.sendPostMessage({msg:"DO_SHOW_MODAL", data:_tempInfo});
-  //     }
-  //   });
-  // }
 
   onMessage(event)
   {
@@ -71,9 +59,17 @@ class ContactList extends AbstractComponent
             }, 100);
             
           break;
+          case "COMMAND_ADD_DATA":
+            setTimeout(() => {
+              this.#getList()
+              
+            }, 100);
+            
+          break;
           case "GET_DATA_LIST":
             this.list = event.data.data;
             setTimeout(() => {
+              console.log("리스트 갱신1");
               this.#appendTable();
             }, 100);
 
@@ -107,7 +103,6 @@ class ContactList extends AbstractComponent
 	{
 		try{
       const formData = new FormData();
-      formData.append("type", this.type);
 			const response = await util.sendFormData(`/contact/list`, "POST", formData);
       if(response.code === 100)
       {
@@ -134,6 +129,12 @@ class ContactList extends AbstractComponent
     }
   }
 
+  #addNewButton()
+  {
+    const addButton = document.createElement('div');
+    addButton.innerHTML = `<button class="btn btn-primary command-show-form" type="button">문의하기</button>`;
+    this.querySelector('.dt-layout-row')?.appendChild(addButton);
+  }
 
   #updateData(data)
   {
@@ -141,7 +142,9 @@ class ContactList extends AbstractComponent
     
     this.table.clear();
     this.table.rows.add( this.list ).draw(false);
+
   }
+
 
   #unSelectAllRows()
   {
@@ -153,9 +156,10 @@ class ContactList extends AbstractComponent
   {
     if(this.table)
     {
+      this.table.clear();
+      this.table.rows.add( this.list ).draw(false);
       return;
     }
-    const productTableStyle = {};
     this.table = new DataTable('#table_list', {
       retrieve: true,
       layout: {
@@ -180,7 +184,7 @@ class ContactList extends AbstractComponent
             target: this.info.columnInvisible,
             visible: false
         },
-        productTableStyle
+        {}
         
       ],
       createdRow: function (row, data, dataIndex) {
@@ -194,9 +198,9 @@ class ContactList extends AbstractComponent
   #appendTable()
   {
     const table = this.#setTable();
-
     if(!table) return;
-
+    
+    this.#addNewButton()
 
     table.on( 'click', 'td', function () {
   
@@ -206,18 +210,13 @@ class ContactList extends AbstractComponent
       cellData.column = table.cell( this )[0][0]["column"];
   
       let this_row = table.rows(this).data();
-      if(cellData.column === 5) //Client 만들기
+      if(cellData.column === 3) 
       {
-        const _tempInfo = {"tagName":'make-reply', "info":this_row[0]}
+        const _tempInfo = {"tagName":'contact-view', "info":this_row[0]}
         const _message = {msg:"DO_SHOW_MODAL", data:_tempInfo}
         window.postMessage(_message, location.href);
         return;
       }  
-      if(cellData.column === 6){
-        const _tempInfo = {"tagName":'contact-delete-form', "info":this_row[0]}
-        const _message = {msg:"DO_SHOW_MODAL", data:_tempInfo}
-        window.postMessage(_message, location.href);
-      }
         
     } );
 

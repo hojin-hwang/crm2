@@ -25,7 +25,6 @@ exports.create = async (req, res, next) => {
 		}
 
 		delete createData._id;
-		console.log(req.user);
 		createData["clientId"] = (req.user && req.user.clientId)?(req.user.clientId): null;
 		createData["user"] = (createData.user)? ObjectId.createFromHexString(createData.user) : null;
 
@@ -72,7 +71,9 @@ exports.update = async (req, res) => {
 		};
 
 		//send email
-		sendEmailContactUser(responseData)
+		if(!responseData.clientId || !responseData.user) {
+			sendEmailContactUser(responseData)
+		}
 
 		return sendSuccessResponse(res, { info: responseData }, "게시판 정보가 업데이트되었습니다.");
 	} catch(error) {
@@ -93,7 +94,9 @@ exports.list = async (req, res) => {
 		} = req.query;
 
 		// 검색 조건 구성
-		const query = {  };
+		const {...formData } = req.body;
+		const clientQuery = (formData.type === 'new')? {status:'N'} : {status:'C'}
+		const query = (req.user.clientId === 'client')? clientQuery : { clientId: req.user.clientId, user: req.user._id };
 	
 		if (search) {
 			query.$or = [

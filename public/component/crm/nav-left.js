@@ -373,6 +373,21 @@ class NavLeft extends AbstractComponent
                   </a>
                 </li>
               </ul>
+
+              <ul class="nav nav-collapse manage-menu">
+                <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+                <h4 class="text-section">시스템</h4>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="command-show-component" tag="contact-list">
+                    <i class="fas fa-question-circle"></i>
+                    <p>문의하기</p>
+                  </a>
+                </li>
+              </ul>
               
             </ul>
           </div>
