@@ -96,7 +96,7 @@ app.get('/test/dashboard',  async(request,response)=>{
 });
 
 app.get('/',  async(request,response)=>{
-	response.render('index.ejs');
+	response.render('index.ejs', {nodeEnv: process.env.NODE_ENV});
 });
 
 

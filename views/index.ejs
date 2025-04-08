@@ -117,12 +117,12 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <a href="/auth/google" class="btn-google command-google-login">
+                    <a href="/auth/google" class="btn-google command-google-login social-login-section">
 											<img src="https://www.google.com/favicon.ico" alt="Google" class="google-icon">
 											Google로 로그인
 										</a>
 
-										<div class="divider">
+										<div class="divider social-login-section">
 											<span>또는</span>
 										</div>
 
@@ -235,8 +235,18 @@
       });
     </script>
 		<script>
+      const node_env_s = `<%= JSON.stringify(nodeEnv) %>`;
 			document.addEventListener('DOMContentLoaded', function () {
 			
+      hideSocialLogin();
+      function hideSocialLogin() {
+        const socialLogin = document.querySelector('.social-login');
+        if (node_env_s.includes('production')) {
+          document.querySelectorAll('.social-login-section').forEach((node)=>{
+            node.classList.add('hidden');
+          })
+        } 
+      }  
       const infoMessage = new InfoMessage({
         title:"데모 서비스 안내", 
         message:"본 서비스는 데모버전입니다. <br> 정식 서비스 준비중입니다.<br> 곧 찾아뵙겠습니다."
