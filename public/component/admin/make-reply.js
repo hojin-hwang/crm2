@@ -69,7 +69,8 @@ class MakeReply extends AbstractComponent
   async #addReply(formData)
 	{
 		try{
-			return await util.sendFormData(`/contact/update`, "POST", formData);
+			const response = await util.sendFormData(`/contact/update`, "POST", formData);
+      this.sendPostMessage({msg:"COMMAND_CHANGE_DATA", data:response.data.info});
 		}
 		catch (error) {
             console.error('오류:', error);

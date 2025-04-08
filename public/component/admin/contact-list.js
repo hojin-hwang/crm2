@@ -43,18 +43,7 @@ class ContactList extends AbstractComponent
     this[name] = newValue;
     
   }
-  // handleClick(e) {
-  //   //e.preventDefault();
-  //   e.composedPath().find((node)=>{
-  //     if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
-  //     if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
-  //     if(node.className.match(/command-show-form/))
-  //     {
-  //       const _tempInfo = {"tagName":'make-reply', "info":null}
-  //       this.sendPostMessage({msg:"DO_SHOW_MODAL", data:_tempInfo});
-  //     }
-  //   });
-  // }
+
 
   onMessage(event)
   {
@@ -76,9 +65,7 @@ class ContactList extends AbstractComponent
             setTimeout(() => {
               this.#appendTable();
             }, 100);
-
           break;
-          
           default:
           break;
         }

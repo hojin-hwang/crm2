@@ -62,14 +62,12 @@ class ContactList extends AbstractComponent
           case "COMMAND_ADD_DATA":
             setTimeout(() => {
               this.#getList()
-              
             }, 100);
             
           break;
           case "GET_DATA_LIST":
             this.list = event.data.data;
             setTimeout(() => {
-              console.log("리스트 갱신1");
               this.#appendTable();
             }, 100);
 
