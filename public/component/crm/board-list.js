@@ -20,18 +20,27 @@ class BoardList extends AbstractComponent
       {
         const _tempInfo = {"tagName":'boardinfo-form', "info":null}
         this.sendPostMessage({msg:"DO_SHOW_MODAL", data:_tempInfo});
+        return;
       }
       if(node.className.match(/command-show-board-user-form/))
       {
         const _tempInfo = {"tagName":'board-user-form', "info":node.dataset.id}
         this.sendPostMessage({msg:"DO_SHOW_MODAL", data:_tempInfo});
+        return;
+      }
+      if(node.className.match(/command-show-excel-upload-form/))
+      {
+        const _tempInfo = {"tagName":'excel-upload-form', "info":node.dataset.tag}
+        this.sendPostMessage({msg:"DO_SHOW_MODAL", data:_tempInfo});
+        return;
       }
       if(node.className.match(/command-board-modify/))
       {
         const formData = new FormData();
         formData.append('_id', node.dataset.id)
         formData.append('name', node.closest('tr').querySelector('input[name=name]').value)
-        store.updateInfo(formData, 'boardInfo', "COMMAND_CHANGE_DATA")
+        store.updateInfo(formData, 'boardInfo', "COMMAND_CHANGE_DATA");
+        return;
       }
       if(node.className.match(/command-board-delete/))
       {
@@ -39,8 +48,9 @@ class BoardList extends AbstractComponent
         {
           const formData = new FormData();
           formData.append('_id', node.dataset.id)
-          store.deleteInfo(formData, 'boardInfo', "COMMAND_CHANGE_DATA")
+          store.deleteInfo(formData, 'boardInfo', "COMMAND_CHANGE_DATA");
         }
+        return;
       }
       
     });
@@ -136,6 +146,7 @@ class BoardList extends AbstractComponent
   {
     let html = '';
     data.list.forEach(element => {
+      
       if(element.type === 'custom')
       {
         const hiddenClass = (element.tag !== 'notice')? "":"hidden"
@@ -163,12 +174,17 @@ class BoardList extends AbstractComponent
       }
       else
       {
+        element.class = 'hidden';
+        if(element.tag === 'company' || element.tag === 'customer' || element.tag === 'product') element.class = '';
         html += `
           <tr>
             <th scope="row">
             <span class="board-name">${element.name}</span>
             </th>
             <td class="text-end">
+            <button type="button" data-tag="${element.tag}" class="btn btn-dark command-show-excel-upload-form ${element.class}">
+                Excel Upload
+            </button>
             <button type="button" data-id="${element._id}" class="btn btn-secondary command-show-board-user-form">
                 사용자 관리
             </button>

@@ -4,6 +4,6 @@ const excelController = require('../controllers/excelController');
 const LoginRequired = require('../utils/loginRequired');
 
 // Excel 파일 업로드 라우트
-router.post('/upload', excelController.uploadExcel);
+router.post('/upload', LoginRequired.messageIfNotLogin, excelController.uploadExcel);
 
 module.exports = router; 

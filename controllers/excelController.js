@@ -7,6 +7,7 @@ const fs = require('fs');
 const Company = require('../models/company');
 const User = require('../models/user');
 const Customer = require('../models/customer');
+const Product = require('../models/product');
 
 const collection = (model) => {
 	switch(model){
@@ -16,6 +17,8 @@ const collection = (model) => {
 			return User;
 		case 'customer':
 			return Customer;
+        case 'product':
+            return Product;    
 	}
 }
 // Excel 파일 업로드를 위한 multer 설정
@@ -72,6 +75,8 @@ exports.uploadExcel = async (req, res) => {
                     // 여기에 데이터 유효성 검사 및 변환 로직 추가
                     return {
                         ...row,
+                        clientId: req.user.clientId,
+                        user:req.user._id,
                         createdAt: new Date(),
                         updatedAt: new Date()
                     };

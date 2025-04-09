@@ -91,14 +91,15 @@ class BoardUserForm extends AbsForm
 
         const accessList = userList.reduce((acc, user) => {
             const userInfo = store.getInfo("user", "_id", user)
-            acc.push(userInfo);
+            if(userInfo) acc.push(userInfo);
             return acc;
           }, []);
-
+          
         this.#makeUserSelect(accessList, 'access_users')
 
         const accessListSet = new Set(accessList)
         const result = globalThis.userList.filter(item => !accessListSet.has(item));
+        
         this.#makeUserSelect(result, 'users')
 
     }
