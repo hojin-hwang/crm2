@@ -7,6 +7,8 @@ const Sheet = require('../models/sheet');
 const Work = require('../models/work');
 const BoardInfo = require('../models/boardInfo');
 const Board = require('../models/board');
+const fs = require('fs');
+const fileConfig = require('../config/fileConfig');
 const generator = require("password-generator");
 
 const sendEmail = require('../utils/sendMail');
@@ -20,6 +22,12 @@ const validateData = (data) => {
 		errors.push('ID는 필수입니다.');
 	}
 
+	const protectClientId = ["client", "admin", "excel"];
+	if(protectClientId.includes(data.clientId))
+	{
+		errors.push('사용할 수 없는 ID입니다.');
+	}
+
 	return errors;
 };
 
@@ -28,7 +36,7 @@ exports.apply = async (req, res) => {
 		const {...createData } = req.body;
 		const validationErrors = validateData(createData);
 		if (validationErrors.length > 0) {
-			return sendErrorResponse(res, 400, '입력값이 유효하지 않습니다.', validationErrors);
+			return sendErrorResponse(res, 400, validationErrors[0], validationErrors);
 		}
 		createData["authCode"] = generator(12, false);
 		createData["clientId"] = (createData.clientId).toLowerCase();
@@ -151,6 +159,11 @@ exports.delete = async(req, res) => {
 			await Board.deleteMany({ clientId: deleteData.clientId});
 			await BoardInfo.deleteMany({ clientId: deleteData.clientId});
 			await Client.deleteOne({ _id });
+			const uploadDir = fileConfig.upload.destination + `/${deleteData.clientId}`;
+			if (fs.existsSync(uploadDir)) {
+				fs.rmdirSync(uploadDir, { recursive: true });
+			}
+
 		}
 		else
 		{

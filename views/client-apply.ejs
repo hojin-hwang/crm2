@@ -265,7 +265,7 @@
   makeUserTable = async () => {
     const formData = new FormData();
     formData.append('model', 'User');
-    formData.append('username', `admin__${clientInfo.clientId}`);
+    formData.append('username', `admin@${clientInfo.clientId}.crm`);
     formData.append('email', clientInfo.email);
     formData.append('name', '관리자');
     formData.append('degree', '관리자')
