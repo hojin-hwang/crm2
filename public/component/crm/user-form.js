@@ -1,11 +1,9 @@
 // 상수 정의 ClientInfo로 빼자..
-const DEFAULT_PASSWORD = 'ss_crm@9999';
 const FORM_CONFIG = {
     departments: ['경영진', '생산부', '관리부', '영업부', '기타'],
     positions: ['사원', '주임', '대리', '과장', '차장', '부장', '이사', '대표'],
     degrees: ['대기', '일반', '관리자']
 };
-
 class UserForm extends AbsForm
 {
     constructor()
@@ -41,7 +39,7 @@ class UserForm extends AbsForm
             const defaultData = {
                 _id: "",
                 username: "",
-                password: DEFAULT_PASSWORD,
+                password: globalThis.user.clientInfo.authCode,
                 code: "",
                 name: "",
                 department: "",
@@ -93,8 +91,8 @@ class UserForm extends AbsForm
     {
         const form = this.querySelector('form');
         const passwordFields = [
-            { name: 'password', value: DEFAULT_PASSWORD },
-            { name: 'repassword', value: DEFAULT_PASSWORD }
+            { name: 'password', value: globalThis.user.clientInfo.authCode },
+            { name: 'repassword', value: globalThis.user.clientInfo.authCode }
         ];
 
         passwordFields.forEach(field => {
@@ -146,7 +144,7 @@ class UserForm extends AbsForm
                             <div>
                                 <label for="email" class="form-label">Email *</label>
                                 <input type="text" class="form-control" id="email" name="username" value="${this.data.username}">
-                                <div class="form-text email-info">신규 사용자 초기 비밀번호는 ${DEFAULT_PASSWORD} 입니다</div>
+                                <div class="form-text email-info">신규 사용자 초기 비밀번호는 ${globalThis.user.clientInfo.authCode} 입니다</div>
                             </div>
                             
                         </div>
@@ -155,7 +153,7 @@ class UserForm extends AbsForm
                             <label for="repassword" class="form-label">비밀번호 초기화</label>
                             <div>
                             <input type="checkbox" class="form-check-input command-check-repassword" id="repassword">
-                            <label for="repassword" class="form-check-label">${DEFAULT_PASSWORD}로 초기화</label>
+                            <label for="repassword" class="form-check-label">${globalThis.user.clientInfo.authCode}로 초기화</label>
                             </div>
                         </div>
                         <hr>
