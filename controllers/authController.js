@@ -34,7 +34,7 @@ exports.googleUser = (req, res, next) => {
 };
 
 exports.googleCallback = (req, res, next) => {
-	console.log("google")
+	console.log("google!!")
 	passport.authenticate('google', { 
 		failureRedirect: '/user/login' 
 	}, (err, user, info) => {
