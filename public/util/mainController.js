@@ -159,8 +159,7 @@ class MainController
         return;
       }
     }
-
-    this.#appendInfoMessage()
+    if(this.accessMenu.length === 0) this.#appendInfoMessage()
   }
 
   #accessableMenu()
@@ -180,7 +179,6 @@ class MainController
     
     document.querySelector('.page-inner').innerHTML = '';
     document.querySelector('.page-inner').appendChild(new InfoMessage(defaultMessage));
-    console.log("not found")
   }
 
   #removeListener()

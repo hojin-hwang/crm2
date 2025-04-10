@@ -249,7 +249,14 @@
       }  
       const infoMessage = new InfoMessage({
         title:"데모 서비스 안내", 
-        message:"본 서비스는 데모버전입니다. <br> 정식 서비스 준비중입니다.<br> 곧 찾아뵙겠습니다."
+        message:`본 서비스는 데모버전입니다. <br> 
+        <ul>
+          <li>구글로그인 지원합니다.</li>
+          <li>무료사용신청 실시간 처리됩니다.(이메일)</li>
+          <li>운영자에게 문의하기 추가</li>
+          <li>고객, 고객사, 품목 엑셀업로드 추가</li>
+        </ul>
+        정식 서비스 준비중입니다.<br> 곧 찾아뵙겠습니다.`
       })
       document.querySelector('.demo-version').appendChild(infoMessage)
 
