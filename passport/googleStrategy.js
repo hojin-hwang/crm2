@@ -4,13 +4,12 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/user');
 
 module.exports = () => {
-   console.log(process.env.GOOGLE_CLIENT_ID)
    passport.use(
       new GoogleStrategy(
          {
             clientID: process.env.GOOGLE_CLIENT_ID, // 구글 로그인에서 발급받은 REST API 키
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: '/auth/google/callback', 
+            callbackURL: process.env.GOOGLE_CALLBACK_URL, 
             scope: ['profile', 'email'],
             passReqToCallback: true // 요청 객체를 콜백 함수에 전달
          },
