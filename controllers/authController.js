@@ -57,7 +57,7 @@ exports.googleCallback = (req, res, next) => {
 			if (err) {
 				return next(err);
 			}
-			return res.redirect(process.env.HOST_DOMAIN + '/crm/' + user.clientId);
+			return res.redirect(process.env.HOST_DOMAIN + 'crm/' + user.clientId);
 			// if(user.clientId !== 'client') {
 			// 	
 			// } 
