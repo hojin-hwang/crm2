@@ -41,6 +41,9 @@ class SheetForm extends AbsForm
         {
             Object.assign(this.data, store.getInfo('sheet','_id', data._id));
             this.data["isNew"] = false;
+            this.data.companyId = (this.data.companyId)? this.data.companyId: this.data.company
+            this.data.customerId = (this.data.customerId)? this.data.customerId: this.data.customer
+            this.data.userId = (this.data.userId)? this.data.userId: this.data.user
         }
         else
         {
