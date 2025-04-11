@@ -81,6 +81,9 @@
 						 if(node.className.match(/command-pass-user/))
 							{
 								const form = node.closest('form');
+
+                if(!util.checkEmail(form) || !checkPassword(form)) return;
+
 								const formData = new FormData(form);
                 formData.append('clientId', clientId);
 								util.sendFormData("/auth/login", "POST", formData ).then((response) => {
@@ -102,6 +105,13 @@
 				 });
 		 }
 
+     const checkPassword = (form)=>{
+      if(form.password.value.length < 4) {
+        alert('비밀번호는 4자 이상이어야 합니다');
+        return false;
+      }
+      return true;
+    }
 		 
 
 		})

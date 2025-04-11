@@ -197,6 +197,22 @@ util.dateDashFormat = function(dateString)
   return _dateString;
 }
 
+util.checkEmail = (form)=>{
+  if(form.username.value.length < 1) {
+    alert('이메일은 필수입력사항입니다');
+    return false;
+  }
+  else
+  {
+    const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+    if(!regEmail.test(form.username.value)) {
+        alert('이메일 형식에 따라 정확히 입력해주세요');
+        return false;
+    }
+  }
+  return true;
+}
+
 util.ajaxApi = function(type, url, params, callback, fallback)
 {
   $.ajax({
