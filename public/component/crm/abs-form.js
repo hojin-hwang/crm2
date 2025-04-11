@@ -26,26 +26,39 @@ class AbsForm extends AbstractComponent
             }
             if(node.className.match(/command-delete-form/))
             {
-                const _form = new FormData();
-                _form.append('_id', node.dataset.value)
-                store.deleteInfo(_form, this.data.collection, 'COMMAND_CHANGE_DATA');
+                const formData = new FormData();
+                formData.append('_id', node.dataset.value)
+                store.deleteInfo(formData, this.data.collection, 'COMMAND_CHANGE_DATA');
                 this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
                 
                 return;
             }
             if(node.className.match(/command-save-form/))
             {
-                const _form = new FormData(this.querySelector('form'));
+                const form = this.querySelector('form')
+                const formData = new FormData(form);
+
+                const tempArray = Array.from(form.elements)
+
+                for(let i=0; i<tempArray.length; i++)
+                {
+                    if(tempArray[i].getAttribute('required') !== null && !tempArray[i].value)
+                    {
+                        new AlertMessage({type:"warning",message:tempArray[i].placeholder});
+                        return
+                    }
+                }
+
                 if(this.data.collection === "sales")
                 {
-                    if(!_form.get('sheetName'))
+                    if(!formData.get('sheetName'))
                     {
                         alert("영업기회는 필수입니다.");
                         return;
                     }
                 }
-                if(!this.data.isNew) store.updateInfo(_form, this.data.collection, "COMMAND_CHANGE_DATA");
-                else store.addInfo(_form, this.data.collection, "COMMAND_CHANGE_DATA");
+                if(!this.data.isNew) store.updateInfo(formData, this.data.collection, "COMMAND_CHANGE_DATA");
+                else store.addInfo(formData, this.data.collection, "COMMAND_CHANGE_DATA");
                 this.sendPostMessage({msg:"DO_HIDE_MODAL", data:null});
                 this.sendPostMessage({msg:"HIDE_SEARCH_LIST", data:null});
                 return;

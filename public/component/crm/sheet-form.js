@@ -44,19 +44,24 @@ class SheetForm extends AbsForm
             this.data.companyId = (this.data.companyId)? this.data.companyId: this.data.company
             this.data.customerId = (this.data.customerId)? this.data.customerId: this.data.customer
             this.data.userId = (this.data.userId)? this.data.userId: this.data.user
+            this.data["namePlaceHolder"] = "제목을 작성해 주세요";
         }
         else
         {
             const _data = {};
             _data["_id"] = util.generateObjectId();
             _data["name"] = "";
+            _data["namePlaceHolder"] = "제목을 작성해 주세요";
             _data["userName"] = globalThis.user.name;
             _data["userId"] = globalThis.user._id;
             _data["customer"] = "0000000000";
             _data["company"] = "0000000000";
             _data["product"] = []
-            _data["customerName"] = "없음";
-            _data["companyName"] = "없음";
+            _data["customerName"] = "";
+            _data["companyName"] = "";
+            _data["customerPlaceHolder"] = "고객을 선택해주세요";
+            _data["companyPlaceHolder"] = "고객을 선택해주세요";
+            
             _data["productName"] = "";
             _data["step"] = "제안";
             _data["isNew"] = true;
@@ -113,19 +118,19 @@ class SheetForm extends AbsForm
                             <input type="hidden" name="user"  value="${this.data.userId}">  
                             <div class="mb-3">
                                 <label for="title" class="form-label">제목 *</label>
-                                <input type="text" class="form-control" id="title" name="name" value="${this.data.name}">
+                                <input type="text" class="form-control" id="title" name="name" value="${this.data.name}" required placeholder="${this.data.namePlaceHolder}">
                                 <div class="form-text">필수 입력 사항입니다.</div>
                             </div>
 
                             <div class="mb-3 row-space-between">
                                 <div>
                                     <label for="customer" class="form-label">고객</label>
-                                    <input type="text" readonly class="form-control command-show-search-list" id="customer" name="customerName"  value="${this.data.customerName}">
+                                    <input type="text" readonly class="form-control command-show-search-list" id="customer" name="customerName"  value="${this.data.customerName}"  required placeholder="${this.data.customerPlaceHolder}">
                                     <div class="form-text company-name">고객을 선택해주세요</div>
                                 </div>
                                 <div>
                                     <label for="company" class="form-label">고객사</label>
-                                    <input type="text" readonly class="form-control" id="company" name="companyName"  value="${this.data.companyName}">
+                                    <input type="text" readonly class="form-control" id="company" name="companyName"  value="${this.data.companyName}"  required placeholder="${this.data.companyPlaceHolder}">
                                 </div>
                             </div>
 

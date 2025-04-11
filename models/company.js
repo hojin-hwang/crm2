@@ -3,7 +3,7 @@ const mongooes = require('mongoose');
 const companySchema = new mongooes.Schema({
 		clientId:{type: String, required: true, default: ""},
 		name: {type: String, required: true},
-		address:{type: String, required: true, default: ""},
+		address:{type: String, required: false, default: ""},
 		user: {type: mongooes.Schema.Types.ObjectId, ref: 'User', required: true},
 		code:{type: String, required: false, default: ""},
 		fax:{type: String, required: false, default: ""},

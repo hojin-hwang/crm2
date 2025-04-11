@@ -110,7 +110,23 @@ class ContactForm extends AbstractComponent
     }
 
   #saveCondition = (form)=>{
-        return ( util.checkEmail(form) && this.#checkField(form));
+        return ( this.#checkEmail(form) && this.#checkField(form));
+  }
+
+  #checkEmail = (form)=>{
+    if(form.email.value.length < 1) {
+      alert('이메일은 필수입력사항입니다');
+      return false;
+    }
+    else
+    {
+      const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+      if(!regEmail.test(form.email.value)) {
+          alert('이메일 형식에 따라 정확히 입력해주세요');
+          return false;
+      }
+    }
+    return true;
   }
   
   #checkField = (form)=>{

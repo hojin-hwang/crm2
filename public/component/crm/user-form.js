@@ -33,6 +33,8 @@ class UserForm extends AbsForm
             Object.assign(this.data, store.getInfo('user','_id', data._id));
             this.data["isNew"] = false;
             FORM_CONFIG.degrees = ['대기', '일반','관리자']
+            this.data["usernamePlaceHolder"] = "Email이 필요합니다.";
+            this.data["namePlaceHolder"] = "이름이 필요합니다.";
         }
         else
         {
@@ -45,7 +47,9 @@ class UserForm extends AbsForm
                 department: "",
                 position: "",
                 degree: "일반",
-                isNew: "save"
+                isNew: true,
+                usernamePlaceHolder : "Email이 필요합니다.",
+                namePlaceHolder : "이름이 필요합니다.",
             };
             Object.assign(this.data, defaultData);
             FORM_CONFIG.degrees = ['대기', '일반']
@@ -143,7 +147,7 @@ class UserForm extends AbsForm
                         <div class="mb-3 row-space-between">
                             <div>
                                 <label for="email" class="form-label">Email *</label>
-                                <input type="text" class="form-control" id="email" name="username" value="${this.data.username}">
+                                <input type="text" class="form-control" id="email" name="username" value="${this.data.username}"  required placeholder="${this.data.usernamePlaceHolder}">
                                 <div class="form-text email-info">신규 사용자 초기 비밀번호는 ${globalThis.user.clientInfo.authCode} 입니다</div>
                             </div>
                             
@@ -164,7 +168,7 @@ class UserForm extends AbsForm
                             </div>
                             <div>
                                 <label for="user_name" class="form-label">이름</label>
-                                <input type="text" class="form-control" id="user_name" name="name" value="${this.data.name}">
+                                <input type="text" class="form-control" id="user_name" name="name" value="${this.data.name}"  required placeholder="${this.data.namePlaceHolder}">
                             </div>
                         </div>
                         

@@ -50,12 +50,14 @@ class WorkForm extends AbsForm
         {
             Object.assign(this.data, data);
             this.data["isNew"] = false;
+            this.data["namePlaceHolder"] = "제목을 작성해 주세요";
         }
         else
         {
             const _data = {};
             _data["_id"] = util.generateObjectId();
             _data["name"] = "";
+            _data["namePlaceHolder"] = "제목을 작성해 주세요";
             _data["userId"] = globalThis.user._id;
             _data["userName"] = globalThis.user.name;
             _data["customer"] = "";
@@ -64,6 +66,7 @@ class WorkForm extends AbsForm
             _data["customerName"] = "";
             _data["companyName"] = "";
             _data["sheetName"] = "";
+            _data["sheetPlaceHolder"] = "영업기회를 선택해 주세요";
             _data["status"] = "경쟁사 정보";
             _data["isNew"] = true;
             _data["duedate"] = (data && data.duedate)? data.duedate:util.getDayDashFormat(new Date());
@@ -99,7 +102,7 @@ class WorkForm extends AbsForm
                         <input type="hidden" value="${this.data.sheetId}" name="sheet">
                         <div class="mb-3">
                             <label for="title" class="form-label">제목 *</label>
-                            <input type="text" class="form-control" id="title" name="name" value="${this.data.name}">
+                            <input type="text" class="form-control" id="title" name="name" value="${this.data.name}"  required placeholder="${this.data.namePlaceHolder}">
                             <div class="form-text">필수 입력 사항입니다.</div>
                         </div>
 
@@ -111,7 +114,7 @@ class WorkForm extends AbsForm
                             </div>  
                             <div>
                                 <label for="user" class="form-label">영업기회 *</label>
-                                <input type="text" readonly class="form-control command-show-search-list" id="sheet" name="sheetName"  value="${this.data.sheetName}">
+                                <input type="text" readonly class="form-control command-show-search-list" id="sheet" name="sheetName"  value="${this.data.sheetName}"  required placeholder="${this.data.sheetPlaceHolder}">
                                 <div class="form-text company-name">영업기회를 선택해주세요</div>
                             </div>
                         </div>

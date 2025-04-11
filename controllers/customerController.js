@@ -176,14 +176,12 @@ exports.delete = async (req, res) => {
 		const { _id, ...updateData } = req.body;
 
 		if (!_id) {
-			return sendErrorResponse(res, 400, "고객 ID가 필요합니다.");
+			return sendErrorResponse(res, 400, "ID가 필요합니다.");
 		}
-
-
 
 		const customer = await Customer.findById({_id, clientId: req.user.clientId});
 		if (!customer) {
-			return sendErrorResponse(res, 404, "고객 정보를 찾을 수 없습니다.");
+			return sendErrorResponse(res, 404, "정보를 찾을 수 없습니다.");
 		}
 
 		// 변경된 필드만 업데이트

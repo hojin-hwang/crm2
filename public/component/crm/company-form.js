@@ -11,6 +11,7 @@ class CompanyForm extends AbsForm
         {
             Object.assign(this.data, store.getInfo('company', '_id', data._id));
             this.data["isNew"] = false;
+            this.data["namePlaceHolder"] = "이름이 필요합니다.";
         }
         else
         {
@@ -18,6 +19,7 @@ class CompanyForm extends AbsForm
             _data["_id"] = "";
             _data["code"] = "";
             _data["name"] = "";
+            _data["namePlaceHolder"] = "이름이 필요합니다.";
             _data["fax"] = "";
             _data["tel"] = "";
             _data["website"] = "";
@@ -56,7 +58,7 @@ class CompanyForm extends AbsForm
                         <div class="mb-3 row-space-between">
                             <div>
                                 <label for="name" class="form-label">고객사 이름 *</label>
-                                <input type="text" class="form-control" id="name" name="name" value="${this.data.name}">
+                                <input type="text" class="form-control" id="name" name="name" value="${this.data.name}"   required placeholder="${this.data.namePlaceHolder}">
                                 <div class="form-text">필수 입력 사항입니다.</div>
                             </div>
                             <div>

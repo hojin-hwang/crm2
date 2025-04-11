@@ -10,4 +10,5 @@ router.post('/list', LoginRequired.messageIfNotLogin, customerController.list);
 
 router.post('/update', LoginRequired.messageIfNotLogin, customerController.update);
 
+router.post('/delete', LoginRequired.messageIfNotLogin, customerController.delete);
 module.exports = router; 

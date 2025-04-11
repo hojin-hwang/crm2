@@ -11,6 +11,8 @@ class CustomerForm extends AbsForm
         {
             Object.assign(this.data, store.getInfo('customer', '_id', data._id));
             this.data["isNew"] = false
+            this.data["namePlaceHolder"] = "이름이 필요합니다.";
+            this.data["hpPlaceHolder"] = "연락처가가 필요합니다.";
         }
         else
         {
@@ -18,8 +20,11 @@ class CustomerForm extends AbsForm
             _data["_id"] = "";
             _data["company"] = "";
             _data["companyName"] = "";
+            _data["companyPlaceHolder"] = "고객사를 선택해주세요.";
             _data["name"] = "";
+            _data["namePlaceHolder"] = "이름이 필요합니다.";
             _data["hp"] = "";
+            _data["hpPlaceHolder"] = "연락처가가 필요합니다.";
             _data["tel"] = "";
             _data["email"] = "";
             _data["position"] = "";
@@ -66,12 +71,12 @@ class CustomerForm extends AbsForm
                         <div class="mb-3 row-space-between">
                             <div>
                                 <label for="name" class="form-label">고객 이름 *</label>
-                                <input type="text" class="form-control" id="name" name="name" value="${this.data.name}">
+                                <input type="text" class="form-control" id="name" name="name" value="${this.data.name}"   required placeholder="${this.data.namePlaceHolder}">
                                 <div class="form-text">필수 입력 사항입니다.</div>
                             </div>
                             <div>
                                 <label for="company" class="form-label">고객사 *</label>
-                                <input type="text" class="form-control command-show-search-list" readonly id="company" name="companyName"  value="${this.data.companyName}">
+                                <input type="text" class="form-control command-show-search-list" readonly id="company" name="companyName"  value="${this.data.companyName}"   required placeholder="${this.data.companyPlaceHolder}">
                                 <div class="form-text">필수 입력 사항입니다.</div>
                             </div>
                         </div>
@@ -90,7 +95,7 @@ class CustomerForm extends AbsForm
                         <div class="mb-3 row-space-between">
                             <div>
                                 <label for="hp" class="form-label">hp *</label>
-                                <input type="text" class="form-control" id="hp" name="hp"  value="${this.data.hp}">
+                                <input type="text" class="form-control" id="hp" name="hp"  value="${this.data.hp}"   required placeholder="${this.data.hpPlaceHolder}">
                                 <div class="form-text">입력양식 : 010-1234-5678</div>
                             </div>
                             <div>
@@ -135,7 +140,7 @@ class CustomerForm extends AbsForm
                 <div class="mt-1 row-space-between">
                     <div>
                         <button type="button" class="btn btn-link m-1 command-show-delete-button hidden">고객 정보 삭제</button>
-                        <button type="button" class="btn btn-outline-dark m-1 command-delete-form hidden" data-value="${this.data.id}">삭제하시겠습니까? 삭제해도 과거데이터는 남아있습니다. </button>
+                        <button type="button" class="btn btn-outline-dark m-1 command-delete-form hidden" data-value="${this.data._id}">삭제하시겠습니까? 삭제해도 과거데이터는 남아있습니다. </button>
                     </div>
                     <button type="button" class="btn btn-primary command-save-form">save</button> 
                 </div>

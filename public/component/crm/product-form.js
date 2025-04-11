@@ -17,9 +17,10 @@ class ProductForm extends AbsForm
     {
         if(data)
         {
-            console.log(data)
+            
             Object.assign(this.data, store.getInfo('product','_id', data._id));
             this.data["isNew"] = false;
+            this.data["namePlaceHolder"] = "이름이 필요합니다.";
         }
         else
         {
@@ -27,6 +28,7 @@ class ProductForm extends AbsForm
             _data["_id"] = "";
             _data["code"] = "";
             _data["name"] = "";
+            _data["namePlaceHolder"] = "이름이 필요합니다.";
             _data["brand"] = "";
             _data["memo"] = ""
             _data["user"] = globalThis.user.name;
@@ -65,7 +67,7 @@ class ProductForm extends AbsForm
                         </div>
                         <div class="mb-3">
                             <label for="product_name" class="form-label">품목명</label>
-                            <input type="text" class="form-control" id="product_name" name="name" value="${this.data.name}">
+                            <input type="text" class="form-control" id="product_name" name="name" value="${this.data.name}"   required placeholder="${this.data.namePlaceHolder}">
                         </div>
                         <div class="mb-3">
                             <div>
