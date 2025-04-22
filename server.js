@@ -95,9 +95,9 @@ app.get('/test/',  async(request,response)=>{
 app.get('/test/dashboard',  async(request,response)=>{
 	response.render('test/dashboard.ejs');
 });
-app.get('/test/familyTree',  async(request,response)=>{
-	response.render('test/familyTree.ejs');
-});
+// app.get('/test/familyTree',  async(request,response)=>{
+// 	response.render('test/familyTree.ejs');
+// });
 
 app.get('/',  async(request,response)=>{
 	response.render('index.ejs', {nodeEnv: process.env.NODE_ENV});
