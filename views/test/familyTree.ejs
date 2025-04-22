@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<script src="https://cdn.jsdelivr.net/npm/gojs@3.0.21/release/go.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<p>
+  
+</p>
+<!-- <div id="allSampleContent" class="p-4 w-full"> -->
+          
+
+<link href="https://fonts.googleapis.com/css?family=Poppins:regular,medium,bold&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+<style>
+  #hidden {
+    font: 500 18px Poppins;
+    opacity: 0;
+  }
+</style>
+<script>
+
+  // This GoJS sample was designed by Synergy Codes, our consultant partner with
+  // over a decade of experience and cooperation with the GoJS team.
+  // See https://synergycodes.com/gojs/ for more
+
+  // This sample demonstrates polished Node and Link template design,
+  // which involves considerable code and opinionated choices.
+  // It may be unsuitable as a starting point unless you want to copy these specific styles.
+  // As part of your evaluation, the GoJS team is happy to help you craft your own templates.
+  // For a more rudimentary family tree, see familyTreeJP.html
+
+  // properties used in bindings,
+  // defined to not use simple strings in bindings across application
+  const nameProperty = 'name';
+  const genderProperty = 'gender';
+  const statusProperty = 'status';
+  const countProperty = 'count';
+
+  const theme = {
+    colors: {
+      femaleBadgeBackground: '#FFCBEA',
+      maleBadgeBackground: '#A2DAFF',
+      femaleBadgeText: '#7A005E',
+      maleBadgeText: '#001C76',
+      kingQueenBorder: '#FEBA00',
+      princePrincessBorder: '#679DDA',
+      civilianBorder: '#58ADA7',
+      personText: '#383838',
+      personNodeBackground: '#FFFFFF',
+      selectionStroke: '#485670',
+      counterBackground: '#485670',
+      counterBorder: '#FFFFFF',
+      counterText: '#FFFFFF',
+      link: '#686E76'
+    },
+    fonts: {
+      badgeFont: 'bold 12px Poppins',
+      birthDeathFont: '14px Poppins',
+      nameFont: '500 18px Poppins',
+      counterFont: '14px Poppins'
+    }
+  };
+
+  // toggle highlight on mouse enter/leave
+  // this sample also uses highlight for selection, so only unhighlight if unselected
+  const onMouseEnterPart = (e, part) => part.isHighlighted = true;
+  const onMouseLeavePart = (e, part) => { if (!part.isSelected) part.isHighlighted = false; }
+  const onSelectionChange = (part) => { part.isHighlighted = part.isSelected; }
+
+  const STROKE_WIDTH = 3;
+  const ADORNMENT_STROKE_WIDTH = STROKE_WIDTH + 1;
+  const CORNER_ROUNDNESS = 12;
+  const IMAGE_TOP_MARGIN = 10;
+  const MAIN_SHAPE_NAME = 'mainShape';
+  const IMAGE_DIAMETER = 100;
+
+  const getStrokeForStatus = (status) => {
+    switch (status) {
+      case '20':
+        return theme.colors.civilianBorder;
+      case '21':
+        return theme.colors.kingQueenBorder;
+      case '22':
+        return theme.colors.princePrincessBorder;
+      default:
+        return theme.colors.civilianBorder;
+    }
+  };
+
+  function strokeStyle(shape) {
+    return shape
+      .set({
+        fill: theme.colors.personNodeBackground,
+        strokeWidth: STROKE_WIDTH
+      })
+      .bind('stroke', statusProperty, status => getStrokeForStatus(status))
+      .bindObject('stroke', 'isHighlighted', (isHighlighted, obj) =>
+        isHighlighted
+          ? theme.colors.selectionStroke
+          : getStrokeForStatus(obj.part.data.status))
+  }
+
+  const genderToText = (gender) => (gender === 'M' ? 'MALE' : 'FEMALE');
+
+  const genderToTextColor = (gender) =>
+    gender === 'M' ? theme.colors.maleBadgeText : theme.colors.femaleBadgeText;
+
+  const genderToFillColor = (gender) =>
+    gender === 'M'
+      ? theme.colors.maleBadgeBackground
+      : theme.colors.femaleBadgeBackground;
+
+  const personBadge = () =>
+    new go.Panel('Auto', {
+      alignmentFocus: go.Spot.TopRight,
+      alignment: new go.Spot(1, 0, -25, STROKE_WIDTH - 0.5)
+    })
+      .add(
+        new go.Shape({
+          figure: 'RoundedRectangle',
+          parameter1: CORNER_ROUNDNESS,
+          parameter2: 4 | 8, // round only the bottom
+          desiredSize: new go.Size(NaN, 22.5),
+          stroke: null
+        })
+          .bind('fill', genderProperty, genderToFillColor),
+      new go.TextBlock({
+        font: theme.fonts.badgeFont
+      })
+        .bind('stroke', genderProperty, genderToTextColor)
+        .bind('text', genderProperty, genderToText)
+      )
+
+  const personBirthDeathTextBlock = () =>
+    new go.TextBlock({
+      stroke: theme.colors.personText,
+      font: theme.fonts.birthDeathFont,
+      alignmentFocus: go.Spot.Top,
+      alignment: new go.Spot(0.5, 1, 0, -35)
+    })
+      .bind('text', '', ({ born, death }) => {
+        if (!born) return '';
+        return `${born} - ${death ?? ''}`;
+      })
+
+  // Panel to display the number of children a node has
+  const personCounter = () =>
+    new go.Panel('Auto', {
+      visible: false,
+      alignmentFocus: go.Spot.Center,
+      alignment: go.Spot.Bottom
+    })
+      .bindObject('visible', '', (obj) => obj.findLinksOutOf().count > 0)
+      .add(
+        new go.Shape('Circle', {
+        desiredSize: new go.Size(29, 29),
+        strokeWidth: STROKE_WIDTH,
+        stroke: theme.colors.counterBorder,
+        fill: theme.colors.counterBackground
+      }),
+        new go.TextBlock({
+        alignment: new go.Spot(0.5, 0.5, 0, 1),
+        stroke: theme.colors.counterText,
+        font: theme.fonts.counterFont,
+        textAlign: 'center'
+      })
+        .bindObject('text', '', (obj) => obj.findNodesOutOf().count)
+      )
+
+  function findHeadShot(pic) {
+    if(pic) return `/assets/test/images/${pic}`;
+    else return `/assets/test/images/profile_2.jpg`;
+  }
+  
+  const personImage = () =>
+    new go.Panel('Spot', {
+      isClipping: true,
+      alignmentFocus: go.Spot.Top,
+      alignment: new go.Spot(0, 0, STROKE_WIDTH / 2, IMAGE_TOP_MARGIN)
+    })
+    .add(
+      new go.Shape('Circle', { desiredSize: new go.Size(IMAGE_DIAMETER, IMAGE_DIAMETER), strokeWidth: 0 }),
+      new go.Picture({
+        name: 'PICTURE',
+        source: '/assets/test/images/profile_3.jpg',
+        desiredSize: new go.Size(IMAGE_DIAMETER, IMAGE_DIAMETER)
+      }).bind('source', 'pic', findHeadShot)
+    );
+
+  const personMainShape = () =>
+    new go.Shape({
+      figure: 'RoundedRectangle',
+      desiredSize: new go.Size(215, 110),
+      portId: '',
+      parameter1: CORNER_ROUNDNESS
+    })
+      .apply(strokeStyle);
+
+  const personNameTextBlock = () =>
+    new go.TextBlock({
+      stroke: theme.colors.personText,
+      font: theme.fonts.nameFont,
+      desiredSize: new go.Size(160, 50),
+      overflow: go.TextOverflow.Ellipsis,
+      textAlign: 'center',
+      verticalAlignment: go.Spot.Center,
+      toolTip: go.GraphObject.build('ToolTip')
+        .add(new go.TextBlock({ margin: 4 }).bind('text', nameProperty)),
+      alignmentFocus: go.Spot.Top,
+      alignment: new go.Spot(0.5, 0, 0, 25)
+    })
+      .bind('text', nameProperty)
+
+
+  const createNodeTemplate = () =>
+    new go.Node('Spot', {
+      selectionAdorned: false,
+      mouseEnter: onMouseEnterPart,
+      mouseLeave: onMouseLeavePart,
+      selectionChanged: onSelectionChange
+    })
+      .add(
+        new go.Panel('Spot')
+        .add(
+          personMainShape(),
+          personNameTextBlock(),
+          personBirthDeathTextBlock()
+        ),
+        personImage(),
+        personBadge(),
+        personCounter()
+      )
+
+  const createLinkTemplate = () =>
+    new go.Link({
+      selectionAdorned: false,
+      routing: go.Routing.Orthogonal,
+      layerName: 'Background',
+      mouseEnter: onMouseEnterPart,
+      mouseLeave: onMouseLeavePart
+    })
+      .add(
+        new go.Shape({
+          stroke: theme.colors.link,
+          strokeWidth: 1
+        })
+          .bindObject('stroke', 'isHighlighted', (isHighlighted) =>
+            isHighlighted ? theme.colors.selectionStroke : theme.colors.link
+          )
+          .bindObject('stroke', 'isSelected', (selected) =>
+            selected ? theme.colors.selectionStroke : theme.colors.link
+          )
+          .bindObject('strokeWidth', 'isSelected', (selected) => selected ? 2 : 1)
+      );
+
+
+  const initDiagram = (divId) => {
+    const diagram = new go.Diagram(divId, {
+      layout: new go.TreeLayout({
+        //angle: 90,
+        nodeSpacing: 20,
+        layerSpacing: 50,
+        layerStyle: go.TreeLayout.LayerUniform,
+
+        // For compaction, make the last parents place their children in a bus
+        treeStyle: go.TreeStyle.LastParents,
+        //alternateAngle: 90,
+        alternateLayerSpacing: 35,
+        alternateAlignment: go.TreeAlignment.BottomRightBus,
+        alternateNodeSpacing: 20
+      }),
+      'toolManager.hoverDelay': 100,
+      linkTemplate: createLinkTemplate(),
+      model: new go.TreeModel({ nodeKeyProperty: 'name' })
+    });
+
+    diagram.nodeTemplate = createNodeTemplate();
+    const nodes = familyData;
+    diagram.model.addNodeDataCollection(nodes);
+
+    // Initially center on root:
+    diagram.addDiagramListener('InitialLayoutCompleted', () => {
+      const root = diagram.findNodeForKey('황곡성');
+      if (!root) return;
+      diagram.scale = 0.6;
+      diagram.scrollToRect(root.actualBounds);
+    });
+
+    // Setup zoom to fit button
+    document.getElementById('zoomToFit').addEventListener('click', () => diagram.commandHandler.zoomToFit());
+
+    document.getElementById('centerRoot').addEventListener('click', () => {
+      diagram.scale = 1;
+      diagram.commandHandler.scrollToPart(diagram.findNodeForKey('황곡성'));
+    });
+  };
+
+  const familyData = [
+    {
+      name: '황곡성',
+      gender: 'M', status: '20', born: '1865', death: '1936',
+      id:'h001'
+      // no parent value, this is the root
+    },
+    {
+      name: '황치순',  id:'h002',
+      gender: 'M', status: '21', born: '1895', death: '1952',
+      parent: '황곡성'
+    },
+    {
+      name: '황치열',id:'h003',
+      gender: 'M', status: '21', born: '1895', death: '1952',
+      parent: '황곡성'
+    },
+    {
+      name: '황치명',id:'h004',
+      gender: 'M', status: '21', born: '1895', death: '1952',
+      parent: '황곡성'
+    },
+    {
+      name: '황치형',id:'h005',
+      gender: 'M', status: '21', born: '1895', death: '1952',
+      parent: '황곡성'
+    },
+    {
+      name: '황치서',id:'h006',
+      gender: 'M', status: '21', born: '1895', death: '1952',
+      parent: '황곡성'
+    },
+    {
+      name: '황치우',id:'h007',
+      gender: 'M', status: '21', born: '1895', death: '1952',
+      parent: '황곡성'
+    },
+
+    {
+      name: '황유선',id:'h008',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치순'
+    },
+    {
+      name: '황용선',id:'h009',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치순'
+    },
+    {
+      name: '황창선',id:'h010',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치순'
+    },
+    {
+      name: '황우선',id:'h011',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치순'
+    },
+    {
+      name: '황호선',id:'h012',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치순'
+    },
+
+    {
+      name: '황인선',id:'h013',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치열'
+    },
+    {
+      name: '황공선',id:'h014',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치열'
+    },
+    {
+      name: '황경선',id:'h015',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치명'
+    },
+    {
+      name: '황제선',id:'h016',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치명'
+    },
+    {
+      name: '황군선',id:'h017',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치명'
+    },
+    {
+      name: '황득선',id:'h0018',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치형'
+    },
+    {
+      name: '황상선',id:'h019',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치형'
+    },
+    
+    {
+      name: '황춘선',id:'h020',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치서'
+    },
+    {
+      name: '황정선',id:'h021',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치서'
+    },
+    {
+      name: '황준선',id:'h022',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치서'
+    },
+    {
+      name: '황웅선',id:'h023',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치서'
+    },
+
+    {
+      name: '황희선',id:'h024',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치우'
+    },
+    {
+      name: '황선홍',id:'h025',
+      gender: 'M', status: '22', born: '1895', death: '1952',
+      parent: '황치우'
+    },
+
+    {
+      name: '황순옥',id:'h026',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황유선'
+    },
+    {
+      name: '황순병',id:'h027',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황유선'
+    },
+    {
+      name: '황순일',id:'h028',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황유선'
+    },
+    {
+      name: '황순만',id:'h029',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황유선'
+    },
+    {
+      name: '황순익',id:'h030',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황유선'
+    },
+    {
+      name: '황순신',id:'h031',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황유선'
+    },
+    {
+      name: '황순명',id:'h033',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황유선'
+    },
+    {
+      name: '황순섭',id:'h034',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황유선'
+    },
+    {
+      name: '황세열',id:'h035',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황유선'
+    },
+    {
+      name: '황일권',id:'h036',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황용선'
+    },
+    {
+      name: '황순태',id:'h037',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황창선'
+    },
+    {
+      name: '황순영',id:'h038',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황창선'
+    },
+    {
+      name: '황순홍',id:'h039',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황창선'
+    },
+    {
+      name: '황순필',id:'h040',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황우선'
+    },
+    {
+      name: '황순오',id:'h041',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황호선'
+    },
+    {
+      name: '황순경',id:'h042',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황호선'
+    },
+    {
+      name: '황한순',id:'h043',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황인선'
+    },
+    {
+      name: '황효순',id:'h044',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황인선'
+    },
+    {
+      name: '황호진',id:'h045',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황공선'
+    },
+    {
+      name: '황호형',id:'h046',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황공선'
+    },
+    {
+      name: '황순기',id:'h047',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황경선'
+    },
+    {
+      name: '황세훈',id:'h048',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황군선'
+    },
+    {
+      name: '황진순',id:'h049',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황득선'
+    },
+    {
+      name: '황창순',id:'h050',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황득선'
+    },
+    {
+      name: '황헌순',id:'h051',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황춘선'
+    },
+    {
+      name: '황대오',id:'h052',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황춘선'
+    },
+    {
+      name: '황인식',id:'h053',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황정선'
+    },
+    {
+      name: '황성호',id:'h054',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황준선'
+    },
+    {
+      name: '황인호',id:'h055',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황준선'
+    },
+    {
+      name: '황도윤',id:'h056',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황웅선'
+    },
+    {
+      name: '황성식',id:'h057',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황희선'
+    },
+    {
+      name: '황성훈',id:'h058',
+      gender: 'M', status: '23', born: '1895', death: '1952',
+      parent: '황희선'
+    },
+
+    {
+      name: '황동현',id:'h059',
+      gender: 'M', status: '24', born: '1895', death: '1952',
+      parent: '황호진',
+      pic : 'profile_1.jpg'
+    },
+    {
+      name: '황서현',id:'h060',
+      gender: 'F', status: '24', born: '1895', death: '1952',
+      parent: '황호진'
+    },
+
+  ];
+
+
+  window.addEventListener('DOMContentLoaded', () => {
+    // setTimeout only to ensure font is loaded before loading diagram
+    // you may want to use an asset loading library for this
+    // to keep this sample simple, it does not
+    setTimeout(() => {
+      initDiagram('yourDiagramDiv');
+    }, 300);
+  });
+</script>
+
+<div id="family">
+  <div id="yourDiagramDiv" style="background-color: white; border: solid 1px black; width: 100%; height: 550px"></div>
+    <p>
+      <!-- <button id="zoomToFit">Zoom to Fit</button>  -->
+      <button id="centerRoot">Center on root</button>
+    </p>
+    <p id="hidden">this forces the font to load in Chromium browsers</p>
+  </div>
+</div>
+</body>
+</html>
