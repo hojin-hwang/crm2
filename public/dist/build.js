@@ -1,0 +1,1 @@
+(()=>{"use strict";class e extends AbstractComponent{constructor(e){super(),this.name=e}getName(){return this.name+"!!"}}customElements.define("user-name",e);const t=new e("John Hopper");console.log(t.getName())})();
