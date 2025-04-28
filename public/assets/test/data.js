@@ -58,7 +58,8 @@ familyData = [
 			"pImage": "임남순.png",
 			"name": "임남순",
 			"step": 21,
-			"birth": "0000~0000",
+			"birth": "1906.07.05",
+			"death": "2000.01.01",
 			"number": 2
 	},
 	{
@@ -463,7 +464,7 @@ familyData = [
 			"pImage": "황한순.png",
 			"name": "황한순",
 			"step": 23,
-			"birth": "1990~",
+			"birth": "1968.09.23",
 			"number": 17
 	},
 	{
@@ -504,7 +505,7 @@ familyData = [
 			"pImage": "황호진.png",
 			"name": "황호진",
 			"step": 23,
-			"birth": "1973",
+			"birth": "1973.01.14",
 			"number": 19
 	},
 	{
@@ -515,7 +516,7 @@ familyData = [
 			"mImage": "",
 			"name": "황호형",
 			"step": 23,
-			"birth": "1976",
+			"birth": "1976.04.23",
 			"number": 20
 	},
 	{
