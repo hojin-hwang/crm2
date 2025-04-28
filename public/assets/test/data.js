@@ -372,7 +372,7 @@ familyData = [
 			"yPos": 1054,
 			"parent": "황용선",
 			"pImage": "황일권.png",
-			"name": "황순철",
+			"name": "황일권",
 			"step": 23,
 			"birth": "1951.07.21",
 			"number": 10
