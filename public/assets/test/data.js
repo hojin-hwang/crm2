@@ -334,7 +334,7 @@ familyData = [
 			"pImage": "황순신.png",
 			"name": "황순신",
 			"step": 23,
-			"birth": "1990~",
+			"birth": "1965.08.26",
 			"number": 6
 	},
 	{
@@ -394,7 +394,7 @@ familyData = [
 			"pImage": "황순영.png",
 			"name": "황순영",
 			"step": 23,
-			"birth": "1990~",
+			"birth": "1965.05.09",
 			"number": 12
 	},
 	{
@@ -667,7 +667,8 @@ familyData = [
 			"pImage": "황춘선.png",
 			"name": "황춘선",
 			"step": 22,
-			"birth": "1900",
+			"birth": "1942.05.05일",
+			"death": "",
 			"number": 13
 	},
 	{
@@ -677,7 +678,7 @@ familyData = [
 			"pImage": "이학봉.png",
 			"name": "이학봉",
 			"step": 22,
-			"birth": "1900",
+			"birth": "1943.02.12일",
 			"number": 13
 	},
 	{
@@ -847,7 +848,7 @@ familyData = [
 			"pImage": "황성훈.png",
 			"name": "황성훈",
 			"step": 23,
-			"birth": "1985.04.24",
+			"birth": "1985.06.12",
 			"number": 32
 	}
 ]
