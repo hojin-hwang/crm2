@@ -171,20 +171,20 @@ familyData = [
 			"xPos": 660,
 			"yPos": 262,
 			"partner": "황유선",
-			"pImage": "profile_1.png",
+			"pImage": "표옥순.png",
 			"name": "표옥순",
 			"step": 22,
-			"lifeCycle": "1990~",
+			"lifeCycle": "1926~2018",
 			"number": 1
 	},
 	{
 			"xPos": 660,
 			"yPos": 366,
 			"partner": "표옥순",
-			"pImage": "김계순.png",
+			"pImage": "profile_1.png",
 			"name": "김계순",
 			"step": 22,
-			"lifeCycle": "1926~2018",
+			"lifeCycle": "1990",
 			"number": 1
 	},
 	{
