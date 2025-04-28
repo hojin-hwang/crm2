@@ -243,7 +243,8 @@ familyData = [
 			"pImage": "황우선.png",
 			"name": "황우선",
 			"step": 22,
-			"birth": "1990~",
+			"birth": "1935.02.04",
+			"death": "2015.10.03",
 			"number": 4
 	},
 	{
@@ -253,7 +254,7 @@ familyData = [
 			"pImage": "강금례.png",
 			"name": "강금례",
 			"step": 22,
-			"birth": "1990~",
+			"birth": "1943.01.22",
 			"number": 4
 	},
 	{
@@ -413,7 +414,7 @@ familyData = [
 			"pImage": "황순필.png",
 			"name": "황순필",
 			"step": 23,
-			"birth": "1990~",
+			"birth": "1966.06.15",
 			"number": 14
 	},
 	{
