@@ -61,7 +61,11 @@ class Player {
 
 		this.ctx.fillText(this.step +` - ${this.number}`, this.xPos + this.imageSize+10, this.yPos + 15);
 
-		this.ctx.fillText(this.lifeCycle, this.xPos + this.imageSize+10, this.yPos + 55);
+		this.ctx.fillText(this.birth, this.xPos + this.imageSize+10, this.yPos + 55);
+
+		if(this.death){
+			this.ctx.fillText(this.death, this.xPos + this.imageSize+10, this.yPos + 70);
+		}
 
 		this.ctx.font = "14px Arial";
 		const names = (this.fullName) ? this.fullName : this.name;
@@ -121,7 +125,8 @@ class Player {
 			mImage: this.mImage,
 			name: this.name,
 			step: this.step,
-			lifeCycle: this.lifeCycle,
+			birth: this.birth,
+			death: this.death,
 			number: this.number
 		}
 	}

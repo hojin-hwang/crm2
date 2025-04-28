@@ -5,7 +5,8 @@ familyData = [
 			"pImage": "황곡성.png",
 			"name": "황곡성",
 			"step": 20,
-			"lifeCycle": "1879~1946",
+			"birth": "1879.03.17",
+			"death": "1946.07.07",
 			"number": 0
 	},
 	{
@@ -14,7 +15,8 @@ familyData = [
 			"pImage": "최장동.png",
 			"name": "최장동",
 			"step": 20,
-			"lifeCycle": "1881~1971",
+			"birth": "1881.10.17",
+			"death": "1971.03.23",
 			"number": 0
 	},
 	{
@@ -24,7 +26,8 @@ familyData = [
 			"pImage": "황치순.png",
 			"name": "황치순",
 			"step": 21,
-			"lifeCycle": "1903~1978",
+			"birth": "1903.03.04",
+			"death": "1978.02.03",
 			"number": 1
 	},
 	{
@@ -34,7 +37,8 @@ familyData = [
 			"pImage": "최갑진.png",
 			"name": "최갑진",
 			"step": 21,
-			"lifeCycle": "1905~1969",
+			"birth": "1905.11.05",
+			"death":"1969.06.17",
 			"number": 1
 	},
 	{
@@ -44,7 +48,7 @@ familyData = [
 			"pImage": "황치열.png",
 			"name": "황치열",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 2
 	},
 	{
@@ -54,7 +58,7 @@ familyData = [
 			"pImage": "임남순.png",
 			"name": "임남순",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 2
 	},
 	{
@@ -64,7 +68,7 @@ familyData = [
 			"pImage": "황치명.png",
 			"name": "황치명",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 3
 	},
 	{
@@ -74,7 +78,7 @@ familyData = [
 			"pImage": "지경애.png",
 			"name": "지경애",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 2
 	},
 	{
@@ -84,7 +88,7 @@ familyData = [
 			"pImage": "황치형.png",
 			"name": "황치형",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 4
 	},
 	{
@@ -94,7 +98,7 @@ familyData = [
 			"pImage": "노정순.png",
 			"name": "노정순",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 2
 	},
 	{
@@ -104,7 +108,7 @@ familyData = [
 			"pImage": "황치서.png",
 			"name": "황치서",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 5
 	},
 	{
@@ -114,7 +118,7 @@ familyData = [
 			"pImage": "김순금.png",
 			"name": "김순금",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 5
 	},
 	{
@@ -124,7 +128,7 @@ familyData = [
 			"pImage": "송일례.png",
 			"name": "송일례",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 5
 	},
 	{
@@ -134,7 +138,7 @@ familyData = [
 			"pImage": "황치우.png",
 			"name": "황치우",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 6
 	},
 	{
@@ -144,7 +148,7 @@ familyData = [
 			"pImage": "최부춘.png",
 			"name": "최부춘",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 6
 	},
 	{
@@ -154,7 +158,7 @@ familyData = [
 			"pImage": "조석자.png",
 			"name": "조석자",
 			"step": 21,
-			"lifeCycle": "0000~0000",
+			"birth": "0000~0000",
 			"number": 6
 	},
 	{
@@ -164,7 +168,8 @@ familyData = [
 			"pImage": "황유선.png",
 			"name": "황유선",
 			"step": 22,
-			"lifeCycle": "1926~1987",
+			"birth": "1926.04.14",
+			"death": "1987.04.16",
 			"number": 1
 	},
 	{
@@ -174,7 +179,8 @@ familyData = [
 			"pImage": "표옥순.png",
 			"name": "표옥순",
 			"step": 22,
-			"lifeCycle": "1926~2018",
+			"birth": "1926.03.25",
+			"death": "2018.04.07",
 			"number": 1
 	},
 	{
@@ -184,7 +190,7 @@ familyData = [
 			"pImage": "김계순.png",
 			"name": "김계순",
 			"step": 22,
-			"lifeCycle": "1990",
+			"birth": "1990",
 			"number": 1
 	},
 	{
@@ -194,7 +200,7 @@ familyData = [
 			"pImage": "황용선.png",
 			"name": "황용선",
 			"step": 22,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 2
 	},
 	{
@@ -204,7 +210,7 @@ familyData = [
 			"pImage": "최영자.png",
 			"name": "최영자",
 			"step": 22,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 2
 	},
 	{
@@ -214,7 +220,8 @@ familyData = [
 			"pImage": "황창선.png",
 			"name": "황창선",
 			"step": 22,
-			"lifeCycle": "1932~1996",
+			"birth": "1932.07.26",
+			"death": "1996.07.15",
 			"number": 3
 	},
 	{
@@ -224,7 +231,8 @@ familyData = [
 			"pImage": "박계님.png",
 			"name": "박계님",
 			"step": 22,
-			"lifeCycle": "1932~2009",
+			"birth": "1932.10.21",
+			"death": "2009.01.30",
 			"number": 3
 	},
 	{
@@ -234,7 +242,7 @@ familyData = [
 			"pImage": "황우선.png",
 			"name": "황우선",
 			"step": 22,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 4
 	},
 	{
@@ -244,7 +252,7 @@ familyData = [
 			"pImage": "강금례.png",
 			"name": "강금례",
 			"step": 22,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 4
 	},
 	{
@@ -254,7 +262,7 @@ familyData = [
 			"pImage": "황호선.png",
 			"name": "황호선",
 			"step": 22,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 5
 	},
 	{
@@ -264,7 +272,7 @@ familyData = [
 			"pImage": "진귀미자.png",
 			"name": "진귀미자",
 			"step": 22,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 5
 	},
 	{
@@ -274,8 +282,8 @@ familyData = [
 			"pImage": "황순옥.png",
 			"name": "황순옥",
 			"step": 23,
-			"lifeCycle": "1990~",
-			"number": 1
+			"birth": "1990~",
+			"number": 1,
 	},
 	{
 			"xPos": 990,
@@ -284,7 +292,7 @@ familyData = [
 			"pImage": "황순병.png",
 			"name": "황순병",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 2
 	},
 	{
@@ -294,7 +302,7 @@ familyData = [
 			"pImage": "황순일.png",
 			"name": "황순일",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 3
 	},
 	{
@@ -304,7 +312,7 @@ familyData = [
 			"pImage": "황순만.png",
 			"name": "황순만",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 4
 	},
 	{
@@ -314,7 +322,7 @@ familyData = [
 			"pImage": "황순익.png",
 			"name": "황순익",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 5
 	},
 	{
@@ -324,7 +332,7 @@ familyData = [
 			"pImage": "황순신.png",
 			"name": "황순신",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 6
 	},
 	{
@@ -334,7 +342,7 @@ familyData = [
 			"pImage": "황순명.png",
 			"name": "황순명",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 7
 	},
 	{
@@ -344,7 +352,7 @@ familyData = [
 			"pImage": "황순섭.png",
 			"name": "황순섭",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 8
 	},
 	{
@@ -354,7 +362,7 @@ familyData = [
 			"pImage": "황세열.png",
 			"name": "황세열",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 9
 	},
 	{
@@ -364,7 +372,7 @@ familyData = [
 			"pImage": "황일권.png",
 			"name": "황일권",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 10
 	},
 	{
@@ -374,7 +382,7 @@ familyData = [
 			"pImage": "황순태.png",
 			"name": "황순태",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 11
 	},
 	{
@@ -384,7 +392,7 @@ familyData = [
 			"pImage": "황순영.png",
 			"name": "황순영",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 12
 	},
 	{
@@ -394,7 +402,7 @@ familyData = [
 			"pImage": "황순홍.png",
 			"name": "황순홍",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 13
 	},
 	{
@@ -404,7 +412,7 @@ familyData = [
 			"pImage": "황순필.png",
 			"name": "황순필",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 14
 	},
 	{
@@ -414,7 +422,7 @@ familyData = [
 			"pImage": "황순오.png",
 			"name": "황순오",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 15
 	},
 	{
@@ -424,7 +432,7 @@ familyData = [
 			"pImage": "황순경.png",
 			"name": "황순경",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 16
 	},
 	{
@@ -434,7 +442,8 @@ familyData = [
 			"pImage": "황인선.png",
 			"name": "황인선",
 			"step": 22,
-			"lifeCycle": "1990~",
+			"birth": "1934.9.9",
+			"death": "2016.9.12",
 			"number": 6
 	},
 	{
@@ -444,7 +453,7 @@ familyData = [
 			"pImage": "장판순.png",
 			"name": "장판순",
 			"step": 22,
-			"lifeCycle": "1990~",
+			"birth": "1935.12.7",
 			"number": 6
 	},
 	{
@@ -454,7 +463,7 @@ familyData = [
 			"pImage": "황한순.png",
 			"name": "황한순",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 17
 	},
 	{
@@ -464,7 +473,7 @@ familyData = [
 			"pImage": "황효순.png",
 			"name": "황효순",
 			"step": 23,
-			"lifeCycle": "1990~",
+			"birth": "1990~",
 			"number": 18
 	},
 	{
@@ -474,7 +483,7 @@ familyData = [
 			"pImage": "황공선.png",
 			"name": "황공선",
 			"step": 22,
-			"lifeCycle": "1944~2019",
+			"birth": "1944~2019",
 			"number": 7
 	},
 	{
@@ -484,7 +493,7 @@ familyData = [
 			"pImage": "김정숙.png",
 			"name": "김정숙",
 			"step": 22,
-			"lifeCycle": "1951",
+			"birth": "1951",
 			"number": 7
 	},
 	{
@@ -494,7 +503,7 @@ familyData = [
 			"pImage": "황호진.png",
 			"name": "황호진",
 			"step": 23,
-			"lifeCycle": "1973",
+			"birth": "1973",
 			"number": 19
 	},
 	{
@@ -505,7 +514,7 @@ familyData = [
 			"mImage": "",
 			"name": "황호형",
 			"step": 23,
-			"lifeCycle": "1976",
+			"birth": "1976",
 			"number": 20
 	},
 	{
@@ -515,7 +524,7 @@ familyData = [
 			"pImage": "황경선.png",
 			"name": "황경선",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 8
 	},
 	{
@@ -525,7 +534,7 @@ familyData = [
 			"pImage": "정화덕.png",
 			"name": "정화덕",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 8
 	},
 	{
@@ -535,7 +544,7 @@ familyData = [
 			"pImage": "황제선.png",
 			"name": "황제선",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 9
 	},
 	{
@@ -545,7 +554,7 @@ familyData = [
 			"pImage": "김태순.png",
 			"name": "김태순",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 9
 	},
 	{
@@ -555,7 +564,7 @@ familyData = [
 			"pImage": "황군선.png",
 			"name": "황군선",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 10
 	},
 	{
@@ -565,7 +574,7 @@ familyData = [
 			"pImage": "유다복.png",
 			"name": "유다복",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 10
 	},
 	{
@@ -575,7 +584,7 @@ familyData = [
 			"pImage": "황순기.png",
 			"name": "황순기",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 21
 	},
 	{
@@ -585,7 +594,7 @@ familyData = [
 			"pImage": "황세훈.png",
 			"name": "황세훈",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 22
 	},
 	{
@@ -595,7 +604,7 @@ familyData = [
 			"pImage": "황득선.png",
 			"name": "황득선",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 11
 	},
 	{
@@ -605,7 +614,7 @@ familyData = [
 			"pImage": "박순례.png",
 			"name": "박순례",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 11
 	},
 	{
@@ -615,7 +624,7 @@ familyData = [
 			"pImage": "황상선.png",
 			"name": "황상선",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 12
 	},
 	{
@@ -625,7 +634,7 @@ familyData = [
 			"pImage": "김영자.png",
 			"name": "김영자",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 12
 	},
 	{
@@ -635,7 +644,7 @@ familyData = [
 			"pImage": "황진순.png",
 			"name": "황진순",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 23
 	},
 	{
@@ -645,7 +654,7 @@ familyData = [
 			"pImage": "황창순.png",
 			"name": "황창순",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 24
 	},
 	{
@@ -655,7 +664,7 @@ familyData = [
 			"pImage": "황춘선.png",
 			"name": "황춘선",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 13
 	},
 	{
@@ -665,7 +674,7 @@ familyData = [
 			"pImage": "이학봉.png",
 			"name": "이학봉",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 13
 	},
 	{
@@ -675,7 +684,7 @@ familyData = [
 			"pImage": "황정선.png",
 			"name": "황정선",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 14
 	},
 	{
@@ -685,7 +694,7 @@ familyData = [
 			"pImage": "최학림.png",
 			"name": "최학림",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 14
 	},
 	{
@@ -695,7 +704,7 @@ familyData = [
 			"pImage": "황준선.png",
 			"name": "황준선",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 15
 	},
 	{
@@ -705,7 +714,7 @@ familyData = [
 			"pImage": "박승인.png",
 			"name": "박승인",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 15
 	},
 	{
@@ -715,7 +724,7 @@ familyData = [
 			"pImage": "황웅선.png",
 			"name": "황웅선",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 16
 	},
 	{
@@ -725,7 +734,7 @@ familyData = [
 			"pImage": "이경.png",
 			"name": "이경",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 16
 	},
 	{
@@ -735,7 +744,7 @@ familyData = [
 			"pImage": "황헌순.png",
 			"name": "황헌순",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 25
 	},
 	{
@@ -745,7 +754,7 @@ familyData = [
 			"pImage": "황대오.png",
 			"name": "황대오",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 26
 	},
 	{
@@ -755,7 +764,7 @@ familyData = [
 			"pImage": "황인식.png",
 			"name": "황인식",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 27
 	},
 	{
@@ -765,7 +774,7 @@ familyData = [
 			"pImage": "황성호.png",
 			"name": "황성호",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 28
 	},
 	{
@@ -775,7 +784,7 @@ familyData = [
 			"pImage": "황인호.png",
 			"name": "황인호",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 29
 	},
 	{
@@ -785,7 +794,7 @@ familyData = [
 			"pImage": "황도윤.png",
 			"name": "황도윤",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 30
 	},
 	{
@@ -795,7 +804,7 @@ familyData = [
 			"pImage": "황희선.png",
 			"name": "황희선",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 17
 	},
 	{
@@ -805,7 +814,7 @@ familyData = [
 			"pImage": "신점순.png",
 			"name": "신점순",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 17
 	},
 	{
@@ -815,7 +824,7 @@ familyData = [
 			"pImage": "황선홍.png",
 			"name": "황선홍",
 			"step": 22,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 18
 	},
 	{
@@ -825,7 +834,7 @@ familyData = [
 			"pImage": "황성식.png",
 			"name": "황성식",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 31
 	},
 	{
@@ -835,7 +844,7 @@ familyData = [
 			"pImage": "황성훈.png",
 			"name": "황성훈",
 			"step": 23,
-			"lifeCycle": "1900",
+			"birth": "1900",
 			"number": 32
 	}
 ]
