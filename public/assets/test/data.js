@@ -483,7 +483,8 @@ familyData = [
 			"pImage": "황공선.png",
 			"name": "황공선",
 			"step": 22,
-			"birth": "1944~2019",
+			"birth": "1944.01.23",
+			"death": "2019.06.20",
 			"number": 7
 	},
 	{
@@ -493,7 +494,7 @@ familyData = [
 			"pImage": "김정숙.png",
 			"name": "김정숙",
 			"step": 22,
-			"birth": "1951",
+			"birth": "1951.03.10",
 			"number": 7
 	},
 	{
