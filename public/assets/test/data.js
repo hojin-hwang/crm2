@@ -1,0 +1,841 @@
+familyData = [
+	{
+			"xPos": 20,
+			"yPos": 60,
+			"pImage": "황곡성.png",
+			"name": "황곡성",
+			"step": 20,
+			"lifeCycle": "1879~1946",
+			"number": 0
+	},
+	{
+			"xPos": 20,
+			"yPos": 158,
+			"pImage": "최장동.png",
+			"name": "최장동",
+			"step": 20,
+			"lifeCycle": "1881~1971",
+			"number": 0
+	},
+	{
+			"xPos": 335,
+			"yPos": 146,
+			"parent": "황곡성",
+			"pImage": "황치순.png",
+			"name": "황치순",
+			"step": 21,
+			"lifeCycle": "1903~1978",
+			"number": 1
+	},
+	{
+			"xPos": 335,
+			"yPos": 254,
+			"partner": "황치순",
+			"pImage": "최갑진.png",
+			"name": "최갑진",
+			"step": 21,
+			"lifeCycle": "1905~1969",
+			"number": 1
+	},
+	{
+			"xPos": 335,
+			"yPos": 1815,
+			"parent": "황곡성",
+			"pImage": "황치열.png",
+			"name": "황치열",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 2
+	},
+	{
+			"xPos": 335,
+			"yPos": 1929,
+			"partner": "황치열",
+			"pImage": "임남순.png",
+			"name": "임남순",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 2
+	},
+	{
+			"xPos": 335,
+			"yPos": 2209,
+			"parent": "황곡성",
+			"pImage": "황치명.png",
+			"name": "황치명",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 3
+	},
+	{
+			"xPos": 335,
+			"yPos": 2314,
+			"partner": "황치명",
+			"pImage": "지경애.png",
+			"name": "지경애",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 2
+	},
+	{
+			"xPos": 335,
+			"yPos": 2754,
+			"parent": "황곡성",
+			"pImage": "황치형.png",
+			"name": "황치형",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 4
+	},
+	{
+			"xPos": 335,
+			"yPos": 2852,
+			"partner": "황치형",
+			"pImage": "노정순.png",
+			"name": "노정순",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 2
+	},
+	{
+			"xPos": 335,
+			"yPos": 3099,
+			"parent": "황곡성",
+			"pImage": "profile_1.png",
+			"name": "황치서",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 5
+	},
+	{
+			"xPos": 335,
+			"yPos": 3209,
+			"partner": "황치서",
+			"pImage": "profile_1.png",
+			"name": "김순금",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 5
+	},
+	{
+			"xPos": 335,
+			"yPos": 3312,
+			"partner": "김순금",
+			"pImage": "profile_1.png",
+			"name": "송일례",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 5
+	},
+	{
+			"xPos": 335,
+			"yPos": 3901,
+			"parent": "황곡성",
+			"pImage": "profile_1.png",
+			"name": "황치우",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 6
+	},
+	{
+			"xPos": 335,
+			"yPos": 4007,
+			"partner": "황치우",
+			"pImage": "profile_1.png",
+			"name": "최부춘",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 6
+	},
+	{
+			"xPos": 335,
+			"yPos": 4130,
+			"partner": "최부춘",
+			"pImage": "profile_1.png",
+			"name": "조석자",
+			"step": 21,
+			"lifeCycle": "0000~0000",
+			"number": 6
+	},
+	{
+			"xPos": 660,
+			"yPos": 152,
+			"parent": "황치순",
+			"pImage": "황유선.png",
+			"name": "황유선",
+			"step": 22,
+			"lifeCycle": "1926~1987",
+			"number": 1
+	},
+	{
+			"xPos": 660,
+			"yPos": 262,
+			"partner": "황유선",
+			"pImage": "profile_1.png",
+			"name": "표옥순",
+			"step": 22,
+			"lifeCycle": "1990~",
+			"number": 1
+	},
+	{
+			"xPos": 660,
+			"yPos": 366,
+			"partner": "표옥순",
+			"pImage": "김계순.png",
+			"name": "김계순",
+			"step": 22,
+			"lifeCycle": "1926~2018",
+			"number": 1
+	},
+	{
+			"xPos": 660,
+			"yPos": 1019,
+			"parent": "황치순",
+			"pImage": "profile_1.png",
+			"name": "황용선",
+			"step": 22,
+			"lifeCycle": "1990~",
+			"number": 2
+	},
+	{
+			"xPos": 660,
+			"yPos": 1123,
+			"partner": "황용선",
+			"pImage": "profile_1.png",
+			"name": "최영자",
+			"step": 22,
+			"lifeCycle": "1990~",
+			"number": 2
+	},
+	{
+			"xPos": 660,
+			"yPos": 1228,
+			"parent": "황치순",
+			"pImage": "황창선.png",
+			"name": "황창선",
+			"step": 22,
+			"lifeCycle": "1932~1996",
+			"number": 3
+	},
+	{
+			"xPos": 660,
+			"yPos": 1323,
+			"partner": "황창선",
+			"pImage": "박계님.png",
+			"name": "박계님",
+			"step": 22,
+			"lifeCycle": "1932~2009",
+			"number": 3
+	},
+	{
+			"xPos": 660,
+			"yPos": 1424,
+			"parent": "황치순",
+			"pImage": "황우선.png",
+			"name": "황우선",
+			"step": 22,
+			"lifeCycle": "1990~",
+			"number": 4
+	},
+	{
+			"xPos": 660,
+			"yPos": 1519,
+			"partner": "황우선",
+			"pImage": "강금례.png",
+			"name": "강금례",
+			"step": 22,
+			"lifeCycle": "1990~",
+			"number": 4
+	},
+	{
+			"xPos": 660,
+			"yPos": 1611,
+			"parent": "황치순",
+			"pImage": "profile_1.png",
+			"name": "황호선",
+			"step": 22,
+			"lifeCycle": "1990~",
+			"number": 5
+	},
+	{
+			"xPos": 660,
+			"yPos": 1702,
+			"partner": "황호선",
+			"pImage": "profile_1.png",
+			"name": "진귀미자",
+			"step": 22,
+			"lifeCycle": "1990~",
+			"number": 5
+	},
+	{
+			"xPos": 990,
+			"yPos": 154,
+			"parent": "황유선",
+			"pImage": "profile_1.png",
+			"name": "황순옥",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 1
+	},
+	{
+			"xPos": 990,
+			"yPos": 256,
+			"parent": "황유선",
+			"pImage": "profile_1.png",
+			"name": "황순병",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 2
+	},
+	{
+			"xPos": 990,
+			"yPos": 370,
+			"parent": "황유선",
+			"pImage": "profile_1.png",
+			"name": "황순일",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 3
+	},
+	{
+			"xPos": 990,
+			"yPos": 466,
+			"parent": "황유선",
+			"pImage": "profile_1.png",
+			"name": "황순만",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 4
+	},
+	{
+			"xPos": 990,
+			"yPos": 561,
+			"parent": "황유선",
+			"pImage": "profile_1.png",
+			"name": "황순익",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 5
+	},
+	{
+			"xPos": 990,
+			"yPos": 661,
+			"parent": "황유선",
+			"pImage": "profile_1.png",
+			"name": "황순신",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 6
+	},
+	{
+			"xPos": 990,
+			"yPos": 759,
+			"parent": "황유선",
+			"pImage": "profile_1.png",
+			"name": "황순명",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 7
+	},
+	{
+			"xPos": 990,
+			"yPos": 853,
+			"parent": "황유선",
+			"pImage": "profile_1.png",
+			"name": "황순섭",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 8
+	},
+	{
+			"xPos": 990,
+			"yPos": 949,
+			"parent": "황유선",
+			"pImage": "profile_1.png",
+			"name": "황세열",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 9
+	},
+	{
+			"xPos": 990,
+			"yPos": 1054,
+			"parent": "황용선",
+			"pImage": "profile_1.png",
+			"name": "황일권",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 10
+	},
+	{
+			"xPos": 990,
+			"yPos": 1162,
+			"parent": "황창선",
+			"pImage": "profile_1.png",
+			"name": "황순태",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 11
+	},
+	{
+			"xPos": 990,
+			"yPos": 1251,
+			"parent": "황창선",
+			"pImage": "profile_1.png",
+			"name": "황순영",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 12
+	},
+	{
+			"xPos": 990,
+			"yPos": 1340,
+			"parent": "황창선",
+			"pImage": "profile_1.png",
+			"name": "황순홍",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 13
+	},
+	{
+			"xPos": 990,
+			"yPos": 1455,
+			"parent": "황우선",
+			"pImage": "황순필.png",
+			"name": "황순필",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 14
+	},
+	{
+			"xPos": 990,
+			"yPos": 1563,
+			"parent": "황호선",
+			"pImage": "profile_1.png",
+			"name": "황순오",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 15
+	},
+	{
+			"xPos": 990,
+			"yPos": 1659,
+			"parent": "황호선",
+			"pImage": "profile_1.png",
+			"name": "황순경",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 16
+	},
+	{
+			"xPos": 660,
+			"yPos": 1815,
+			"parent": "황치열",
+			"pImage": "황인선.png",
+			"name": "황인선",
+			"step": 22,
+			"lifeCycle": "1990~",
+			"number": 6
+	},
+	{
+			"xPos": 660,
+			"yPos": 1910,
+			"partner": "황인선",
+			"pImage": "profile_1.png",
+			"name": "장판순",
+			"step": 22,
+			"lifeCycle": "1990~",
+			"number": 6
+	},
+	{
+			"xPos": 990,
+			"yPos": 1791,
+			"parent": "황인선",
+			"pImage": "profile_1.png",
+			"name": "황한순",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 17
+	},
+	{
+			"xPos": 990,
+			"yPos": 1891,
+			"parent": "황인선",
+			"pImage": "profile_1.png",
+			"name": "황효순",
+			"step": 23,
+			"lifeCycle": "1990~",
+			"number": 18
+	},
+	{
+			"xPos": 660,
+			"yPos": 2001,
+			"parent": "황치열",
+			"pImage": "황공선.png",
+			"name": "황공선",
+			"step": 22,
+			"lifeCycle": "1944~2019",
+			"number": 7
+	},
+	{
+			"xPos": 660,
+			"yPos": 2095,
+			"partner": "황공선",
+			"pImage": "김정숙.png",
+			"name": "김정숙",
+			"step": 22,
+			"lifeCycle": "1951",
+			"number": 7
+	},
+	{
+			"xPos": 990,
+			"yPos": 2000,
+			"parent": "황공선",
+			"pImage": "황호진.png",
+			"name": "황호진",
+			"step": 23,
+			"lifeCycle": "1973",
+			"number": 19
+	},
+	{
+			"xPos": 990,
+			"yPos": 2112,
+			"parent": "황공선",
+			"pImage": "황호형.png",
+			"mImage": "",
+			"name": "황호형",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 20
+	},
+	{
+			"xPos": 660,
+			"yPos": 2187,
+			"parent": "황치명",
+			"pImage": "황경선.png",
+			"name": "황경선",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 8
+	},
+	{
+			"xPos": 660,
+			"yPos": 2275,
+			"partner": "황경선",
+			"pImage": "정화덕.png",
+			"name": "정화덕",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 8
+	},
+	{
+			"xPos": 660,
+			"yPos": 2361,
+			"parent": "황치명",
+			"pImage": "profile_1.png",
+			"name": "황제선",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 9
+	},
+	{
+			"xPos": 660,
+			"yPos": 2456,
+			"partner": "황제선",
+			"pImage": "profile_1.png",
+			"name": "김태순",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 9
+	},
+	{
+			"xPos": 660,
+			"yPos": 2548,
+			"parent": "황치명",
+			"pImage": "profile_1.png",
+			"name": "황군선",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 10
+	},
+	{
+			"xPos": 660,
+			"yPos": 2638,
+			"partner": "황군선",
+			"pImage": "profile_1.png",
+			"name": "유다복",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 10
+	},
+	{
+			"xPos": 990,
+			"yPos": 2245,
+			"parent": "황경선",
+			"pImage": "profile_1.png",
+			"name": "황순기",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 21
+	},
+	{
+			"xPos": 990,
+			"yPos": 2548,
+			"parent": "황군선",
+			"pImage": "profile_1.png",
+			"name": "황세훈",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 22
+	},
+	{
+			"xPos": 660,
+			"yPos": 2731,
+			"parent": "황치형",
+			"pImage": "황득선.png",
+			"name": "황득선",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 11
+	},
+	{
+			"xPos": 660,
+			"yPos": 2821,
+			"partner": "황득선",
+			"pImage": "박순례.png",
+			"name": "박순례",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 11
+	},
+	{
+			"xPos": 660,
+			"yPos": 2919,
+			"parent": "황치형",
+			"pImage": "profile_1.png",
+			"name": "황상선",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 12
+	},
+	{
+			"xPos": 660,
+			"yPos": 3011,
+			"partner": "황상선",
+			"pImage": "profile_1.png",
+			"name": "김영자",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 12
+	},
+	{
+			"xPos": 990,
+			"yPos": 2731,
+			"parent": "황득선",
+			"pImage": "profile_1.png",
+			"name": "황진순",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 23
+	},
+	{
+			"xPos": 990,
+			"yPos": 2825,
+			"parent": "황득선",
+			"pImage": "profile_1.png",
+			"name": "황창순",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 24
+	},
+	{
+			"xPos": 660,
+			"yPos": 3099,
+			"parent": "황치서",
+			"pImage": "황춘선.png",
+			"name": "황춘선",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 13
+	},
+	{
+			"xPos": 660,
+			"yPos": 3193,
+			"partner": "황춘선",
+			"pImage": "profile_1.png",
+			"name": "이학봉",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 13
+	},
+	{
+			"xPos": 660,
+			"yPos": 3303,
+			"parent": "황치서",
+			"pImage": "profile_1.png",
+			"name": "황정선",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 14
+	},
+	{
+			"xPos": 660,
+			"yPos": 3400,
+			"partner": "황정선",
+			"pImage": "profile_1.png",
+			"name": "최학림",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 14
+	},
+	{
+			"xPos": 660,
+			"yPos": 3509,
+			"parent": "황치서",
+			"pImage": "profile_1.png",
+			"name": "황준선",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 15
+	},
+	{
+			"xPos": 660,
+			"yPos": 3607,
+			"partner": "황준선",
+			"pImage": "profile_1.png",
+			"name": "박승인",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 15
+	},
+	{
+			"xPos": 660,
+			"yPos": 3702,
+			"parent": "황치서",
+			"pImage": "profile_1.png",
+			"name": "황웅선",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 16
+	},
+	{
+			"xPos": 660,
+			"yPos": 3794,
+			"partner": "황웅선",
+			"pImage": "profile_1.png",
+			"name": "이경",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 16
+	},
+	{
+			"xPos": 990,
+			"yPos": 3099,
+			"parent": "황춘선",
+			"pImage": "profile_1.png",
+			"name": "황헌순",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 25
+	},
+	{
+			"xPos": 990,
+			"yPos": 3200,
+			"parent": "황춘선",
+			"pImage": "profile_1.png",
+			"name": "황대오",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 26
+	},
+	{
+			"xPos": 990,
+			"yPos": 3303,
+			"parent": "황정선",
+			"pImage": "profile_1.png",
+			"name": "황인식",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 27
+	},
+	{
+			"xPos": 990,
+			"yPos": 3509,
+			"parent": "황준선",
+			"pImage": "profile_1.png",
+			"name": "황성호",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 28
+	},
+	{
+			"xPos": 990,
+			"yPos": 3608,
+			"parent": "황준선",
+			"pImage": "profile_1.png",
+			"name": "황인호",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 29
+	},
+	{
+			"xPos": 990,
+			"yPos": 3702,
+			"parent": "황웅선",
+			"pImage": "profile_1.png",
+			"name": "황도윤",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 30
+	},
+	{
+			"xPos": 660,
+			"yPos": 3901,
+			"parent": "황치우",
+			"pImage": "profile_1.png",
+			"name": "황희선",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 17
+	},
+	{
+			"xPos": 660,
+			"yPos": 4001,
+			"partner": "황희선",
+			"pImage": "profile_1.png",
+			"name": "신점순",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 17
+	},
+	{
+			"xPos": 660,
+			"yPos": 4130,
+			"parent": "황치우",
+			"pImage": "profile_1.png",
+			"name": "황선홍",
+			"step": 22,
+			"lifeCycle": "1900",
+			"number": 18
+	},
+	{
+			"xPos": 990,
+			"yPos": 3901,
+			"parent": "황희선",
+			"pImage": "profile_1.png",
+			"name": "황성식",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 31
+	},
+	{
+			"xPos": 990,
+			"yPos": 3997,
+			"parent": "황희선",
+			"pImage": "profile_1.png",
+			"name": "황성훈",
+			"step": 23,
+			"lifeCycle": "1900",
+			"number": 32
+	}
+]

@@ -1,641 +1,300 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
+<head>
+  <meta name="viewport" 
+        content="width=device-width, 
+        initial-scale=1.0, 
+        user-scalable=no" />
+  <title>Drag/Drop/Bounce</title>
+  <style>
+    #container, canvas{
+      background-color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 7px;
+      touch-action: none;
+    }
+		canvas{
+			background-color: rgb(247, 239, 200);
+			overflow: scroll;
+		}
+		.controller{
+			position: fixed;
+			top: 10px;
+		}
+		.hidden{display: none;}
+  </style>
+</head>
+
 <body>
-<script src="https://cdn.jsdelivr.net/npm/gojs@3.0.21/release/go.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<p>
-  
-</p>
-<!-- <div id="allSampleContent" class="p-4 w-full"> -->
-          
 
-<link href="https://fonts.googleapis.com/css?family=Poppins:regular,medium,bold&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
-<style>
-  #hidden {
-    font: 500 18px Poppins;
-    opacity: 0;
-  }
-</style>
-<script>
-
-  // This GoJS sample was designed by Synergy Codes, our consultant partner with
-  // over a decade of experience and cooperation with the GoJS team.
-  // See https://synergycodes.com/gojs/ for more
-
-  // This sample demonstrates polished Node and Link template design,
-  // which involves considerable code and opinionated choices.
-  // It may be unsuitable as a starting point unless you want to copy these specific styles.
-  // As part of your evaluation, the GoJS team is happy to help you craft your own templates.
-  // For a more rudimentary family tree, see familyTreeJP.html
-
-  // properties used in bindings,
-  // defined to not use simple strings in bindings across application
-  const nameProperty = 'name';
-  const genderProperty = 'gender';
-  const statusProperty = 'status';
-  const countProperty = 'count';
-
-  const theme = {
-    colors: {
-      femaleBadgeBackground: '#FFCBEA',
-      maleBadgeBackground: '#A2DAFF',
-      femaleBadgeText: '#7A005E',
-      maleBadgeText: '#001C76',
-      kingQueenBorder: '#FEBA00',
-      princePrincessBorder: '#679DDA',
-      civilianBorder: '#58ADA7',
-      personText: '#383838',
-      personNodeBackground: '#FFFFFF',
-      selectionStroke: '#485670',
-      counterBackground: '#485670',
-      counterBorder: '#FFFFFF',
-      counterText: '#FFFFFF',
-      link: '#686E76'
-    },
-    fonts: {
-      badgeFont: 'bold 12px Poppins',
-      birthDeathFont: '14px Poppins',
-      nameFont: '500 18px Poppins',
-      counterFont: '14px Poppins'
-    }
-  };
-
-  // toggle highlight on mouse enter/leave
-  // this sample also uses highlight for selection, so only unhighlight if unselected
-  const onMouseEnterPart = (e, part) => part.isHighlighted = true;
-  const onMouseLeavePart = (e, part) => { if (!part.isSelected) part.isHighlighted = false; }
-  const onSelectionChange = (part) => { part.isHighlighted = part.isSelected; }
-
-  const STROKE_WIDTH = 3;
-  const ADORNMENT_STROKE_WIDTH = STROKE_WIDTH + 1;
-  const CORNER_ROUNDNESS = 12;
-  const IMAGE_TOP_MARGIN = 10;
-  const MAIN_SHAPE_NAME = 'mainShape';
-  const IMAGE_DIAMETER = 100;
-
-  const getStrokeForStatus = (status) => {
-    switch (status) {
-      case '20':
-        return theme.colors.civilianBorder;
-      case '21':
-        return theme.colors.kingQueenBorder;
-      case '22':
-        return theme.colors.princePrincessBorder;
-      default:
-        return theme.colors.civilianBorder;
-    }
-  };
-
-  function strokeStyle(shape) {
-    return shape
-      .set({
-        fill: theme.colors.personNodeBackground,
-        strokeWidth: STROKE_WIDTH
-      })
-      .bind('stroke', statusProperty, status => getStrokeForStatus(status))
-      .bindObject('stroke', 'isHighlighted', (isHighlighted, obj) =>
-        isHighlighted
-          ? theme.colors.selectionStroke
-          : getStrokeForStatus(obj.part.data.status))
-  }
-
-  const genderToText = (gender) => (gender === 'M' ? 'MALE' : 'FEMALE');
-
-  const genderToTextColor = (gender) =>
-    gender === 'M' ? theme.colors.maleBadgeText : theme.colors.femaleBadgeText;
-
-  const genderToFillColor = (gender) =>
-    gender === 'M'
-      ? theme.colors.maleBadgeBackground
-      : theme.colors.femaleBadgeBackground;
-
-  const personBadge = () =>
-    new go.Panel('Auto', {
-      alignmentFocus: go.Spot.TopRight,
-      alignment: new go.Spot(1, 0, -25, STROKE_WIDTH - 0.5)
-    })
-      .add(
-        new go.Shape({
-          figure: 'RoundedRectangle',
-          parameter1: CORNER_ROUNDNESS,
-          parameter2: 4 | 8, // round only the bottom
-          desiredSize: new go.Size(NaN, 22.5),
-          stroke: null
-        })
-          .bind('fill', genderProperty, genderToFillColor),
-      new go.TextBlock({
-        font: theme.fonts.badgeFont
-      })
-        .bind('stroke', genderProperty, genderToTextColor)
-        .bind('text', genderProperty, genderToText)
-      )
-
-  const personBirthDeathTextBlock = () =>
-    new go.TextBlock({
-      stroke: theme.colors.personText,
-      font: theme.fonts.birthDeathFont,
-      alignmentFocus: go.Spot.Top,
-      alignment: new go.Spot(0.5, 1, 0, -35)
-    })
-      .bind('text', '', ({ born, death }) => {
-        if (!born) return '';
-        return `${born} - ${death ?? ''}`;
-      })
-
-  // Panel to display the number of children a node has
-  const personCounter = () =>
-    new go.Panel('Auto', {
-      visible: false,
-      alignmentFocus: go.Spot.Center,
-      alignment: go.Spot.Bottom
-    })
-      .bindObject('visible', '', (obj) => obj.findLinksOutOf().count > 0)
-      .add(
-        new go.Shape('Circle', {
-        desiredSize: new go.Size(29, 29),
-        strokeWidth: STROKE_WIDTH,
-        stroke: theme.colors.counterBorder,
-        fill: theme.colors.counterBackground
-      }),
-        new go.TextBlock({
-        alignment: new go.Spot(0.5, 0.5, 0, 1),
-        stroke: theme.colors.counterText,
-        font: theme.fonts.counterFont,
-        textAlign: 'center'
-      })
-        .bindObject('text', '', (obj) => obj.findNodesOutOf().count)
-      )
-
-  function findHeadShot(pic) {
-    if(pic) return `/assets/test/images/${pic}`;
-    else return `/assets/test/images/profile_2.jpg`;
-  }
-  
-  const personImage = () =>
-    new go.Panel('Spot', {
-      isClipping: true,
-      alignmentFocus: go.Spot.Top,
-      alignment: new go.Spot(0, 0, STROKE_WIDTH / 2, IMAGE_TOP_MARGIN)
-    })
-    .add(
-      new go.Shape('Circle', { desiredSize: new go.Size(IMAGE_DIAMETER, IMAGE_DIAMETER), strokeWidth: 0 }),
-      new go.Picture({
-        name: 'PICTURE',
-        source: '/assets/test/images/profile_3.jpg',
-        desiredSize: new go.Size(IMAGE_DIAMETER, IMAGE_DIAMETER)
-      }).bind('source', 'pic', findHeadShot)
-    );
-
-  const personMainShape = () =>
-    new go.Shape({
-      figure: 'RoundedRectangle',
-      desiredSize: new go.Size(215, 110),
-      portId: '',
-      parameter1: CORNER_ROUNDNESS
-    })
-      .apply(strokeStyle);
-
-  const personNameTextBlock = () =>
-    new go.TextBlock({
-      stroke: theme.colors.personText,
-      font: theme.fonts.nameFont,
-      desiredSize: new go.Size(160, 50),
-      overflow: go.TextOverflow.Ellipsis,
-      textAlign: 'center',
-      verticalAlignment: go.Spot.Center,
-      toolTip: go.GraphObject.build('ToolTip')
-        .add(new go.TextBlock({ margin: 4 }).bind('text', nameProperty)),
-      alignmentFocus: go.Spot.Top,
-      alignment: new go.Spot(0.5, 0, 0, 25)
-    })
-      .bind('text', nameProperty)
-
-
-  const createNodeTemplate = () =>
-    new go.Node('Spot', {
-      selectionAdorned: false,
-      mouseEnter: onMouseEnterPart,
-      mouseLeave: onMouseLeavePart,
-      selectionChanged: onSelectionChange
-    })
-      .add(
-        new go.Panel('Spot')
-        .add(
-          personMainShape(),
-          personNameTextBlock(),
-          personBirthDeathTextBlock()
-        ),
-        personImage(),
-        personBadge(),
-        personCounter()
-      )
-
-  const createLinkTemplate = () =>
-    new go.Link({
-      selectionAdorned: false,
-      routing: go.Routing.Orthogonal,
-      layerName: 'Background',
-      mouseEnter: onMouseEnterPart,
-      mouseLeave: onMouseLeavePart
-    })
-      .add(
-        new go.Shape({
-          stroke: theme.colors.link,
-          strokeWidth: 1
-        })
-          .bindObject('stroke', 'isHighlighted', (isHighlighted) =>
-            isHighlighted ? theme.colors.selectionStroke : theme.colors.link
-          )
-          .bindObject('stroke', 'isSelected', (selected) =>
-            selected ? theme.colors.selectionStroke : theme.colors.link
-          )
-          .bindObject('strokeWidth', 'isSelected', (selected) => selected ? 2 : 1)
-      );
-
-
-  const initDiagram = (divId) => {
-    const diagram = new go.Diagram(divId, {
-      layout: new go.TreeLayout({
-        //angle: 90,
-        nodeSpacing: 20,
-        layerSpacing: 50,
-        layerStyle: go.TreeLayout.LayerUniform,
-
-        // For compaction, make the last parents place their children in a bus
-        treeStyle: go.TreeStyle.LastParents,
-        //alternateAngle: 90,
-        alternateLayerSpacing: 35,
-        alternateAlignment: go.TreeAlignment.BottomRightBus,
-        alternateNodeSpacing: 20
-      }),
-      'toolManager.hoverDelay': 100,
-      linkTemplate: createLinkTemplate(),
-      model: new go.TreeModel({ nodeKeyProperty: 'name' })
-    });
-
-    diagram.nodeTemplate = createNodeTemplate();
-    const nodes = familyData;
-    diagram.model.addNodeDataCollection(nodes);
-
-    // Initially center on root:
-    diagram.addDiagramListener('InitialLayoutCompleted', () => {
-      const root = diagram.findNodeForKey('황곡성');
-      if (!root) return;
-      diagram.scale = 0.6;
-      diagram.scrollToRect(root.actualBounds);
-    });
-
-    // Setup zoom to fit button
-    // document.getElementById('zoomToFit').addEventListener('click', () => diagram.commandHandler.zoomToFit());
-
-    // document.getElementById('zoomToFit').addEventListener('click', () => {
-    //   diagram.scale = 0.6;
-    //   diagram.commandHandler.scrollToPart(diagram.findNodeForKey('황곡성'));
-    // });
-
-    document.querySelectorAll('.grand-father').forEach(node=>{
-      node.addEventListener('click', (e) => {
-        diagram.scale = 0.8;
-        const id = e.target.getAttribute('id')
-        diagram.commandHandler.scrollToPart(diagram.findNodeForKey(id));
-      });
-    })
-    
-    
-  };
-
-  const familyData = [
-    {
-      name: '황곡성',
-      gender: 'M', status: '20', born: '1865', death: '1936',
-      id:'h001'
-      // no parent value, this is the root
-    },
-    {
-      name: '황치순',  id:'h002',
-      gender: 'M', status: '21', born: '1895', death: '1952',
-      parent: '황곡성'
-    },
-    {
-      name: '황치열',id:'h003',
-      gender: 'M', status: '21', born: '1895', death: '1952',
-      parent: '황곡성'
-    },
-    {
-      name: '황치명',id:'h004',
-      gender: 'M', status: '21', born: '1895', death: '1952',
-      parent: '황곡성'
-    },
-    {
-      name: '황치형',id:'h005',
-      gender: 'M', status: '21', born: '1895', death: '1952',
-      parent: '황곡성'
-    },
-    {
-      name: '황치서',id:'h006',
-      gender: 'M', status: '21', born: '1895', death: '1952',
-      parent: '황곡성'
-    },
-    {
-      name: '황치우',id:'h007',
-      gender: 'M', status: '21', born: '1895', death: '1952',
-      parent: '황곡성'
-    },
-
-    {
-      name: '황유선',id:'h008',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치순'
-    },
-    {
-      name: '황용선',id:'h009',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치순'
-    },
-    {
-      name: '황창선',id:'h010',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치순'
-    },
-    {
-      name: '황우선',id:'h011',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치순'
-    },
-    {
-      name: '황호선',id:'h012',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치순'
-    },
-
-    {
-      name: '황인선',id:'h013',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치열'
-    },
-    {
-      name: '황공선',id:'h014',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치열'
-    },
-    {
-      name: '황경선',id:'h015',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치명'
-    },
-    {
-      name: '황제선',id:'h016',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치명'
-    },
-    {
-      name: '황군선',id:'h017',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치명'
-    },
-    {
-      name: '황득선',id:'h0018',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치형'
-    },
-    {
-      name: '황상선',id:'h019',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치형'
-    },
-    
-    {
-      name: '황춘선',id:'h020',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치서'
-    },
-    {
-      name: '황정선',id:'h021',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치서'
-    },
-    {
-      name: '황준선',id:'h022',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치서'
-    },
-    {
-      name: '황웅선',id:'h023',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치서'
-    },
-
-    {
-      name: '황희선',id:'h024',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치우'
-    },
-    {
-      name: '황선홍',id:'h025',
-      gender: 'M', status: '22', born: '1895', death: '1952',
-      parent: '황치우'
-    },
-
-    {
-      name: '황순옥',id:'h026',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황유선'
-    },
-    {
-      name: '황순병',id:'h027',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황유선'
-    },
-    {
-      name: '황순일',id:'h028',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황유선'
-    },
-    {
-      name: '황순만',id:'h029',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황유선'
-    },
-    {
-      name: '황순익',id:'h030',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황유선'
-    },
-    {
-      name: '황순신',id:'h031',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황유선'
-    },
-    {
-      name: '황순명',id:'h033',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황유선'
-    },
-    {
-      name: '황순섭',id:'h034',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황유선'
-    },
-    {
-      name: '황세열',id:'h035',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황유선'
-    },
-    {
-      name: '황일권',id:'h036',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황용선'
-    },
-    {
-      name: '황순태',id:'h037',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황창선'
-    },
-    {
-      name: '황순영',id:'h038',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황창선'
-    },
-    {
-      name: '황순홍',id:'h039',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황창선'
-    },
-    {
-      name: '황순필',id:'h040',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황우선'
-    },
-    {
-      name: '황순오',id:'h041',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황호선'
-    },
-    {
-      name: '황순경',id:'h042',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황호선'
-    },
-    {
-      name: '황한순',id:'h043',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황인선'
-    },
-    {
-      name: '황효순',id:'h044',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황인선'
-    },
-    {
-      name: '황호진',id:'h045',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황공선'
-    },
-    {
-      name: '황호형',id:'h046',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황공선'
-    },
-    {
-      name: '황순기',id:'h047',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황경선'
-    },
-    {
-      name: '황세훈',id:'h048',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황군선'
-    },
-    {
-      name: '황진순',id:'h049',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황득선'
-    },
-    {
-      name: '황창순',id:'h050',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황득선'
-    },
-    {
-      name: '황헌순',id:'h051',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황춘선'
-    },
-    {
-      name: '황대오',id:'h052',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황춘선'
-    },
-    {
-      name: '황인식',id:'h053',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황정선'
-    },
-    {
-      name: '황성호',id:'h054',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황준선'
-    },
-    {
-      name: '황인호',id:'h055',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황준선'
-    },
-    {
-      name: '황도윤',id:'h056',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황웅선'
-    },
-    {
-      name: '황성식',id:'h057',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황희선'
-    },
-    {
-      name: '황성훈',id:'h058',
-      gender: 'M', status: '23', born: '1895', death: '1952',
-      parent: '황희선'
-    },
-
-    {
-      name: '황동현',id:'h059',
-      gender: 'M', status: '24', born: '1895', death: '1952',
-      parent: '황호진',
-      pic : 'profile_1.jpg'
-    },
-    {
-      name: '황서현',id:'h060',
-      gender: 'F', status: '24', born: '1895', death: '1952',
-      parent: '황호진'
-    },
-
-  ];
-
-
-  window.addEventListener('DOMContentLoaded', () => {
-    // setTimeout only to ensure font is loaded before loading diagram
-    // you may want to use an asset loading library for this
-    // to keep this sample simple, it does not
-    setTimeout(() => {
-      initDiagram('yourDiagramDiv');
-    }, 300);
-  });
-</script>
-
-<div id="family">
-  <div id="yourDiagramDiv" style="background-color: white; border: solid 1px black; width: 100%; height: 550px"></div>
-    <p>
-      <button class="grand-father" id="황곡성">황곡성</button> 
-      <button class="grand-father"  id="황치순">황치순</button>
-      <button class="grand-father"  id="황치열">황치열</button>
-      <button class="grand-father"  id="황치명">황치명</button>
-      <button class="grand-father"  id="황치형">황치형</button>
-      <button class="grand-father"  id="황치서">황치서</button>
-      <button class="grand-father" id="황치우">황치우</button>
-    </p>
-    <p id="hidden">this forces the font to load in Chromium browsers</p>
+  <div style="display:flex;">
+		<canvas></canvas>
+		
   </div>
-</div>
+	<button type="button" class="command-get-data hidden">Get Data</button>
+	<div class="controller">
+		<button type="button" class="command-zoom-in">Zoom In</button>
+		<button type="button" class="command-zoom-out">Zoom Out</button>
+		<button type="button" class="command-focus-player" id="황곡성">황곡성</button>
+		<button type="button" class="command-focus-player" id="황치순">황치순</button>
+		<button type="button" class="command-focus-player" id="황치열">황치열</button>
+		<button type="button" class="command-focus-player" id="황치명">황치명</button>
+		<button type="button" class="command-focus-player" id="황치형">황치형</button>
+		<button type="button" class="command-focus-player" id="황치서">황치서</button>
+		<button type="button" class="command-focus-player" id="황치우">황치우</button>
+	</div>
+	
+	<script src="/component/test/player.js"></script>
+	<script src="/assets/test/data.js" type="text/javascript"></script>
+  <script>
+		document.addEventListener('DOMContentLoaded', function () {
+			document.addEventListener('click', handleClick);
+	
+			function handleClick(e) 
+			{
+				//e.preventDefault();
+				e.composedPath().find((node)=>{
+					if(node.nodeName === 'svg' || node.nodeName === 'path') return false;
+					if(typeof(node.className) === 'object' || !node.className || !node.className?.match(/command/)) return false;
+					if(node.className.match(/command-get-data/))
+					{
+						const userData = [];
+						users.forEach(user => {
+							userData.push(user.getData());
+						})
+						console.log(userData) 
+					}
+					if(node.className.match(/command-add-player/))
+					{
+						const form = document.querySelector('form');
+						const data = form.querySelector('textarea').value;
+						const userData = JSON.parse(data);
+						const user = new Player(userData);
+						users.push(user);
+						const parent = users.find((u)=>u.name === user.parent);
+						if(parent) user.setParent(parent);
+						draw(true);
+					}
+					if(node.className.match(/command-zoom-in/))
+					{
+						if(scale < 0.5) return;
+						zoomCanvas("in")
+						draw(true);
+						 
+					}
+					if(node.className.match(/command-zoom-out/))
+					{
+						if(scale > 1.5) return;
+						zoomCanvas("out")
+						draw(true);
+					}
+					if(node.className.match(/command-focus-player/))
+					{
+						const player = users.find((u)=>u.name === node.id);
+						const xPos = 20 - player.xPos
+						const yPos = 60 - player.yPos
+						users.forEach(user => {
+							user.xPos += xPos;
+							user.yPos += yPos;
+						})
+						zoomCanvas("default");
+						draw(true);
+					}
+				});
+			}
+		});
+
+		const canvas = document.querySelector('canvas')
+		const ctx = canvas.getContext('2d');
+		const editable = true;
+		
+		if(editable)
+		{
+			document.querySelector(".command-get-data").classList.remove("hidden");
+		}
+		
+
+		let scale = window.devicePixelRatio;
+
+		function zoomCanvas(type="in")
+		{
+			if(type === "in")
+			{
+				scale = scale -0.1;
+			}
+			else if(type === "out")
+			{
+				scale = scale +0.1;
+			}
+			else scale = 1;
+			ctx.scale(scale, scale);
+			canvas.width = canvasWidth * scale;
+			canvas.height = canvasHeight * scale;
+			return scale;
+		}
+		
+		const canvasWidth = 1024;
+		const canvasHeight = 800;
+		zoomCanvas(type="default");
+
+
+		canvas.style.width = canvasWidth + "px";
+		canvas.style.height = canvasHeight + "px";
+
+		const canvasBoundRect = canvas.getBoundingClientRect();
+		const offsetTop = canvasBoundRect.top;
+		const offsetLeft = canvasBoundRect.left;
+    
+		const datas = JSON.parse(JSON.stringify(familyData));
+		const users = [];
+		datas.forEach((data)=>{
+			const user = new Player(data);
+			users.push(user);
+		})
+
+		users.forEach((user)=>{
+			if(user.parent)
+			{
+				const parent = users.find((u)=>u.name === user.parent);
+				if(parent) user.setParent(parent);
+			}
+			if(user.partner)
+			{
+				const partner = users.find((u)=>u.name === user.partner);
+				if(partner) user.setPartner(partner);
+			}
+		})
+
+		let selectUser = null;
+
+		let selectBoard = false;
+	  draw(true);
+		
+
+		canvas.addEventListener('mousedown', (e)=>eventStart(e))
+		canvas.addEventListener('mouseup', (e)=>eventEnd(e))
+		canvas.addEventListener('mousemove', (e)=>eventMove(e))
+
+		canvas.addEventListener('touchstart', eventStart, false)
+		canvas.addEventListener('touchend', eventEnd, false)
+		canvas.addEventListener('touchmove', eventMove, false)
+
+		function eventStart(e)
+		{
+			if(!editable) {
+				selectBoard = true;
+				e.target.style.cursor = "grab";
+				return;
+			}
+
+			selectUser = whichUser(e.clientX - offsetLeft, e.clientY - offsetTop)
+			if(!selectUser && e.target.tagName === "CANVAS")
+			{
+				selectBoard = true;
+				e.target.style.cursor = "grab";
+				
+			}
+			else{
+				e.target.style.cursor = "move";
+			} 
+		}
+
+		function eventEnd(e)
+		{
+			e.target.style.cursor = "default";
+			if(selectUser && editable)
+			{
+				users.forEach(user => user.drawImage());
+				selectUser = null;
+				return;
+			}
+			else {
+				users.forEach(user => user.drawImage());
+				selectBoard = false;
+				previousTouch = null;
+			}
+		}
+
+		var previousTouch;
+
+		function eventMove(e)
+		{
+			e.preventDefault();
+			if(selectUser && editable)
+			{
+				selectUser.xPos = e.clientX - offsetLeft;
+				selectUser.yPos = e.clientY - offsetTop;
+				draw(false);
+			}
+			else if(selectBoard)
+			{
+				const touch = (e.touches)? e.touches[0] : null;
+				let _x = 0;
+				let _y = 0;
+				if(touch)
+				{
+					if (previousTouch) {
+						_x = touch.pageX - previousTouch.pageX;
+						_y = touch.pageY - previousTouch.pageY;
+					}
+					previousTouch = touch;
+				}
+				else
+				{
+					_x = e.movementX;
+					_y = e.movementY;
+				}
+				users.forEach(user => {
+					user.xPos += _x;
+					user.yPos += _y;
+				})
+				
+				//console.log("movementX", e.touches[0]?.clientX)
+				draw(false);
+			}
+		}
+
+		
+
+		function draw(init) {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			users.forEach(user => {
+				user.drawPlayerRect();
+				user.drawPlayerText();
+				user.drawLine();
+				user.drawMarryLine();
+				if(init) user.drawImage();
+				
+			});
+			drawTitle()
+		}
+
+		function whichUser(x, y)
+		{
+			for(let i=0; i<users.length; i++)
+			{
+				if(users[i].xPos < x && x < users[i].xPos+users[i].width)
+				{
+					if(users[i].yPos < y && y < users[i].yPos+users[i].height)
+					{
+						return users[i];
+					}
+				}
+			}
+			return null;
+		}
+
+		function drawTitle(){
+			ctx.font = "24px Arial";
+			ctx.fillStyle = "black";
+			ctx.fillText("창원 황씨 현령공주부공파", 740, 35);
+	}
+	
+  </script>
 </body>
+
 </html>
