@@ -688,7 +688,7 @@ familyData = [
 			"pImage": "황정선.png",
 			"name": "황정선",
 			"step": 22,
-			"birth": "1900",
+			"birth": "1947.12.01",
 			"number": 14
 	},
 	{
@@ -698,7 +698,7 @@ familyData = [
 			"pImage": "최학림.png",
 			"name": "최학림",
 			"step": 22,
-			"birth": "1900",
+			"birth": "1951.09.13",
 			"number": 14
 	},
 	{
