@@ -36,6 +36,7 @@
 		
   </div>
 	<button type="button" class="command-get-data hidden">Get Data</button>
+  <button type="button" class="command-get-file">이미지로 저장</button>
 	<div class="controller">
 		<button type="button" class="command-zoom-in">Zoom In</button>
 		<button type="button" class="command-zoom-out">Zoom Out</button>
@@ -66,7 +67,15 @@
 						users.forEach(user => {
 							userData.push(user.getData());
 						})
-						console.log(userData) 
+					}
+          if(node.className.match(/command-get-file/))
+					{
+						const image = canvas.toDataURL();
+            const link = document.createElement("a");
+            link.href = image;
+            link.download = "MyFamilyTree.png";
+            link.click();
+            return;
 					}
 					if(node.className.match(/command-add-player/))
 					{
