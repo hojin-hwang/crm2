@@ -548,6 +548,7 @@ familyData = [
 			"name": "황제선",
 			"step": 22,
 			"birth": "0000",
+			"death": "2020.10.18",
 			"number": 9
 	},
 	{
@@ -729,7 +730,7 @@ familyData = [
 			"pImage": "황웅선.png",
 			"name": "황웅선",
 			"step": 22,
-			"birth": "0000",
+			"birth": "1970.02.07",
 			"number": 16
 	},
 	{
@@ -739,7 +740,7 @@ familyData = [
 			"pImage": "이경.png",
 			"name": "이경",
 			"step": 22,
-			"birth": "0000",
+			"birth": "1970.11.28",
 			"number": 16
 	},
 	{
@@ -799,7 +800,7 @@ familyData = [
 			"pImage": "황도윤.png",
 			"name": "황도윤",
 			"step": 23,
-			"birth": "0000",
+			"birth": "2002.04.16",
 			"number": 30
 	},
 	{
